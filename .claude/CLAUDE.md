@@ -1,55 +1,69 @@
 
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+# Nexus Angular Front - AI Operating Manual
 
-## TypeScript Best Practices
+This repository is Angular 21 with classic SSR (request-time server rendering) using
+`@angular/ssr` and Express.
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+Backend data is PostgreSQL behind APIs. Frontend never writes SQL, but all contracts,
+filters, identifiers, and validation rules must remain PostgreSQL-safe and injection-safe.
 
-## Angular Best Practices
+## Non-Negotiable Priorities
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+1. Security first.
+2. SSR correctness second.
+3. Functional correctness third.
+4. Performance and DX fourth.
 
-## Accessibility Requirements
+If constraints conflict, never sacrifice security or SSR integrity for speed.
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+## Mandatory Rule Files
 
-### Components
+Always load and apply these files before coding:
 
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
+1. `.claude/rules/core.md`
+2. `.claude/rules/angular.md`
+3. `.claude/rules/architecture.md`
+4. `.claude/rules/testing.md`
+5. `.claude/rules/security.md`
+6. `.claude/rules/ssr.md`
+7. `.claude/rules/sonarlint.md`
+8. `.claude/rules/git-workflow.md`
 
-## State Management
+## Available Skills
 
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
+- `.claude/skills/implement-feature/SKILL.md`
+- `.claude/skills/review-pr/SKILL.md`
+- `.claude/skills/angular-ssr/SKILL.md`
+- `.claude/skills/security-hardening/SKILL.md`
+- `.claude/skills/sonarlint-remediation/SKILL.md`
+- `.claude/skills/snyk-dependency-audit/SKILL.md`
 
-## Templates
+## Available Agents
 
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
+- `.claude/agents/code-reviewer.md`
+- `.claude/agents/sonarlint-guardian.md`
+- `.claude/agents/snyk-security-agent.md`
 
-## Services
+## Project Context Summary
 
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+- Framework: Angular 21+.
+- Rendering model: classic SSR, not SSG and not CSR-only.
+- Runtime server: Express Node handler in `src/server.ts`.
+- Build mode: `outputMode: "server"`.
+- Quality baseline: SonarLint clean on modified code.
+- Security baseline: zero known high vulnerabilities from dependency and code scans.
+
+## Definition of Done
+
+A change is done only when all are true:
+
+1. Architecture boundaries are respected.
+2. SSR behavior is correct and stable (no browser-global crashes on server).
+3. Tests are updated and relevant.
+4. SonarLint issues introduced by the change are fixed.
+5. Security checks and threat vectors are reviewed.
+
+## Local Overrides
+
+Local machine-specific overrides may be placed in `CLAUDE.local.md` at repository root.
+Do not put secrets in any `.claude` file.

@@ -1,0 +1,21 @@
+{
+	"permissions": {
+		"allow": [
+			"Read(*)",
+			"LS(*)",
+			"Grep(*)",
+			"Glob(*)",
+			"Edit(*)",
+			"Write(*)",
+			"MultiEdit(*)",
+			"Bash(npm run *)",
+			"Bash(npx ng *)",
+			"Bash(npx snyk *)"
+		],
+		"deny": [
+			"Bash(rm -rf *)",
+			"Bash(git reset --hard *)",
+			"Bash(git clean -fd *)"
+		]
+	}
+}
