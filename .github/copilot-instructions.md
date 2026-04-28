@@ -27,10 +27,10 @@ If constraints conflict, keep this order.
   defaults).
 - `axios` is forbidden; use Angular `HttpClient` only.
 - `any` and `unknown` types are forbidden in application code.
-- Business logic is forbidden in views/templates and must live in
-  domain/application layers.
-- Keep architecture boundaries in `domain`, `application`, `infrastructure`, and
-  `presentation` layers.
+- Business logic is forbidden in views/templates and must live in services.
+- Keep modular architecture boundaries: each feature is self-contained in
+  `src/app/modules/<feature>/`; modules only import from `shared/` and
+  `infrastructure/`, never from each other.
 - Keep modified code SonarLint-clean.
 - Run Snyk audits for dependency-risking changes.
 
