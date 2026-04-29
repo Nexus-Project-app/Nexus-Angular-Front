@@ -11,6 +11,30 @@ import {
 } from '@angular/core';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
+import { InputRule } from '@milkdown/prose/inputrules';
+import { $inputRule } from '@milkdown/utils';
+import { emoji, emojiSchema } from '@milkdown/plugin-emoji';
+
+const CUSTOM_EMOJIS: Record<string, { src: string; alt: string }> = {
+  ':nexus:': { src: '/assets/emojis/nexus.svg', alt: 'Nexus' },
+};
+
+function customEmojiPlugin() {
+  return $inputRule(
+    (ctx) =>
+      new InputRule(/(:([^:\s]+):)$/, (state, match, start, end) => {
+        const content = match[0];
+        if (!content) return null;
+        const custom = CUSTOM_EMOJIS[content];
+        if (!custom) return null;
+        const html = `<img src="${custom.src}" alt="${content}" title="${content}" width="20" height="20" />`;
+        return state.tr
+          .setMeta('emoji', true)
+          .replaceRangeWith(start, end, emojiSchema.type(ctx).create({ html }))
+          .scrollIntoView();
+      })
+  );
+}
 
 const INITIAL_CONTENT = `# Titre du document
 
@@ -78,6 +102,10 @@ export class EditorPageComponent {
       root,
       defaultValue: INITIAL_CONTENT,
     });
+
+    this.crepe.editor
+      .use(emoji)
+      .use(customEmojiPlugin());
 
     this.crepe.on((listener) => {
       listener.markdownUpdated((_ctx, markdown) => {
