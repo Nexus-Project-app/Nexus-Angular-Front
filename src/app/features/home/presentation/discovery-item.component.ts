@@ -72,5 +72,5 @@ export class DiscoveryItemComponent {
   readonly title = input.required<string>();
   readonly items = input.required<ReadonlyArray<DiscoveryItem>>();
 
-  protected readonly headingId = computed(() => `panel-${this.title().toLowerCase().replace(/\s+/g, '-')}`);
+  protected readonly headingId = computed(() => `panel-${this.title().toLowerCase().replaceAll(/\s+/g, '-')}`);
 }

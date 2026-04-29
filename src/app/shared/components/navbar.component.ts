@@ -131,7 +131,7 @@ export class NavbarComponent {
     role: 'Administrateur',
   });
 
-  protected readonly userInitial = computed(() => 
+  protected readonly userInitial = computed(() =>
     this.user().name.trim().charAt(0).toUpperCase()
   );
 
@@ -140,6 +140,6 @@ export class NavbarComponent {
   navigateHome(event: Event): void {
     event.preventDefault();
     // Navigate to home - this will be handled by router in parent components
-    window.location.href = '/';
+    globalThis.location.href = '/';
   }
 }
