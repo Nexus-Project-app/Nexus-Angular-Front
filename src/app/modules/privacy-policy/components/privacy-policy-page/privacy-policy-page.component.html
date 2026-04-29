@@ -1,0 +1,503 @@
+<main class="privacy-policy-shell min-h-screen bg-nexus-bg py-10 sm:py-12">
+  <article class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+    <header class="relative overflow-hidden rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-[0_20px_60px_rgba(10,10,15,0.08)] sm:p-8">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-nexus-interaction via-sky-400 to-cyan-300"></div>
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl space-y-4">
+          <div class="space-y-3">
+            <h1 class="text-3xl font-semibold tracking-tight text-nexus-primary sm:text-4xl">
+              Politique de confidentialité
+            </h1>
+            <p class="max-w-2xl text-sm leading-6 text-nexus-secondary sm:text-base">
+              Une présentation claire de la collecte, de l'utilisation et de la protection des données sur Nexus.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid lg:min-w-[24rem]">
+          <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-nexus-secondary">Dernière mise à jour</p>
+            <p class="mt-2 text-sm font-medium text-nexus-primary">{{ lastUpdated }}</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <aside class="lg:sticky lg:top-6 lg:self-start">
+        <nav class="rounded-3xl border border-nexus-border bg-nexus-component p-5 shadow-sm" aria-label="Sommaire">
+          <h2 class="text-sm font-semibold text-nexus-primary">Sommaire</h2>
+          <ol class="mt-4 space-y-2 text-sm">
+            @for (item of [
+              { href: '#section-intro', label: 'Introduction' },
+              { href: '#section-controller', label: 'Responsable du traitement' },
+              { href: '#section-data-collected', label: 'Données collectées' },
+              { href: '#section-purposes', label: 'Finalités' },
+              { href: '#section-retention', label: 'Conservation' },
+              { href: '#section-rights', label: 'Vos droits' },
+              { href: '#section-sharing', label: 'Partage' },
+              { href: '#section-cookies', label: 'Cookies' },
+              { href: '#section-security', label: 'Sécurité' },
+              { href: '#section-minors', label: 'Mineurs' },
+              { href: '#section-updates', label: 'Mises à jour' },
+              { href: '#section-contact', label: 'Contact' },
+            ]; track item.href) {
+              <li>
+                <a
+                  [href]="item.href"
+                  class="block rounded-xl px-3 py-2 text-nexus-secondary transition-colors hover:bg-nexus-bg hover:text-nexus-primary"
+                >
+                  {{ item.label }}
+                </a>
+              </li>
+            }
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="space-y-6">
+
+        <!-- 1. Introduction -->
+        <section id="section-intro" aria-labelledby="heading-intro" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-intro" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            1. Introduction
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>
+              La présente Politique de confidentialité décrit la manière dont <strong class="font-semibold text-nexus-primary">Nexus</strong>
+              (ci-après « la Plateforme », « nous », « notre ») collecte, utilise, conserve et protège
+              les données à caractère personnel des utilisateurs (ci-après « vous », « l'Utilisateur »)
+              conformément au Règlement (UE) 2016/679 du Parlement européen et du Conseil du
+              27 avril 2016 (RGPD) et à la loi n° 78-17 du 6 janvier 1978 modifiée relative à
+              l'informatique, aux fichiers et aux libertés (Loi Informatique et Libertés).
+            </p>
+            <p>
+              En utilisant la Plateforme, vous acceptez les pratiques décrites dans ce document.
+              Si vous n'acceptez pas cette politique, veuillez cesser d'utiliser la Plateforme.
+            </p>
+          </div>
+        </section>
+
+        <!-- 2. Responsable du traitement -->
+        <section id="section-controller" aria-labelledby="heading-controller" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-controller" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            2. Responsable du traitement
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>Le responsable du traitement des données à caractère personnel est :</p>
+            <address class="not-italic rounded-2xl border border-nexus-border bg-nexus-bg p-5 text-sm leading-7 text-nexus-primary">
+              <strong class="mb-1 block font-semibold">Nexus SAS</strong>
+              69 Av. Aristide Briand, Dijon<br />
+              21000 Dijon, France<br />
+              SIRET : 888 888 888 00012<br />
+              Courriel :
+              <a href="mailto:romain.voyard@diiage.org" class="text-nexus-interaction transition-colors hover:text-nexus-interaction-hover">romain.voyard&#64;diiage.org</a>
+            </address>
+            <p>
+              Pour toute question relative à vos données personnelles ou pour exercer vos droits,
+              vous pouvez contacter notre Délégué à la Protection des Données (DPO) à l'adresse
+              ci-dessus.
+            </p>
+          </div>
+        </section>
+
+        <!-- 3. Données collectées -->
+        <section id="section-data-collected" aria-labelledby="heading-data-collected" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-data-collected" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            3. Données collectées
+          </h2>
+          <div class="mt-5 space-y-6 leading-7 text-nexus-secondary">
+            <p>Nous collectons les catégories de données suivantes :</p>
+
+            @for (category of dataCategories; track category.title) {
+              <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                <h3 class="mb-3 text-base font-semibold text-nexus-primary">{{ category.title }}</h3>
+                <ul class="list-disc space-y-1 pl-5 text-sm text-nexus-secondary marker:text-nexus-interaction">
+                  @for (item of category.items; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            <div class="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+              <span class="mt-0.5 text-lg leading-none" aria-hidden="true">⚠</span>
+              <p>
+                Nous ne collectons pas de données sensibles au sens de l'article 9 du RGPD
+                (origine raciale ou ethnique, opinions politiques, convictions religieuses ou
+                philosophiques, données de santé, données biométriques, etc.) sauf consentement
+                explicite et nécessité avérée.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Finalités et bases légales -->
+        <section id="section-purposes" aria-labelledby="heading-purposes" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-purposes" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            4. Finalités et bases légales des traitements
+          </h2>
+          <div class="mt-5 overflow-x-auto rounded-2xl border border-nexus-border">
+            <table class="min-w-full text-sm">
+              <caption class="sr-only">Finalités, bases légales et durées de conservation</caption>
+              <thead class="border-b border-nexus-border bg-nexus-bg">
+                <tr>
+                  <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Finalité</th>
+                  <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Base légale (RGPD)</th>
+                  <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Durée de conservation</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-nexus-border bg-nexus-component">
+                @for (row of purposesTable; track row.purpose; let odd = $odd) {
+                  <tr [class]="odd ? 'bg-nexus-bg' : ''">
+                    <td class="px-4 py-3 font-medium text-nexus-primary">{{ row.purpose }}</td>
+                    <td class="px-4 py-3 text-nexus-secondary">{{ row.basis }}</td>
+                    <td class="px-4 py-3 text-nexus-secondary">{{ row.duration }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. Durées de conservation -->
+        <section id="section-retention" aria-labelledby="heading-retention" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-retention" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            5. Durées de conservation et destruction des données
+          </h2>
+          <div class="mt-5 space-y-6 leading-7 text-nexus-secondary">
+
+            <div>
+              <h3 class="mb-2 text-lg font-semibold text-nexus-primary">5.1 Principe général</h3>
+              <p>
+                Les données à caractère personnel ne sont conservées que pour la durée strictement
+                nécessaire à la réalisation de la finalité pour laquelle elles ont été collectées,
+                augmentée, le cas échéant, des délais légaux de prescription et d'archivage obligatoire.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="mb-3 text-lg font-semibold text-nexus-primary">5.2 Cycle de vie détaillé</h3>
+              <div class="space-y-4">
+
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                  <h4 class="mb-2 font-semibold text-nexus-primary">Compte actif</h4>
+                  <p class="text-sm">
+                    Tant que votre compte est actif, les données nécessaires à son fonctionnement sont
+                    conservées. En cas d'inactivité prolongée (absence de connexion supérieure à
+                    <strong class="font-semibold text-nexus-primary">3 ans</strong>), nous vous notifions
+                    par courriel 30 jours avant de procéder à la clôture du compte et à la suppression
+                    des données associées.
+                  </p>
+                </div>
+
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                  <h4 class="mb-2 font-semibold text-nexus-primary">Clôture ou suppression du compte</h4>
+                  <p class="mb-3 text-sm">
+                    Lors de la suppression du compte (à votre demande ou pour inactivité), les données
+                    personnelles identifiantes sont <strong class="font-semibold text-nexus-primary">anonymisées
+                    ou effacées sous 30 jours</strong> suivant la clôture effective. Les données nécessaires
+                    aux obligations légales sont conservées dans des archives sécurisées :
+                  </p>
+                  <ul class="space-y-2 text-sm">
+                    @for (item of retentionItems; track item.label) {
+                      <li class="flex gap-2">
+                        <span class="mt-0.5 font-bold text-nexus-interaction" aria-hidden="true">→</span>
+                        <span><strong class="font-semibold text-nexus-primary">{{ item.label }} :</strong> {{ item.duration }}</span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                  <h4 class="mb-3 font-semibold text-nexus-primary">Publications — cycle de vie en deux phases</h4>
+                  <p class="mb-4 text-sm">
+                    La suppression d'une publication par l'utilisateur ne déclenche pas une destruction
+                    immédiate des données. Elle suit un cycle en deux étapes distinctes :
+                  </p>
+
+                  <div class="relative mb-5 space-y-6 border-l-2 border-nexus-border pl-6">
+
+                    <div class="relative">
+                      <span class="absolute -left-[1.35rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-amber-400 bg-amber-100 text-xs font-bold text-amber-700">1</span>
+                      <p class="mb-1 text-sm font-semibold text-nexus-primary">
+                        Suppression logique
+                        <span class="font-normal text-nexus-secondary">(immédiate à la demande)</span>
+                      </p>
+                      <p class="mb-2 text-sm">
+                        Le contenu du post est masqué publiquement. Tous les visiteurs voient à la place le message :
+                      </p>
+                      <div class="mb-2 inline-block rounded border border-nexus-border bg-nexus-component px-3 py-1.5 text-sm italic text-nexus-secondary">
+                        [Ce post a été supprimé]
+                      </div>
+                      <ul class="mt-2 space-y-1 text-xs">
+                        <li class="flex gap-2"><span class="font-bold text-amber-500">→</span> Les commentaires liés au post <strong class="font-semibold text-nexus-primary">ne sont pas supprimés</strong> et restent visibles.</li>
+                        <li class="flex gap-2"><span class="font-bold text-amber-500">→</span> Les données brutes du post restent en base, accessibles uniquement aux administrateurs à des fins de modération et de conformité légale.</li>
+                      </ul>
+                    </div>
+
+                    <div class="relative">
+                      <span class="absolute -left-[1.35rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-400 bg-red-100 text-xs font-bold text-red-700">2</span>
+                      <p class="mb-1 text-sm font-semibold text-nexus-primary">
+                        Destruction physique
+                        <span class="font-normal text-nexus-secondary">(après 1 an)</span>
+                      </p>
+                      <p class="text-sm">
+                        Un an après la suppression logique, les données du post sont définitivement
+                        et irréversiblement supprimées de la base de données. Aucune restauration
+                        n'est possible au-delà de ce délai.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+                    <span aria-hidden="true">ℹ</span>
+                    <p>
+                      Les <strong class="font-semibold">commentaires</strong> ont leur propre cycle de vie
+                      indépendant. La suppression d'un post n'entraîne pas la suppression des commentaires
+                      associés. Un commentaire ne peut être supprimé que par son auteur ou par un administrateur.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                  <h4 class="mb-2 font-semibold text-nexus-primary">Commentaires</h4>
+                  <p class="text-sm">
+                    Les commentaires sont conservés indépendamment des publications auxquelles ils
+                    sont attachés. Ils sont supprimés à la demande de leur auteur ou d'un administrateur,
+                    ou lors de la clôture du compte de l'auteur. La même logique de suppression logique
+                    (1 an) s'applique avant destruction physique.
+                  </p>
+                </div>
+
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                  <h4 class="mb-2 font-semibold text-nexus-primary">Sauvegardes techniques</h4>
+                  <p class="text-sm">
+                    Les sauvegardes de base de données sont conservées pour des raisons de continuité
+                    opérationnelle et de reprise après sinistre. Elles sont automatiquement écrasées
+                    selon un cycle de rotation ne dépassant pas <strong class="font-semibold text-nexus-primary">90 jours</strong>.
+                    La suppression effective de données présentes dans les sauvegardes interviendra donc
+                    au plus tard à l'expiration de ce cycle.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="mb-2 text-lg font-semibold text-nexus-primary">5.3 Destruction sécurisée</h3>
+              <p>
+                La destruction des données est réalisée par des procédés techniques garantissant
+                l'impossibilité de récupération : écrasement cryptographique des supports, suppression
+                logique irréversible avec journalisation de l'opération. Aucune donnée supprimée ne
+                peut être restituée sauf si elle relève d'une conservation légalement obligatoire
+                dans des archives isolées.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. Vos droits -->
+        <section id="section-rights" aria-labelledby="heading-rights" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-rights" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            6. Vos droits
+          </h2>
+          <div class="mt-5 space-y-6 leading-7 text-nexus-secondary">
+            <p>
+              Conformément au RGPD et à la Loi Informatique et Libertés, vous disposez des droits
+              suivants sur vos données personnelles :
+            </p>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              @for (right of userRights; track right.title) {
+                <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-4">
+                  <div class="flex items-start gap-3">
+                    <span class="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-nexus-interaction/10 text-xs font-bold text-nexus-interaction" aria-hidden="true">
+                      {{ right.article }}
+                    </span>
+                    <dl>
+                      <dt class="mb-1 text-sm font-semibold text-nexus-primary">{{ right.title }}</dt>
+                      <dd class="text-xs leading-relaxed text-nexus-secondary">{{ right.description }}</dd>
+                    </dl>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div>
+              <h3 class="mb-2 text-lg font-semibold text-nexus-primary">6.1 Comment exercer vos droits</h3>
+              <p>
+                Pour exercer l'un de ces droits, adressez votre demande par courriel à
+                <a href="mailto:romain.voyard@diiage.org" class="font-medium text-nexus-interaction hover:text-nexus-interaction-hover transition-colors">romain.voyard&#64;diiage.org</a>
+                en indiquant votre nom, prénom, adresse électronique de compte et une copie d'un
+                justificatif d'identité. Nous répondons dans un délai d'<strong class="font-semibold text-nexus-primary">un mois</strong>
+                à compter de la réception de votre demande, délai pouvant être prolongé de deux mois
+                supplémentaires en cas de demandes complexes ou nombreuses.
+              </p>
+            </div>
+
+            <div class="flex gap-3 rounded-2xl border border-nexus-interaction/20 bg-nexus-interaction/5 p-4 text-sm text-nexus-secondary">
+              <span class="mt-0.5 text-lg leading-none" aria-hidden="true">ℹ</span>
+              <p>
+                Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une
+                réclamation auprès de la
+                <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" class="font-medium text-nexus-interaction underline hover:text-nexus-interaction-hover">
+                  Commission Nationale de l'Informatique et des Libertés (CNIL)
+                </a>
+                — 3 Place de Fontenoy, TSA 80715, 75334 Paris Cedex 07.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. Partage des données -->
+        <section id="section-sharing" aria-labelledby="heading-sharing" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-sharing" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            7. Partage des données avec des tiers
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>Nous ne vendons ni ne louons vos données personnelles. Nous pouvons les partager uniquement dans les cas suivants :</p>
+            @for (item of sharingItems; track item.title) {
+              <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                <h3 class="mb-2 text-base font-semibold text-nexus-primary">{{ item.title }}</h3>
+                <p class="text-sm">{{ item.content }}</p>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- 8. Cookies -->
+        <section id="section-cookies" aria-labelledby="heading-cookies" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-cookies" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            8. Cookies et traceurs
+          </h2>
+          <div class="mt-5 space-y-6 leading-7 text-nexus-secondary">
+            <p>
+              Un cookie est un petit fichier texte déposé sur votre terminal lors de la consultation
+              d'un site web. Il permet de mémoriser des informations relatives à votre navigation.
+            </p>
+
+            <div class="overflow-x-auto rounded-2xl border border-nexus-border">
+              <table class="min-w-full text-sm">
+                <caption class="sr-only">Types de cookies déposés sur la Plateforme</caption>
+                <thead class="border-b border-nexus-border bg-nexus-bg">
+                  <tr>
+                    <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Catégorie</th>
+                    <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Nom</th>
+                    <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Finalité</th>
+                    <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Durée</th>
+                    <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-semibold text-nexus-primary">Consentement</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-nexus-border bg-nexus-component">
+                  @for (cookie of cookiesTable; track cookie.name; let odd = $odd) {
+                    <tr [class]="odd ? 'bg-nexus-bg' : ''">
+                      <td class="px-4 py-3 font-medium text-nexus-primary">{{ cookie.category }}</td>
+                      <td class="px-4 py-3"><code class="rounded bg-nexus-bg px-1.5 py-0.5 font-mono text-xs text-nexus-primary">{{ cookie.name }}</code></td>
+                      <td class="px-4 py-3 text-nexus-secondary">{{ cookie.purpose }}</td>
+                      <td class="whitespace-nowrap px-4 py-3 text-nexus-secondary">{{ cookie.duration }}</td>
+                      <td class="px-4 py-3">
+                        @if (cookie.consent) {
+                          <span class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">Oui</span>
+                        } @else {
+                          <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-500/20 dark:text-green-200">Non</span>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Vous pouvez gérer vos préférences cookies via le bandeau de gestion accessible
+              en bas de page, ou à tout moment dans les paramètres de votre compte. Le refus
+              de cookies strictement nécessaires peut altérer le fonctionnement de la Plateforme.
+            </p>
+          </div>
+        </section>
+
+        <!-- 9. Sécurité -->
+        <section id="section-security" aria-labelledby="heading-security" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-security" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            9. Sécurité des données
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>
+              Nous mettons en œuvre des mesures techniques et organisationnelles appropriées
+              pour protéger vos données personnelles contre la perte, l'accès non autorisé,
+              la divulgation, l'altération ou la destruction, notamment :
+            </p>
+            <ul class="divide-y divide-nexus-border rounded-2xl border border-nexus-border bg-nexus-bg">
+              @for (measure of securityMeasures; track measure) {
+                <li class="flex items-center gap-3 px-5 py-3 text-sm">
+                  <span class="flex-shrink-0 font-bold text-green-500" aria-hidden="true">✓</span>
+                  {{ measure }}
+                </li>
+              }
+            </ul>
+            <div class="flex gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200">
+              <span class="mt-0.5 text-lg leading-none" aria-hidden="true">🔔</span>
+              <p>
+                En cas de violation de données susceptible de présenter un risque pour vos droits
+                et libertés, nous nous engageons à en notifier la CNIL dans un délai de
+                <strong class="font-semibold text-nexus-primary">72 heures</strong> et à vous en informer sans délai
+                indu si le risque est élevé (art. 33 et 34 RGPD).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. Mineurs -->
+        <section id="section-minors" aria-labelledby="heading-minors" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-minors" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            10. Mineurs
+          </h2>
+          <p class="mt-5 leading-7 text-nexus-secondary">
+            La Plateforme n'est pas destinée aux personnes de moins de 15 ans. Nous ne
+            collectons pas sciemment de données personnelles de mineurs de moins de 15 ans
+            sans le consentement d'un titulaire de l'autorité parentale. Si vous estimez
+            qu'un mineur nous a fourni des données sans autorisation, veuillez contacter
+            notre DPO à
+            <a href="mailto:romain.voyard@diiage.org" class="font-medium text-nexus-interaction transition-colors hover:text-nexus-interaction-hover">romain.voyard&#64;diiage.org</a>.
+          </p>
+        </section>
+
+        <!-- 11. Mises à jour -->
+        <section id="section-updates" aria-labelledby="heading-updates" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-updates" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            11. Mise à jour de la politique
+          </h2>
+          <p class="mt-5 leading-7 text-nexus-secondary">
+            Nous pouvons modifier la présente Politique de confidentialité à tout moment.
+            Toute modification substantielle vous sera notifiée par courriel ou par une
+            notification prominente sur la Plateforme au moins <strong class="font-semibold text-nexus-primary">30 jours</strong>
+            avant son entrée en vigueur. La version applicable est celle affichée sur cette
+            page avec la date de mise à jour en en-tête.
+          </p>
+        </section>
+
+        <!-- 12. Contact DPO -->
+        <section id="section-contact" aria-labelledby="heading-contact" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-contact" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            12. Contact et Délégué à la Protection des Données
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>
+              Pour toute question, demande d'exercice de droits ou réclamation relative à
+              vos données personnelles, contactez notre DPO :
+            </p>
+            <address class="not-italic rounded-2xl border border-nexus-border bg-nexus-bg p-5 text-sm leading-7 text-nexus-primary">
+              <strong class="mb-1 block font-semibold">Délégué à la Protection des Données — Nexus SAS</strong>
+              Courriel : <a href="mailto:romain.voyard@diiage.org" class="text-nexus-interaction transition-colors hover:text-nexus-interaction-hover">romain.voyard&#64;diiage.org</a><br />
+            </address>
+            <p class="text-sm text-nexus-secondary">
+              Nous nous engageons à traiter votre demande dans les meilleurs délais et au plus
+              tard dans un délai d'un mois à compter de sa réception.
+            </p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </article>
+</main>

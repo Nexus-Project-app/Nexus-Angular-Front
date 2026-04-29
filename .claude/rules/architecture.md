@@ -2,70 +2,78 @@
 
 ## Primary Architecture Style
 
-Use feature-first, clean architecture boundaries inside `src/app/features/<feature>`:
+Use modular architecture with feature-based modules inside `src/app/`:
 
-- `domain/`: entities, value objects, pure business rules.
-- `application/`: use-cases, ports, DTO contracts.
-- `infrastructure/`: API clients, mappers, repository adapters.
-- `presentation/`: pages, components, UI store, view models.
+```
+src/app/
+├── infrastructure/       ← low-level foundational resources
+│   ├── models/           ← shared HTTP/API contracts and base types
+│   └── theme/            ← global design tokens, styles config
+│
+├── modules/              ← one directory per feature
+│   └── <feature>/
+│       ├── components/
+│       │   └── <component-name>/
+│       │       ├── <component-name>.component.ts
+│       │       └── <component-name>.component.html
+│       ├── services/     ← API calls and business logic for this module
+│       ├── stores/       ← signal-based state local to this module
+│       ├── constants/    ← enums, static values, string keys
+│       ├── models/       ← module-scoped interfaces and types
+│       ├── data/         ← mock/seed data for testing or dev fixtures
+│       └── <feature>.routes.ts   ← lazy-loaded route declarations
+│
+└── shared/               ← cross-module primitives only
+    ├── components/       ← reusable UI components (each in own directory)
+    ├── services/         ← common services (auth, http wrappers, etc.)
+    ├── utils/            ← pure helper functions
+    ├── stores/           ← app-wide signal stores
+    ├── constants/        ← app-level constants and route tokens
+    ├── models/           ← shared interfaces and types
+    └── data/             ← shared mock/seed data
+```
 
-## Dependency Direction (Strict)
+## Naming Conventions (Mandatory)
 
-- `domain` depends on nothing from Angular or infrastructure.
-- `application` depends on `domain` and abstract ports only.
-- `infrastructure` implements `application` ports.
-- `presentation` depends on `application` and UI abstractions.
+- Use **kebab-case** for all directories and filenames.
+- Every component lives in its own named directory, even if it contains one file.
+- Angular files follow standard suffixes: `.component.ts`, `.service.ts`, `.store.ts`, `.routes.ts`, `.constants.ts`, `.models.ts`.
 
-Forbidden dependencies:
+## Module Boundary Rules (Strict)
 
-- `domain -> application`
-- `domain -> infrastructure`
-- `application -> infrastructure concrete classes`
+- Modules access only `shared/` and `infrastructure/` — never reach into another module.
+- No cross-module imports. If two modules need the same logic, move it to `shared/`.
+- Route declarations stay inside the module's `<feature>.routes.ts`.
+- Lazy-load every module at the route level.
 
-## Domain Rules
+## Component Rules
 
-- Domain objects are framework-agnostic and serializable.
-- Business invariants live in domain models or use-cases.
-- Do not place HTTP or storage concerns in domain code.
-
-## Application Rules
-
-- Use-cases orchestrate business workflows.
-- Ports define contracts for external dependencies.
-- DTOs are explicit and versionable.
-- Application layer never imports Angular UI classes.
-- Application use-cases own business decisions, not presentation components.
-
-## Infrastructure Rules
-
-- Keep transport details (HTTP, headers, serialization) here.
-- Mappers translate API DTO <-> domain models.
-- Handle retries/timeouts/fallbacks without leaking infra details upward.
-
-## Presentation Rules
-
-- Components and pages focus on user interaction.
-- Keep side effects in dedicated services/stores.
-- Prefer unidirectional data flow.
-- Keep container vs presentational responsibilities clear.
-- Business logic is forbidden in views/templates and must live in domain/application layers.
+- Components handle user interaction and display only.
+- Business logic belongs in `services/`, not in components or templates.
+- Stores hold local reactive state; services perform side effects and API calls.
 
 ## Shared Layer Rules
 
-- `shared/` must contain cross-feature primitives only.
-- Do not place feature-specific business logic in `shared/`.
-- Keep utility functions pure and side-effect free when possible.
+- `shared/` contains cross-module primitives only — no feature-specific logic.
+- Keep utilities pure and side-effect free.
+- Keep shared components generic and reusable without feature knowledge.
+
+## Infrastructure Rules
+
+- `infrastructure/models/` defines HTTP response shapes and base contracts.
+- `infrastructure/theme/` holds global design tokens and style configuration.
+- These are foundational; modules may reference `infrastructure/models/` for API types.
 
 ## Routing Rules
 
-- Use feature-level route modules/files with lazy loading.
-- Keep route guards thin; move business logic to use-cases/services.
+- Each module declares its own routes in `<feature>.routes.ts`.
+- `app.routes.ts` composes module routes via lazy loading only.
+- Keep route guards thin; delegate authorization logic to services.
 
 ## SSR Architecture Rules
 
 - Keep browser-dependent logic isolated from server execution paths.
-- Keep request-specific data scoped per request.
-- Do not use global mutable singletons for request data.
+- Keep request-specific data scoped per request; no global mutable singletons.
 - Keep server-side rendering deterministic and idempotent.
 
 ## PostgreSQL Contract Rules (Frontend Perspective)
