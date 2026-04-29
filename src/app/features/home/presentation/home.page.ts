@@ -2,13 +2,6 @@
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
 import { NavbarComponent } from '../../../shared/components/navbar.component';
-import { NgOptimizedImage } from '@angular/common';
-
-// Interfaces exported for reuse
-export interface UserProfile {
-  readonly name: string;
-  readonly role: string;
-}
 
 export interface SidebarItem {
   readonly id: string;
@@ -35,6 +28,47 @@ export interface FeedCard {
 
 // Import DiscoveryItem from its module
 type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
+
+const SIDEBAR_ITEM_TEMPLATE: Omit<SidebarItem, 'id'> = {
+  title: 'Lorum ispeum',
+  subtitle: '',
+};
+
+const FEED_CARD_TEMPLATE: Omit<FeedCard, 'id'> = {
+  author: 'John doe',
+  title: 'Titre du post/ de la documentation',
+  description:
+    'Dans ce guide, nous allons explorer les concepts fondamentaux de Kubernetes et comment l utiliser pour orchestrer des containers Docker en production...',
+  tags: ['Docker', 'Kubernetes', 'DevOps'],
+  actions: [
+    { id: 'likes', icon: 'like', label: 'J aime', count: '42' },
+    { id: 'comments', icon: 'comment', label: 'Commentaires', count: '12' },
+    { id: 'shares', icon: 'share', label: 'Partages', count: '7' },
+  ],
+  savedCount: '42',
+};
+
+function createSidebarItem(id: string): SidebarItem {
+  return {
+    id,
+    ...SIDEBAR_ITEM_TEMPLATE,
+  };
+}
+
+function createFeedCard(id: string): FeedCard {
+  return {
+    id,
+    ...FEED_CARD_TEMPLATE,
+  };
+}
+
+function createFeedCards(ids: ReadonlyArray<string>): ReadonlyArray<FeedCard> {
+  return ids.map((id) => createFeedCard(id));
+}
+
+function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarItem> {
+  return ids.map((id) => createSidebarItem(id));
+}
 
 @Component({
   selector: 'app-home-page',
@@ -197,17 +231,11 @@ type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
     }
     .item-title,
     .item-subtitle,
-    .panel-title,
-    .panel-metric {
-      display: block;
-    }
-    .item-title,
-    .panel-title {
+    .item-title {
       color: #ffffff;
       font-weight: 600;
     }
-    .item-subtitle,
-    .panel-metric {
+    .item-subtitle {
       color: #9ca3af;
       font-size: 0.85rem;
       margin-top: 0.2rem;
@@ -349,9 +377,6 @@ type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
     button:hover {
       filter: brightness(1.08);
     }
-    .panel-item:hover {
-      background: #28283c;
-    }
     .right-footer a:hover {
       color: #ffffff;
     }
@@ -388,9 +413,6 @@ type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
       width: 1px;
     }
     @media (max-width: 1200px) {
-      .brand {
-        height: 3rem;
-      }
       .main-grid {
         grid-template-columns: 1fr;
         overflow: visible;
@@ -409,63 +431,12 @@ type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
   `,
 })
 export class HomePageComponent {
-  protected readonly user = signal<UserProfile>({
-    name: 'Admin Superadmin',
-    role: 'Administrateur',
-  });
-
   protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>([
-    { id: 'item-1', title: 'Lorum ispeum', subtitle: '' },
-    { id: 'item-2', title: 'Lorum ispeum', subtitle: '' },
-    { id: 'item-3', title: 'Lorum ispeum', subtitle: '' },
-    { id: 'item-4', title: 'Lorum ispeum', subtitle: '' },
-    { id: 'item-5', title: 'Lorum ispeum', subtitle: '' },
-    { id: 'item-6', title: 'Lorum ispeum', subtitle: '' },
+    ...createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   ]);
 
   protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([
-    {
-      id: 'card-1',
-      author: 'John doe',
-      title: 'Titre du post/ de la documentation',
-      description:
-        'Dans ce guide, nous allons explorer les concepts fondamentaux de Kubernetes et comment l utiliser pour orchestrer des containers Docker en production...',
-      tags: ['Docker', 'Kubernetes', 'DevOps'],
-      actions: [
-        { id: 'likes', icon: 'like', label: 'J aime', count: '42' },
-        { id: 'comments', icon: 'comment', label: 'Commentaires', count: '12' },
-        { id: 'shares', icon: 'share', label: 'Partages', count: '7' },
-      ],
-      savedCount: '42',
-    },
-    {
-      id: 'card-2',
-      author: 'John doe',
-      title: 'Titre du post/ de la documentation',
-      description:
-        'Dans ce guide, nous allons explorer les concepts fondamentaux de Kubernetes et comment l utiliser pour orchestrer des containers Docker en production...',
-      tags: ['Docker', 'Kubernetes', 'DevOps'],
-      actions: [
-        { id: 'likes', icon: 'like', label: 'J aime', count: '42' },
-        { id: 'comments', icon: 'comment', label: 'Commentaires', count: '12' },
-        { id: 'shares', icon: 'share', label: 'Partages', count: '7' },
-      ],
-      savedCount: '42',
-    },
-    {
-      id: 'card-3',
-      author: 'John doe',
-      title: 'Titre du post/ de la documentation',
-      description:
-        'Dans ce guide, nous allons explorer les concepts fondamentaux de Kubernetes et comment l utiliser pour orchestrer des containers Docker en production...',
-      tags: ['Docker', 'Kubernetes', 'DevOps'],
-      actions: [
-        { id: 'likes', icon: 'like', label: 'J aime', count: '42' },
-        { id: 'comments', icon: 'comment', label: 'Commentaires', count: '12' },
-        { id: 'shares', icon: 'share', label: 'Partages', count: '7' },
-      ],
-      savedCount: '42',
-    },
+    ...createFeedCards(['card-1', 'card-2', 'card-3']),
   ]);
 
   protected readonly topicDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([
@@ -481,7 +452,6 @@ export class HomePageComponent {
     { id: 'g4', name: 'Linux', metric: '200 utilisateurs' },
   ]);
 
-  protected readonly userInitial = computed(() => this.user().name.trim().charAt(0).toUpperCase());
 
   protected readonly totalInteractions = computed(() =>
     this.feedCards()
