@@ -1,120 +1,132 @@
-<main class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <article class="max-w-4xl mx-auto">
-
-    <!-- Header -->
-    <header class="mb-10 pb-8 border-b border-gray-200">
-      <h1 class="text-4xl font-bold text-gray-900 tracking-tight mb-3">
-        Politique de confidentialité
-      </h1>
-      <p class="text-sm text-gray-500">
-        Dernière mise à jour : {{ lastUpdated }}
-      </p>
-    </header>
-
-    <!-- Table of contents -->
-    <nav class="mb-10 bg-white rounded-xl border border-gray-200 p-6 shadow-sm" aria-label="Sommaire">
-      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Sommaire</h2>
-      <ol class="space-y-2 text-sm">
-        @for (item of [
-          { href: '#section-intro',        label: '1. Introduction' },
-          { href: '#section-controller',   label: '2. Responsable du traitement' },
-          { href: '#section-data-collected', label: '3. Données collectées' },
-          { href: '#section-purposes',     label: '4. Finalités et bases légales' },
-          { href: '#section-retention',    label: '5. Durées de conservation et destruction' },
-          { href: '#section-rights',       label: '6. Vos droits' },
-          { href: '#section-sharing',      label: '7. Partage des données' },
-          { href: '#section-cookies',      label: '8. Cookies et traceurs' },
-          { href: '#section-security',     label: '9. Sécurité' },
-          { href: '#section-minors',       label: '10. Mineurs' },
-          { href: '#section-updates',      label: '11. Mises à jour' },
-          { href: '#section-contact',      label: '12. Contact et DPO' },
-        ]; track item.href) {
-          <li>
-            <a [href]="item.href" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">
-              {{ item.label }}
-            </a>
-          </li>
-        }
-      </ol>
-    </nav>
-
-    <!-- Sections -->
-    <div class="space-y-10">
-
-      <!-- 1. Introduction -->
-      <section id="section-intro" aria-labelledby="heading-intro">
-        <h2 id="heading-intro" class="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-          1. Introduction
-        </h2>
-        <div class="prose-like space-y-4 text-gray-700 leading-relaxed">
-          <p>
-            La présente Politique de confidentialité décrit la manière dont <strong class="font-semibold text-gray-900">Nexus</strong>
-            (ci-après « la Plateforme », « nous », « notre ») collecte, utilise, conserve et protège
-            les données à caractère personnel des utilisateurs (ci-après « vous », « l'Utilisateur »)
-            conformément au Règlement (UE) 2016/679 du Parlement européen et du Conseil du
-            27 avril 2016 (RGPD) et à la loi n° 78-17 du 6 janvier 1978 modifiée relative à
-            l'informatique, aux fichiers et aux libertés (Loi Informatique et Libertés).
-          </p>
-          <p>
-            En utilisant la Plateforme, vous acceptez les pratiques décrites dans ce document.
-            Si vous n'acceptez pas cette politique, veuillez cesser d'utiliser la Plateforme.
-          </p>
-        </div>
-      </section>
-
-      <!-- 2. Responsable du traitement -->
-      <section id="section-controller" aria-labelledby="heading-controller">
-        <h2 id="heading-controller" class="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-          2. Responsable du traitement
-        </h2>
-        <div class="space-y-4 text-gray-700 leading-relaxed">
-          <p>Le responsable du traitement des données à caractère personnel est :</p>
-          <address class="not-italic bg-white border border-gray-200 rounded-lg p-5 text-sm leading-7 shadow-sm">
-            <strong class="font-semibold text-gray-900 block mb-1">Nexus SAS</strong>
-            69 Av. Aristide Briand,  Dijon<br />
-            21000 Dijon, France<br />
-            SIRET : 888 888 888 00012<br />
-            Courriel :
-            <a href="mailto:adrien.lafargue@diiage.org" class="text-blue-600 hover:underline">romain.voyard&#64;diiage.org</a>
-          </address>
-          <p>
-            Pour toute question relative à vos données personnelles ou pour exercer vos droits,
-            vous pouvez contacter notre Délégué à la Protection des Données (DPO) à l'adresse
-            ci-dessus.
-          </p>
-        </div>
-      </section>
-
-      <!-- 3. Données collectées -->
-      <section id="section-data-collected" aria-labelledby="heading-data-collected">
-        <h2 id="heading-data-collected" class="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">
-          3. Données collectées
-        </h2>
-        <div class="space-y-6 text-gray-700 leading-relaxed">
-          <p>Nous collectons les catégories de données suivantes :</p>
-
-          @for (category of dataCategories; track category.title) {
-            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
-              <h3 class="text-base font-semibold text-gray-900 mb-3">{{ category.title }}</h3>
-              <ul class="list-disc list-inside space-y-1 text-sm">
-                @for (item of category.items; track item) {
-                  <li>{{ item }}</li>
-                }
-              </ul>
-            </div>
-          }
-
-          <div class="flex gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-            <span class="text-lg leading-none mt-0.5" aria-hidden="true">⚠</span>
-            <p>
-              Nous ne collectons pas de données sensibles au sens de l'article 9 du RGPD
-              (origine raciale ou ethnique, opinions politiques, convictions religieuses ou
-              philosophiques, données de santé, données biométriques, etc.) sauf consentement
-              explicite et nécessité avérée.
+<main class="privacy-policy-shell min-h-screen bg-nexus-bg py-10 sm:py-12">
+  <article class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+    <header class="relative overflow-hidden rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-[0_20px_60px_rgba(10,10,15,0.08)] sm:p-8">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-nexus-interaction via-sky-400 to-cyan-300"></div>
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl space-y-4">
+          <div class="space-y-3">
+            <h1 class="text-3xl font-semibold tracking-tight text-nexus-primary sm:text-4xl">
+              Politique de confidentialité
+            </h1>
+            <p class="max-w-2xl text-sm leading-6 text-nexus-secondary sm:text-base">
+              Une présentation claire de la collecte, de l'utilisation et de la protection des données sur Nexus.
             </p>
           </div>
         </div>
-      </section>
+
+        <div class="grid lg:min-w-[24rem]">
+          <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-nexus-secondary">Dernière mise à jour</p>
+            <p class="mt-2 text-sm font-medium text-nexus-primary">{{ lastUpdated }}</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <aside class="lg:sticky lg:top-6 lg:self-start">
+        <nav class="rounded-3xl border border-nexus-border bg-nexus-component p-5 shadow-sm" aria-label="Sommaire">
+          <h2 class="text-sm font-semibold text-nexus-primary">Sommaire</h2>
+          <ol class="mt-4 space-y-2 text-sm">
+            @for (item of [
+              { href: '#section-intro', label: 'Introduction' },
+              { href: '#section-controller', label: 'Responsable du traitement' },
+              { href: '#section-data-collected', label: 'Données collectées' },
+              { href: '#section-purposes', label: 'Finalités' },
+              { href: '#section-retention', label: 'Conservation' },
+              { href: '#section-rights', label: 'Vos droits' },
+              { href: '#section-sharing', label: 'Partage' },
+              { href: '#section-cookies', label: 'Cookies' },
+              { href: '#section-security', label: 'Sécurité' },
+              { href: '#section-minors', label: 'Mineurs' },
+              { href: '#section-updates', label: 'Mises à jour' },
+              { href: '#section-contact', label: 'Contact' },
+            ]; track item.href) {
+              <li>
+                <a
+                  [href]="item.href"
+                  class="block rounded-xl px-3 py-2 text-nexus-secondary transition-colors hover:bg-nexus-bg hover:text-nexus-primary"
+                >
+                  {{ item.label }}
+                </a>
+              </li>
+            }
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="space-y-6">
+        <section id="section-intro" aria-labelledby="heading-intro" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-intro" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            1. Introduction
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>
+              La présente Politique de confidentialité décrit la manière dont <strong class="font-semibold text-nexus-primary">Nexus</strong>
+              (ci-après « la Plateforme », « nous », « notre ») collecte, utilise, conserve et protège
+              les données à caractère personnel des utilisateurs (ci-après « vous », « l'Utilisateur »)
+              conformément au Règlement (UE) 2016/679 du Parlement européen et du Conseil du
+              27 avril 2016 (RGPD) et à la loi n° 78-17 du 6 janvier 1978 modifiée relative à
+              l'informatique, aux fichiers et aux libertés (Loi Informatique et Libertés).
+            </p>
+            <p>
+              En utilisant la Plateforme, vous acceptez les pratiques décrites dans ce document.
+              Si vous n'acceptez pas cette politique, veuillez cesser d'utiliser la Plateforme.
+            </p>
+          </div>
+        </section>
+
+        <section id="section-controller" aria-labelledby="heading-controller" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-controller" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            2. Responsable du traitement
+          </h2>
+          <div class="mt-5 space-y-4 leading-7 text-nexus-secondary">
+            <p>Le responsable du traitement des données à caractère personnel est :</p>
+            <address class="not-italic rounded-2xl border border-nexus-border bg-nexus-bg p-5 text-sm leading-7 text-nexus-primary">
+              <strong class="mb-1 block font-semibold">Nexus SAS</strong>
+              69 Av. Aristide Briand, Dijon<br />
+              21000 Dijon, France<br />
+              SIRET : 888 888 888 00012<br />
+              Courriel :
+              <a href="mailto:adrien.lafargue@diiage.org" class="text-nexus-interaction transition-colors hover:text-nexus-interaction-hover">romain.voyard&#64;diiage.org</a>
+            </address>
+            <p>
+              Pour toute question relative à vos données personnelles ou pour exercer vos droits,
+              vous pouvez contacter notre Délégué à la Protection des Données (DPO) à l'adresse
+              ci-dessus.
+            </p>
+          </div>
+        </section>
+
+        <section id="section-data-collected" aria-labelledby="heading-data-collected" class="rounded-3xl border border-nexus-border bg-nexus-component p-6 shadow-sm sm:p-8">
+          <h2 id="heading-data-collected" class="border-b border-nexus-border pb-3 text-2xl font-semibold text-nexus-primary">
+            3. Données collectées
+          </h2>
+          <div class="mt-5 space-y-6 leading-7 text-nexus-secondary">
+            <p>Nous collectons les catégories de données suivantes :</p>
+
+            @for (category of dataCategories; track category.title) {
+              <div class="rounded-2xl border border-nexus-border bg-nexus-bg p-5">
+                <h3 class="mb-3 text-base font-semibold text-nexus-primary">{{ category.title }}</h3>
+                <ul class="list-disc space-y-1 pl-5 text-sm text-nexus-secondary marker:text-nexus-interaction">
+                  @for (item of category.items; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            <div class="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+              <span class="mt-0.5 text-lg leading-none" aria-hidden="true">⚠</span>
+              <p>
+                Nous ne collectons pas de données sensibles au sens de l'article 9 du RGPD
+                (origine raciale ou ethnique, opinions politiques, convictions religieuses ou
+                philosophiques, données de santé, données biométriques, etc.) sauf consentement
+                explicite et nécessité avérée.
+              </p>
+            </div>
+          </div>
+        </section>
 
       <!-- 4. Finalités et bases légales -->
       <section id="section-purposes" aria-labelledby="heading-purposes">
@@ -471,7 +483,6 @@
           <address class="not-italic bg-white border border-gray-200 rounded-lg p-5 text-sm leading-7 shadow-sm">
             <strong class="font-semibold text-gray-900 block mb-1">Délégué à la Protection des Données - Nexus SAS</strong>
             Courriel : <a href="mailto:adrien.lafargue@diiage.org" class="text-blue-600 hover:underline">adrien.lafargue@diiage.org</a><br />
-            Courrier : [Adresse postale], France
           </address>
           <p class="text-sm text-gray-500">
             Nous nous engageons à traiter votre demande dans les meilleurs délais et au plus
@@ -480,6 +491,7 @@
         </div>
       </section>
 
-    </div><!-- /space-y-10 -->
+    </div>
+  </div>
   </article>
 </main>
