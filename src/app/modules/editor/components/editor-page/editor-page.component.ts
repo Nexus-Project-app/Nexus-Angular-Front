@@ -9,16 +9,8 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { Editor } from '@milkdown/kit/core';
-import { rootCtx, defaultValueCtx } from '@milkdown/kit/core';
-import { commonmark } from '@milkdown/kit/preset/commonmark';
-import { gfm } from '@milkdown/kit/preset/gfm';
-import { history } from '@milkdown/kit/plugin/history';
-import { clipboard } from '@milkdown/kit/plugin/clipboard';
-import { cursor } from '@milkdown/kit/plugin/cursor';
-import { indent } from '@milkdown/kit/plugin/indent';
-import { trailing } from '@milkdown/kit/plugin/trailing';
-import { listener, listenerCtx } from '@milkdown/kit/plugin/listener';
+import { Crepe } from '@milkdown/crepe';
+import { replaceAll } from '@milkdown/kit/utils';
 
 const INITIAL_CONTENT = `# Titre du document
 
@@ -59,10 +51,14 @@ export class EditorPageComponent {
   readonly wordCount = signal(0);
   readonly isSaved = signal(true);
   readonly isEditorReady = signal(false);
+  readonly markdownSource = signal(INITIAL_CONTENT);
+  readonly isMarkdownPanelOpen = signal(false);
 
   private readonly editorRoot = viewChild.required<ElementRef<HTMLDivElement>>('editorRoot');
   private readonly destroyRef = inject(DestroyRef);
-  private editor: Editor | null = null;
+  private crepe: Crepe | null = null;
+  private _sourceTextareaFocused = false;
+  private _debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     afterNextRender(() => {
@@ -70,35 +66,31 @@ export class EditorPageComponent {
     });
 
     this.destroyRef.onDestroy(() => {
-      void this.editor?.destroy();
+      if (this._debounceTimer) clearTimeout(this._debounceTimer);
+      void this.crepe?.destroy();
     });
   }
 
   private async initEditor(): Promise<void> {
     const root = this.editorRoot().nativeElement;
 
-    this.editor = await Editor.make()
-      .config((ctx) => {
-        ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, INITIAL_CONTENT);
-      })
-      .use(commonmark)
-      .use(gfm)
-      .use(history)
-      .use(clipboard)
-      .use(cursor)
-      .use(indent)
-      .use(trailing)
-      .use(listener)
-      .config((ctx) => {
-        ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {
-          const words = markdown.trim().split(/\s+/).filter(Boolean).length;
-          this.wordCount.set(words);
-          this.isSaved.set(false);
-        });
-      })
-      .create();
+    this.crepe = new Crepe({
+      root,
+      defaultValue: INITIAL_CONTENT,
+    });
 
+    this.crepe.on((listener) => {
+      listener.markdownUpdated((_ctx, markdown) => {
+        const words = markdown.trim().split(/\s+/).filter(Boolean).length;
+        this.wordCount.set(words);
+        this.isSaved.set(false);
+        if (!this._sourceTextareaFocused) {
+          this.markdownSource.set(markdown);
+        }
+      });
+    });
+
+    await this.crepe.create();
     this.isEditorReady.set(true);
   }
 
@@ -109,5 +101,28 @@ export class EditorPageComponent {
   onTitleChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.titleText.set(input.value);
+  }
+
+  toggleMarkdownPanel(): void {
+    this.isMarkdownPanelOpen.update((v) => !v);
+  }
+
+  onSourceFocus(): void {
+    this._sourceTextareaFocused = true;
+  }
+
+  onSourceBlur(): void {
+    this._sourceTextareaFocused = false;
+  }
+
+  onSourceInput(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    const markdown = textarea.value;
+    this.markdownSource.set(markdown);
+
+    if (this._debounceTimer) clearTimeout(this._debounceTimer);
+    this._debounceTimer = setTimeout(() => {
+      this.crepe?.editor.action(replaceAll(markdown));
+    }, 300);
   }
 }

@@ -20,6 +20,38 @@
         </span>
       }
 
+      <!-- Bouton bascule panneau Markdown -->
+      <button
+        type="button"
+        class="nexus-editor-toggle-btn"
+        [class.active]="isMarkdownPanelOpen()"
+        (click)="toggleMarkdownPanel()"
+        [attr.aria-label]="isMarkdownPanelOpen() ? 'Masquer le Markdown' : 'Afficher le Markdown'"
+        [attr.aria-expanded]="isMarkdownPanelOpen()"
+        aria-controls="markdown-panel"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span>Markdown</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="nexus-editor-chevron"
+          aria-hidden="true"
+        >
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+
       <button
         type="button"
         class="nexus-editor-save-btn"
@@ -44,15 +76,54 @@
     </div>
   </header>
 
-  <!-- Zone d'édition -->
-  <main class="nexus-editor-body">
-    @if (!isEditorReady()) {
-      <div class="nexus-editor-loading" role="status" aria-label="Chargement de l'éditeur">
-        <div class="nexus-editor-loading-spinner"></div>
-        <span>Chargement de l'éditeur…</span>
+  <!-- Zone principale : éditeur + panneau markdown -->
+  <div class="nexus-editor-workspace" [class.panel-open]="isMarkdownPanelOpen()">
+
+    <!-- Éditeur WYSIWYG -->
+    <main class="nexus-editor-body">
+      @if (!isEditorReady()) {
+        <output class="nexus-editor-loading" aria-label="Chargement de l'éditeur">
+          <div class="nexus-editor-loading-spinner"></div>
+          <span>Chargement de l'éditeur…</span>
+        </output>
+      }
+      <div #editorRoot class="nexus-editor-root" [class.ready]="isEditorReady()"></div>
+    </main>
+
+    <!-- Panneau Markdown source -->
+    <aside
+      id="markdown-panel"
+      class="nexus-markdown-panel"
+      [class.open]="isMarkdownPanelOpen()"
+      [attr.aria-hidden]="!isMarkdownPanelOpen()"
+    >
+      <div class="nexus-markdown-panel-header">
+        <span>Source Markdown</span>
+        <button
+          type="button"
+          class="nexus-markdown-panel-close"
+          (click)="toggleMarkdownPanel()"
+          aria-label="Fermer le panneau Markdown"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-    }
-    <div #editorRoot class="nexus-editor-root" [class.ready]="isEditorReady()"></div>
-  </main>
+      <textarea
+        class="nexus-markdown-source"
+        [value]="markdownSource()"
+        (focus)="onSourceFocus()"
+        (blur)="onSourceBlur()"
+        (input)="onSourceInput($event)"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        aria-label="Source Markdown éditable"
+      ></textarea>
+    </aside>
+
+  </div>
 
 </div>
