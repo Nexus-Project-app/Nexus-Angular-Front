@@ -58,7 +58,7 @@ export class EditorPageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private crepe: Crepe | null = null;
   private _sourceTextareaFocused = false;
-  private _debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private _applySourceTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     afterNextRender(() => {
@@ -66,7 +66,7 @@ export class EditorPageComponent {
     });
 
     this.destroyRef.onDestroy(() => {
-      if (this._debounceTimer) clearTimeout(this._debounceTimer);
+      if (this._applySourceTimer) clearTimeout(this._applySourceTimer);
       void this.crepe?.destroy();
     });
   }
@@ -120,9 +120,17 @@ export class EditorPageComponent {
     const markdown = textarea.value;
     this.markdownSource.set(markdown);
 
-    if (this._debounceTimer) clearTimeout(this._debounceTimer);
-    this._debounceTimer = setTimeout(() => {
-      this.crepe?.editor.action(replaceAll(markdown));
-    }, 300);
+    if (this._applySourceTimer) clearTimeout(this._applySourceTimer);
+    this._applySourceTimer = setTimeout(() => {
+      if (this.crepe) {
+        this.crepe.editor.action(replaceAll(markdown, true));
+      }
+    }, 80);
+  }
+
+  focusEditor(): void {
+    if (!this.crepe) return;
+    const pm = this.editorRoot().nativeElement.querySelector<HTMLElement>('.ProseMirror');
+    pm?.focus();
   }
 }

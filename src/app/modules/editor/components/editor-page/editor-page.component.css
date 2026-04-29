@@ -300,8 +300,16 @@
 
 /* ─── Editor area adjustments ────────────────────────────────── */
 
-.nexus-editor-root .ProseMirror {
+.nexus-editor-body {
+  cursor: text;
+}
+
+.nexus-editor-root .milkdown {
   min-height: 60vh;
+}
+
+.nexus-editor-root .ProseMirror {
+  min-height: 50vh;
   caret-color: var(--nexus-interaction);
 }
 
