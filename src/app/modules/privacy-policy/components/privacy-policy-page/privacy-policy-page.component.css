@@ -29,16 +29,6 @@
   color: var(--nexus-text-primary) !important;
 }
 
-.privacy-policy-shell section .text-nexus-secondary,
-.privacy-policy-shell section p,
-.privacy-policy-shell section li,
-.privacy-policy-shell section dd,
-.privacy-policy-shell section address,
-.privacy-policy-shell section td,
-.privacy-policy-shell section th {
-  color: #374151 !important;
-}
-
 .privacy-policy-shell p,
 .privacy-policy-shell li,
 .privacy-policy-shell dd,
