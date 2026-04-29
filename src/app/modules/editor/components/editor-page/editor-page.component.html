@@ -1,0 +1,58 @@
+<div class="nexus-editor-page">
+
+  <!-- Barre supérieure -->
+  <header class="nexus-editor-header">
+    <div class="nexus-editor-header-left">
+      <input
+        type="text"
+        class="nexus-editor-title-input"
+        [value]="titleText()"
+        (input)="onTitleChange($event)"
+        placeholder="Titre du document"
+        aria-label="Titre du document"
+      />
+    </div>
+
+    <div class="nexus-editor-header-right">
+      @if (isEditorReady()) {
+        <span class="nexus-editor-meta">
+          {{ wordCount() }} mot{{ wordCount() > 1 ? 's' : '' }}
+        </span>
+      }
+
+      <button
+        type="button"
+        class="nexus-editor-save-btn"
+        [class.saved]="isSaved()"
+        (click)="onSave()"
+        [attr.aria-label]="isSaved() ? 'Document sauvegardé' : 'Sauvegarder le document'"
+      >
+        @if (isSaved()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Sauvegardé</span>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          <span>Sauvegarder</span>
+        }
+      </button>
+    </div>
+  </header>
+
+  <!-- Zone d'édition -->
+  <main class="nexus-editor-body">
+    @if (!isEditorReady()) {
+      <div class="nexus-editor-loading" role="status" aria-label="Chargement de l'éditeur">
+        <div class="nexus-editor-loading-spinner"></div>
+        <span>Chargement de l'éditeur…</span>
+      </div>
+    }
+    <div #editorRoot class="nexus-editor-root" [class.ready]="isEditorReady()"></div>
+  </main>
+
+</div>

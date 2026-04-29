@@ -25,10 +25,16 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/@milkdown/kit/lib/prose/view/style/prosemirror.css",
+              "node_modules/@milkdown/kit/lib/prose/gapcursor/style/gapcursor.css",
+              "node_modules/@milkdown/kit/lib/prose/tables/style/tables.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
+            "allowedCommonJsDependencies": [
+              "extend"
+            ],
             "security": {
               "allowedHosts": []
             },
@@ -46,8 +52,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"

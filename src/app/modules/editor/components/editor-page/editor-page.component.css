@@ -1,0 +1,323 @@
+/* ─── Layout ──────────────────────────────────────────────── */
+
+.nexus-editor-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--nexus-bg);
+  color: var(--nexus-text-primary);
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+
+.nexus-editor-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  height: 3.5rem;
+  background: var(--nexus-bg-component);
+  border-bottom: 1px solid var(--nexus-border);
+}
+
+.nexus-editor-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.nexus-editor-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.nexus-editor-title-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  caret-color: var(--nexus-interaction);
+}
+
+.nexus-editor-title-input::placeholder {
+  color: var(--nexus-text-secondary);
+  font-weight: 400;
+}
+
+.nexus-editor-meta {
+  font-size: 0.75rem;
+  color: var(--nexus-text-secondary);
+}
+
+.nexus-editor-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--nexus-border);
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.nexus-editor-save-btn:hover {
+  background: var(--nexus-bg);
+  color: var(--nexus-text-primary);
+  border-color: var(--nexus-interaction);
+}
+
+.nexus-editor-save-btn.saved {
+  color: #22c55e;
+  border-color: transparent;
+  background: transparent;
+}
+
+/* ─── Body ────────────────────────────────────────────────── */
+
+.nexus-editor-body {
+  flex: 1;
+  position: relative;
+  padding: 3rem 1.5rem;
+}
+
+.nexus-editor-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 0;
+  color: var(--nexus-text-secondary);
+  font-size: 0.875rem;
+}
+
+.nexus-editor-loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--nexus-border);
+  border-top-color: var(--nexus-interaction);
+  border-radius: 50%;
+  animation: nexus-spin 0.8s linear infinite;
+}
+
+@keyframes nexus-spin {
+  to { transform: rotate(360deg); }
+}
+
+.nexus-editor-root {
+  max-width: 48rem;
+  margin: 0 auto;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nexus-editor-root.ready {
+  opacity: 1;
+}
+
+/* ─── ProseMirror editor area ──────────────────────────────── */
+
+.nexus-editor-root .ProseMirror {
+  outline: none;
+  min-height: 60vh;
+  color: var(--nexus-text-primary);
+  font-size: 1rem;
+  line-height: 1.75;
+  caret-color: var(--nexus-interaction);
+}
+
+.nexus-editor-root .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--nexus-text-secondary);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* ─── Typography ───────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror h1,
+.nexus-editor-root .ProseMirror h2,
+.nexus-editor-root .ProseMirror h3,
+.nexus-editor-root .ProseMirror h4,
+.nexus-editor-root .ProseMirror h5,
+.nexus-editor-root .ProseMirror h6 {
+  color: var(--nexus-text-primary);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.75em;
+  margin-bottom: 0.5em;
+}
+
+.nexus-editor-root .ProseMirror h1 { font-size: 2rem; }
+.nexus-editor-root .ProseMirror h2 { font-size: 1.5rem; }
+.nexus-editor-root .ProseMirror h3 { font-size: 1.25rem; }
+.nexus-editor-root .ProseMirror h4 { font-size: 1.125rem; }
+.nexus-editor-root .ProseMirror h5,
+.nexus-editor-root .ProseMirror h6 { font-size: 1rem; }
+
+.nexus-editor-root .ProseMirror p {
+  margin: 0 0 1em;
+  color: var(--nexus-text-primary);
+}
+
+.nexus-editor-root .ProseMirror strong {
+  font-weight: 700;
+  color: var(--nexus-text-primary);
+}
+
+.nexus-editor-root .ProseMirror em {
+  font-style: italic;
+}
+
+.nexus-editor-root .ProseMirror s {
+  text-decoration: line-through;
+  color: var(--nexus-text-secondary);
+}
+
+.nexus-editor-root .ProseMirror a {
+  color: var(--nexus-interaction);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nexus-editor-root .ProseMirror a:hover {
+  color: var(--nexus-interaction-hover);
+}
+
+/* ─── Lists ─────────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror ul,
+.nexus-editor-root .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1em;
+}
+
+.nexus-editor-root .ProseMirror li {
+  margin-bottom: 0.25em;
+  color: var(--nexus-text-primary);
+}
+
+.nexus-editor-root .ProseMirror ul { list-style-type: disc; }
+.nexus-editor-root .ProseMirror ol { list-style-type: decimal; }
+
+/* Task list (GFM) */
+.nexus-editor-root .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0.25rem;
+}
+
+.nexus-editor-root .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.nexus-editor-root .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  accent-color: var(--nexus-interaction);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+/* ─── Code ──────────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.875em;
+  background: var(--nexus-border-subtle);
+  color: var(--nexus-interaction);
+  border-radius: 0.25rem;
+  padding: 0.125em 0.375em;
+}
+
+.nexus-editor-root .ProseMirror pre {
+  background: var(--nexus-bg-component);
+  border: 1px solid var(--nexus-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.25em 0;
+}
+
+.nexus-editor-root .ProseMirror pre code {
+  background: transparent;
+  color: var(--nexus-text-primary);
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ─── Blockquote ────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror blockquote {
+  border-left: 3px solid var(--nexus-interaction);
+  padding-left: 1rem;
+  margin: 1.25em 0;
+  color: var(--nexus-text-secondary);
+  font-style: italic;
+}
+
+/* ─── Horizontal rule ───────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--nexus-border);
+  margin: 2em 0;
+}
+
+/* ─── Tables (GFM) ───────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25em 0;
+  font-size: 0.9375rem;
+}
+
+.nexus-editor-root .ProseMirror th,
+.nexus-editor-root .ProseMirror td {
+  border: 1px solid var(--nexus-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: var(--nexus-text-primary);
+}
+
+.nexus-editor-root .ProseMirror th {
+  background: var(--nexus-bg);
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+}
+
+.nexus-editor-root .ProseMirror tbody tr:hover {
+  background: var(--nexus-bg);
+}
+
+/* ─── Selection ─────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror ::selection {
+  background: color-mix(in srgb, var(--nexus-interaction) 25%, transparent);
+}
+
+/* ─── Drop cursor ────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror-dropcursor {
+  border: 2px solid var(--nexus-interaction);
+}
+
+/* ─── Gap cursor ─────────────────────────────────────────────── */
+
+.nexus-editor-root .ProseMirror-gapcursor:after {
+  border-top-color: var(--nexus-interaction);
+}
