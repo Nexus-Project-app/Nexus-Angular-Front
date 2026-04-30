@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NavbarComponent } from '../../../../shared/components/navbar.component';
 
 @Component({
   selector: 'app-privacy-policy-page',
   templateUrl: './privacy-policy-page.component.html',
   styleUrl: './privacy-policy-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NavbarComponent],
 })
 export class PrivacyPolicyPageComponent {
   readonly lastUpdated = '29 avril 2026';

@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavbarComponent } from '../../../../shared/components/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
 import { InputRule } from '@milkdown/prose/inputrules';
@@ -70,6 +71,7 @@ console.log(salutation);
   styleUrl: './editor-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  imports: [NavbarComponent],
 })
 export class EditorPageComponent {
   private readonly route = inject(ActivatedRoute);
