@@ -9,7 +9,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../../../shared/components/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
@@ -75,12 +75,14 @@ console.log(salutation);
 })
 export class EditorPageComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   readonly titleText = signal(this.getInitialTitle());
   readonly wordCount = signal(0);
   readonly isSaved = signal(true);
   readonly isEditorReady = signal(false);
   readonly markdownSource = signal(INITIAL_CONTENT);
   readonly isMarkdownPanelOpen = signal(false);
+  readonly isLeaveModalOpen = signal(false);
 
   private readonly editorRoot = viewChild.required<ElementRef<HTMLDivElement>>('editorRoot');
   private readonly destroyRef = inject(DestroyRef);
@@ -135,6 +137,22 @@ export class EditorPageComponent {
 
   onSave(): void {
     this.isSaved.set(true);
+  }
+
+  onBackClick(): void {
+    if (this.isSaved()) {
+      void this.router.navigate(['/']);
+    } else {
+      this.isLeaveModalOpen.set(true);
+    }
+  }
+
+  confirmLeave(): void {
+    void this.router.navigate(['/']);
+  }
+
+  cancelLeave(): void {
+    this.isLeaveModalOpen.set(false);
   }
 
   onTitleChange(event: Event): void {
