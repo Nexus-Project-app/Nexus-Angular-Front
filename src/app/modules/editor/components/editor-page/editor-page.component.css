@@ -137,6 +137,7 @@
   padding: 3rem 1.5rem;
   overflow-y: auto;
   min-width: 0;
+  cursor: text;
 }
 
 .nexus-editor-loading {
@@ -299,10 +300,6 @@
 }
 
 /* ─── Editor area adjustments ────────────────────────────────── */
-
-.nexus-editor-body {
-  cursor: text;
-}
 
 .nexus-editor-root .milkdown {
   min-height: 60vh;

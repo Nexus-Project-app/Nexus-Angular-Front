@@ -86,12 +86,19 @@ export class EditorPageComponent {
 
   constructor() {
     afterNextRender(() => {
-      void this.initEditor();
+      this.initEditor().catch((error: Error) => {
+        console.error(error);
+      });
     });
 
     this.destroyRef.onDestroy(() => {
       if (this._applySourceTimer) clearTimeout(this._applySourceTimer);
-      void this.crepe?.destroy();
+      const destroyPromise = this.crepe?.destroy();
+      if (destroyPromise) {
+        destroyPromise.catch((error: Error) => {
+          console.error(error);
+        });
+      }
     });
   }
 
@@ -133,6 +140,13 @@ export class EditorPageComponent {
 
   toggleMarkdownPanel(): void {
     this.isMarkdownPanelOpen.update((v) => !v);
+  }
+
+  onEditorKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.focusEditor();
+    }
   }
 
   onSourceFocus(): void {
