@@ -1,0 +1,30 @@
+<main class="min-h-screen bg-nexus-bg flex items-center justify-center px-4">
+  <div class="bg-nexus-component border border-nexus-border rounded-2xl p-10 max-w-md w-full text-center shadow-sm">
+
+    <img src="/nexus-logo.svg" alt="Nexus" class="h-12 mx-auto mb-6" />
+
+    <h1 class="text-2xl font-bold text-nexus-primary mb-2">Nexus</h1>
+    <p class="text-nexus-secondary text-sm mb-8">Plateforme en cours de développement.</p>
+
+    <nav class="flex flex-col gap-3" aria-label="Navigation principale">
+      <a
+        routerLink="/editor"
+        class="flex items-center justify-center gap-2 px-4 py-2.5
+               bg-nexus-interaction hover:bg-nexus-interaction-hover
+               text-white text-sm font-medium rounded-lg transition-colors"
+      >
+        Ouvrir l'éditeur
+      </a>
+      <a
+        routerLink="/policy"
+        class="flex items-center justify-center gap-2 px-4 py-2.5
+               border border-nexus-border hover:border-nexus-interaction
+               text-nexus-secondary hover:text-nexus-primary
+               text-sm rounded-lg transition-colors"
+      >
+        Politique de confidentialité
+      </a>
+    </nav>
+
+  </div>
+</main>
