@@ -24,15 +24,15 @@ export interface DiscoveryItem {
   `,
   styles: `
     .discovery-panel {
-      background: #14141F;
-      border: 1px solid #28283C;
+      background: var(--nexus-bg-component);
+      border: 1px solid var(--nexus-border);
       border-radius: 1rem;
       padding: 1rem;
       height: fit-content;
     }
 
     .discovery-panel h2 {
-      color: #FFFFFF;
+      color: var(--nexus-text-primary);
       font-size: 1rem;
       margin: 0 0 0.75rem;
     }
@@ -54,16 +54,16 @@ export interface DiscoveryItem {
     }
 
     .panel-item:hover {
-      background: #28283C;
+      background: var(--nexus-border-subtle);
     }
 
     .panel-title {
-      color: #FFFFFF;
+      color: var(--nexus-text-primary);
       font-weight: 600;
     }
 
     .panel-metric {
-      color: #9CA3AF;
+      color: var(--nexus-text-secondary);
       font-size: 0.85rem;
     }
   `

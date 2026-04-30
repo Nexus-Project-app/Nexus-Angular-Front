@@ -9,6 +9,8 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavbarComponent } from '../../../../shared/components/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
 import { InputRule } from '@milkdown/prose/inputrules';
@@ -69,14 +71,18 @@ console.log(salutation);
   styleUrl: './editor-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  imports: [NavbarComponent],
 })
 export class EditorPageComponent {
-  readonly titleText = signal('Document sans titre');
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  readonly titleText = signal(this.getInitialTitle());
   readonly wordCount = signal(0);
   readonly isSaved = signal(true);
   readonly isEditorReady = signal(false);
   readonly markdownSource = signal(INITIAL_CONTENT);
   readonly isMarkdownPanelOpen = signal(false);
+  readonly isLeaveModalOpen = signal(false);
 
   private readonly editorRoot = viewChild.required<ElementRef<HTMLDivElement>>('editorRoot');
   private readonly destroyRef = inject(DestroyRef);
@@ -133,9 +139,30 @@ export class EditorPageComponent {
     this.isSaved.set(true);
   }
 
+  async onBackClick(): Promise<void> {
+    if (this.isSaved()) {
+      await this.router.navigate(['/']);
+    } else {
+      this.isLeaveModalOpen.set(true);
+    }
+  }
+
+  async confirmLeave(): Promise<void> {
+    await this.router.navigate(['/']);
+  }
+
+  cancelLeave(): void {
+    this.isLeaveModalOpen.set(false);
+  }
+
   onTitleChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.titleText.set(input.value);
+  }
+
+  private getInitialTitle(): string {
+    const title = this.route.snapshot.queryParamMap.get('title')?.trim();
+    return title || 'Document sans titre';
   }
 
   toggleMarkdownPanel(): void {

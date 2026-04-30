@@ -6,36 +6,39 @@
 
 /* Light mode (default) */
 :root {
-  --nexus-bg:           #F6F6F6;
-  --nexus-bg-component: #FFFFFF;
-  --nexus-text-primary: #0A0A0F;
+  --nexus-bg:             #F6F6F6;
+  --nexus-bg-component:   #FFFFFF;
+  --nexus-surface-raised: #EBEBF2;
+  --nexus-text-primary:   #0A0A0F;
   --nexus-text-secondary: #9CA3AF;
-  --nexus-interaction: #5B7CFF;
+  --nexus-interaction:       #5B7CFF;
   --nexus-interaction-hover: #4A6AEE;
-  --nexus-border: #E5E7EB;
+  --nexus-border:        #E5E7EB;
   --nexus-border-subtle: #F3F4F6;
 }
 
 /* Dark mode — toggled by .dark class on <html> */
 .dark {
-  --nexus-bg:           #0A0A0F;
-  --nexus-bg-component: #14141F;
-  --nexus-text-primary: #FFFFFF;
+  --nexus-bg:             #0A0A0F;
+  --nexus-bg-component:   #14141F;
+  --nexus-surface-raised: #28283C;
+  --nexus-text-primary:   #FFFFFF;
   --nexus-text-secondary: #9CA3AF;
-  --nexus-interaction: #5B7CFF;
+  --nexus-interaction:       #5B7CFF;
   --nexus-interaction-hover: #6E8FFF;
-  --nexus-border: #1F1F2E;
+  --nexus-border:        #1F1F2E;
   --nexus-border-subtle: #16161F;
 }
 
 /* Tailwind v4 — expose tokens as utility-class colors */
 @theme inline {
-  --color-nexus-bg:            var(--nexus-bg);
-  --color-nexus-component:     var(--nexus-bg-component);
-  --color-nexus-primary:       var(--nexus-text-primary);
-  --color-nexus-secondary:     var(--nexus-text-secondary);
-  --color-nexus-interaction:   var(--nexus-interaction);
-  --color-nexus-interaction-hover: var(--nexus-interaction-hover);
+  --color-nexus-bg:             var(--nexus-bg);
+  --color-nexus-component:      var(--nexus-bg-component);
+  --color-nexus-surface-raised: var(--nexus-surface-raised);
+  --color-nexus-primary:        var(--nexus-text-primary);
+  --color-nexus-secondary:      var(--nexus-text-secondary);
+  --color-nexus-interaction:        var(--nexus-interaction);
+  --color-nexus-interaction-hover:  var(--nexus-interaction-hover);
   --color-nexus-border:        var(--nexus-border);
   --color-nexus-border-subtle: var(--nexus-border-subtle);
 }

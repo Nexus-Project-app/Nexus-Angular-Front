@@ -18,30 +18,30 @@ export interface FooterLink {
   `,
   styles: `
     .right-footer {
-      color: rgba(156, 163, 175, 0.6);
+      color: color-mix(in srgb, var(--nexus-text-secondary) 60%, transparent);
       display: flex;
       flex-wrap: wrap;
       font-size: 0.75rem;
       gap: 0.75rem;
       padding-top: 0.5rem;
-      border-top: 1px solid #28283C;
+      border-top: 1px solid var(--nexus-border);
     }
 
     .right-footer a {
-      color: #9CA3AF;
+      color: var(--nexus-text-secondary);
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
     .right-footer a:hover {
-      color: #FFFFFF;
+      color: var(--nexus-text-primary);
     }
   `
 })
 export class FooterLinksComponent {
   protected readonly FOOTER_LINKS: ReadonlyArray<FooterLink> = [
     { text: 'Conditions d\'utilisation', href: '#' },
-    { text: 'Politique de Confidentialité', href: '#' },
+    { text: 'Politique de Confidentialité', href: '/policy' },
     { text: 'À propos', href: '#' },
     { text: 'Cookies', href: '#' }
   ];
