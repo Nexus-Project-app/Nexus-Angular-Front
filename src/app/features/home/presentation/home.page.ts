@@ -178,7 +178,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   `,
   styles: `
     .home-page {
-      background: #0a0a0f;
+      background: var(--nexus-bg);
       min-height: 100%;
     }
     .main-grid {
@@ -199,7 +199,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       overflow: hidden;
     }
     .left-sidebar {
-      background: #14141f;
+      background: var(--nexus-bg-component);
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -217,18 +217,18 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     }
     .sidebar-item {
       align-items: center;
-      background: #28283c;
+      background: var(--nexus-surface-raised);
       border: 1px solid transparent;
       border-radius: 0.75rem;
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       display: flex;
       gap: 0.75rem;
       padding: 0.65rem;
       text-decoration: none;
     }
     .item-visual {
-      background: #1d1d2c;
-      border: 1px solid #3a3a52;
+      background: var(--nexus-border-subtle);
+      border: 1px solid var(--nexus-border);
       border-radius: 0.5rem;
       flex: 0 0 2rem;
       height: 2rem;
@@ -237,14 +237,12 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       display: grid;
       min-width: 0;
     }
-    .item-title,
-    .item-subtitle,
     .item-title {
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       font-weight: 600;
     }
     .item-subtitle {
-      color: #9ca3af;
+      color: var(--nexus-text-secondary);
       font-size: 0.85rem;
       margin-top: 0.2rem;
     }
@@ -254,9 +252,9 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       margin-top: auto;
     }
     .join-button {
-      background: #28283c;
-      border: 1px solid #3a3a52;
-      color: #ffffff;
+      background: var(--nexus-surface-raised);
+      border: 1px solid var(--nexus-border);
+      color: var(--nexus-text-primary);
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s ease;
@@ -294,10 +292,10 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       display: none;
     }
     .feed-card {
-      background: #14141f;
-      border: 1px solid #28283c;
+      background: var(--nexus-bg-component);
+      border: 1px solid var(--nexus-border);
       border-radius: 0.75rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       padding: 1rem;
       transition: all 0.2s ease;
     }
@@ -315,12 +313,12 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       flex: 0 0 2.25rem;
     }
     .card-title {
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       font-size: 1.1rem;
       margin: 1rem 0 0.6rem;
     }
     .card-description {
-      color: #9ca3af;
+      color: var(--nexus-text-secondary);
       margin: 0;
     }
     .tag-list {
@@ -330,9 +328,9 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       margin-top: 0.875rem;
     }
     .tag {
-      background: #28283c;
+      background: var(--nexus-surface-raised);
       border-radius: 999px;
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       font-size: 0.8rem;
       padding: 0.3rem 0.6rem;
     }
@@ -343,7 +341,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       gap: 0.75rem;
       margin-top: 1rem;
       padding-top: 1rem;
-      border-top: 1px solid #28283c;
+      border-top: 1px solid var(--nexus-border);
     }
     .card-actions-left {
       align-items: center;
@@ -355,7 +353,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       align-items: center;
       background: transparent;
       border: 0;
-      color: #9ca3af;
+      color: var(--nexus-text-secondary);
       cursor: pointer;
       display: inline-flex;
       gap: 0.35rem;
@@ -368,7 +366,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       color: inherit;
     }
     .feed-summary {
-      color: #9ca3af;
+      color: var(--nexus-text-secondary);
       font-size: 0.85rem;
       margin: 0;
     }
@@ -385,11 +383,8 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     button:hover {
       filter: brightness(1.08);
     }
-    .right-footer a:hover {
-      color: #ffffff;
-    }
     .join-button:hover {
-      background: #3a3a52;
+      background: var(--nexus-border);
       transform: translateY(-1px);
     }
     .plus-button:hover {
@@ -398,11 +393,11 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     }
     .feed-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
     .action-button:hover,
     .save-button:hover {
-      color: #ffffff;
+      color: var(--nexus-text-primary);
     }
     a:focus-visible,
     button:focus-visible {

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { ThemeService } from '../services/theme.service';
 
 export interface UserProfile {
   readonly name: string;
@@ -19,8 +20,13 @@ export interface UserProfile {
         <button class="icon-button" type="button" aria-label="Rechercher">
           <i class="fas fa-search"></i>
         </button>
-        <button class="icon-button" type="button" aria-label="Changer de thème">
-          <i class="fas fa-sun"></i>
+        <button
+          class="icon-button"
+          type="button"
+          [attr.aria-label]="themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+          (click)="themeService.toggle()"
+        >
+          <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
         <div class="user-meta">
           <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
@@ -35,7 +41,8 @@ export interface UserProfile {
   styles: `
     .top-header {
       align-items: center;
-      background: #14141f;
+      background: var(--nexus-bg-component);
+      border-bottom: 1px solid var(--nexus-border);
       border-radius: 0;
       display: flex;
       justify-content: space-between;
@@ -67,7 +74,7 @@ export interface UserProfile {
       background: transparent;
       border: 1px solid transparent;
       border-radius: 999px;
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       cursor: pointer;
       display: inline-flex;
       height: 2rem;
@@ -99,7 +106,7 @@ export interface UserProfile {
 
     .avatar {
       align-items: center;
-      background: #9ca3af;
+      background: var(--nexus-text-secondary);
       border-radius: 999px;
       color: #0a0a0f;
       display: inline-flex;
@@ -110,7 +117,7 @@ export interface UserProfile {
     }
 
     .user-name {
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       font-size: 0.95rem;
       font-weight: 600;
       line-height: 1.2;
@@ -118,7 +125,7 @@ export interface UserProfile {
     }
 
     .user-role {
-      color: rgba(156, 163, 175, 0.7);
+      color: color-mix(in srgb, var(--nexus-text-secondary) 70%, transparent);
       font-size: 0.8rem;
       line-height: 1.2;
       margin: 0;
@@ -126,6 +133,8 @@ export interface UserProfile {
   `
 })
 export class NavbarComponent {
+  protected readonly themeService = inject(ThemeService);
+
   protected readonly user = signal<UserProfile>({
     name: 'Admin Superadmin',
     role: 'Administrateur',
@@ -135,11 +144,8 @@ export class NavbarComponent {
     this.user().name.trim().charAt(0).toUpperCase()
   );
 
-  constructor() {}
-
   navigateHome(event: Event): void {
     event.preventDefault();
-    // Navigate to home - this will be handled by router in parent components
     globalThis.location.href = '/';
   }
 }

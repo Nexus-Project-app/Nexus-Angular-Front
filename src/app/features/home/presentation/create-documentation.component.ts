@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-create-documentation',
@@ -35,8 +35,8 @@
   styles: `
     .create-documentation {
       align-items: stretch;
-      background: #14141f;
-      border: 1px solid #28283c;
+      background: var(--nexus-bg-component);
+      border: 1px solid var(--nexus-border);
       border-radius: 1rem;
       display: flex;
       flex-direction: column;
@@ -49,13 +49,13 @@
     }
 
     .create-documentation__content h2 {
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       font-size: 1rem;
       margin: 0 0 0.25rem;
     }
 
     .create-documentation__content p {
-      color: rgba(156, 163, 175, 0.82);
+      color: color-mix(in srgb, var(--nexus-text-secondary) 82%, transparent);
       font-size: 0.875rem;
       margin: 0;
     }
@@ -68,17 +68,17 @@
     }
 
     .create-documentation__input {
-      background: #0a0a0f;
-      border: 1px solid #28283c;
+      background: var(--nexus-bg);
+      border: 1px solid var(--nexus-border);
       border-radius: 0.75rem;
-      color: #ffffff;
+      color: var(--nexus-text-primary);
       flex: 1;
       min-width: 0;
       padding: 0.8rem 0.9rem;
     }
 
     .create-documentation__input::placeholder {
-      color: rgba(156, 163, 175, 0.78);
+      color: color-mix(in srgb, var(--nexus-text-secondary) 78%, transparent);
     }
 
     .create-documentation__button {

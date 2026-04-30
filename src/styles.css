@@ -3,8 +3,8 @@
 
 html,
 body {
-  background: #0A0A0F;
-  color: #FFFFFF;
+  background: var(--nexus-bg);
+  color: var(--nexus-text-primary);
   height: 100%;
   margin: 0;
 }
@@ -15,12 +15,12 @@ body {
 
 app-home-page {
   display: block;
-  color: #FFFFFF;
+  color: var(--nexus-text-primary);
   min-height: 100dvh;
 }
 
 app-home-page .home-page {
-  background: #0A0A0F;
+  background: var(--nexus-bg);
   height: 100dvh;
   padding: 0;
   display: grid;
@@ -33,9 +33,9 @@ app-home-page .skip-link {
   left: -9999px;
   top: 0;
   z-index: 100;
-  background-color: #111827;
-  border: 1px solid #374151;
-  color: #F9FAFB;
+  background-color: var(--nexus-bg-component);
+  border: 1px solid var(--nexus-border);
+  color: var(--nexus-text-primary);
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
 }
@@ -43,7 +43,6 @@ app-home-page .skip-link {
 app-home-page .skip-link:focus-visible {
   left: 1rem;
   top: 1rem;
-  outline: 2px solid #93C5FD;
+  outline: 2px solid #b374ff;
   outline-offset: 2px;
 }
-
