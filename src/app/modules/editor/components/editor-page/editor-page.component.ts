@@ -142,6 +142,13 @@ export class EditorPageComponent {
     this.isMarkdownPanelOpen.update((v) => !v);
   }
 
+  onEditorKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.focusEditor();
+    }
+  }
+
   onSourceFocus(): void {
     this._sourceTextareaFocused = true;
   }

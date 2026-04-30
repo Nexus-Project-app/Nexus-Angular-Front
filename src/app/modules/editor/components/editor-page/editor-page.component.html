@@ -80,7 +80,7 @@
   <div class="nexus-editor-workspace" [class.panel-open]="isMarkdownPanelOpen()">
 
     <!-- Éditeur WYSIWYG -->
-    <main class="nexus-editor-body" (click)="focusEditor()">
+    <main class="nexus-editor-body" (click)="focusEditor()" (keydown)="onEditorKeydown($event)">
       @if (!isEditorReady()) {
         <output class="nexus-editor-loading" aria-label="Chargement de l'éditeur">
           <div class="nexus-editor-loading-spinner"></div>
