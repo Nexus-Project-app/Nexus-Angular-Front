@@ -12,8 +12,8 @@ import { NavbarComponent } from '../../../../shared/components/navbar.component'
 export class PrivacyPolicyPageComponent {
   private readonly router = inject(Router);
 
-  goBack(): void {
-    void this.router.navigate(['/']);
+  async goBack(): Promise<void> {
+    await this.router.navigate(['/']);
   }
 
   readonly lastUpdated = '29 avril 2026';

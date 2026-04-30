@@ -139,16 +139,16 @@ export class EditorPageComponent {
     this.isSaved.set(true);
   }
 
-  onBackClick(): void {
+  async onBackClick(): Promise<void> {
     if (this.isSaved()) {
-      void this.router.navigate(['/']);
+      await this.router.navigate(['/']);
     } else {
       this.isLeaveModalOpen.set(true);
     }
   }
 
-  confirmLeave(): void {
-    void this.router.navigate(['/']);
+  async confirmLeave(): Promise<void> {
+    await this.router.navigate(['/']);
   }
 
   cancelLeave(): void {

@@ -346,6 +346,9 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  border: none;
+  max-width: none;
+  max-height: none;
 }
 
 .nexus-editor-modal {
@@ -403,11 +406,11 @@
 }
 
 .nexus-editor-modal-confirm {
-  background: #ef4444;
+  background: #b91c1c;
   border: 1px solid transparent;
   color: #ffffff;
 }
 
 .nexus-editor-modal-confirm:hover {
-  background: #dc2626;
+  background: #991b1b;
 }

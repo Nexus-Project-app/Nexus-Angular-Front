@@ -140,15 +140,14 @@
 </div>
 
 @if (isLeaveModalOpen()) {
-  <div
+  <dialog
     class="nexus-editor-modal-overlay"
-    role="dialog"
-    aria-modal="true"
     aria-labelledby="leave-modal-title"
+    open
     (click)="cancelLeave()"
     (keydown.escape)="cancelLeave()"
   >
-    <div class="nexus-editor-modal" (click)="$event.stopPropagation()">
+    <div class="nexus-editor-modal" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
       <h2 id="leave-modal-title" class="nexus-editor-modal-title">Quitter sans sauvegarder ?</h2>
       <p class="nexus-editor-modal-body">Vos modifications seront perdues définitivement.</p>
       <div class="nexus-editor-modal-actions">
@@ -160,5 +159,5 @@
         </button>
       </div>
     </div>
-  </div>
+  </dialog>
 }
