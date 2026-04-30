@@ -3,6 +3,27 @@
   color: var(--nexus-text-primary);
 }
 
+.pp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--nexus-border);
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.pp-back-btn:hover {
+  background: var(--nexus-border-subtle);
+  color: var(--nexus-text-primary);
+  border-color: var(--nexus-interaction);
+}
+
 .privacy-policy-shell {
   scroll-behavior: smooth;
 }

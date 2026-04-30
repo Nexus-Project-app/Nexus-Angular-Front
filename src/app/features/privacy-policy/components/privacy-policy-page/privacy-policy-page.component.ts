@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavbarComponent } from '../../../../shared/components/navbar.component';
 
 @Component({
@@ -9,6 +10,12 @@ import { NavbarComponent } from '../../../../shared/components/navbar.component'
   imports: [NavbarComponent],
 })
 export class PrivacyPolicyPageComponent {
+  private readonly router = inject(Router);
+
+  goBack(): void {
+    void this.router.navigate(['/']);
+  }
+
   readonly lastUpdated = '29 avril 2026';
 
   readonly dataCategories = [

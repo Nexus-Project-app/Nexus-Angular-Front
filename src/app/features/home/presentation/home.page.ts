@@ -117,7 +117,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
                   <div class="avatar" aria-hidden="true">
                     {{ card.author.charAt(0).toUpperCase() }}
                   </div>
-                  <div>
+                  <div class="card-author-info">
                     <p class="user-name">{{ card.author }}</p>
                     <p class="card-meta">Il y a 7h</p>
                   </div>
@@ -310,7 +310,36 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       justify-content: flex-start;
     }
     .avatar {
+      align-items: center;
+      background: var(--nexus-text-secondary);
+      border-radius: 999px;
+      color: #0a0a0f;
+      display: inline-flex;
       flex: 0 0 2.25rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      height: 2.25rem;
+      justify-content: center;
+      width: 2.25rem;
+    }
+    .card-author-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .user-name {
+      color: var(--nexus-text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .card-meta {
+      color: var(--nexus-text-secondary);
+      font-size: 0.78rem;
+      margin: 0;
     }
     .card-title {
       color: var(--nexus-text-primary);
