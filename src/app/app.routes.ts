@@ -3,9 +3,10 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    loadChildren: () =>
-      import('./modules/home/home.routes').then((m) => m.HOME_ROUTES),
+    loadComponent: () =>
+      import('./features/home/presentation/home.page').then(
+        (module) => module.HomePageComponent
+      )
   },
   {
     path: 'policy',
@@ -18,5 +19,10 @@ export const routes: Routes = [
     path: 'editor',
     loadChildren: () =>
       import('./modules/editor/editor.routes').then((m) => m.EDITOR_ROUTES),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
   },
 ];

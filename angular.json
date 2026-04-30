@@ -26,8 +26,17 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/@milkdown/crepe/lib/theme/common/style.css",
-              "node_modules/@milkdown/crepe/lib/theme/frame/style.css"
+              {
+                "input": "node_modules/@milkdown/crepe/lib/theme/common/style.css",
+                "bundleName": "milkdown-common",
+                "inject": false
+              },
+              {
+                "input": "node_modules/@milkdown/crepe/lib/theme/frame/style.css",
+                "bundleName": "milkdown-frame",
+                "inject": false
+              },
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
