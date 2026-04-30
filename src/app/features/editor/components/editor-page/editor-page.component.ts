@@ -9,6 +9,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
 import { InputRule } from '@milkdown/prose/inputrules';
@@ -71,7 +72,8 @@ console.log(salutation);
   encapsulation: ViewEncapsulation.None,
 })
 export class EditorPageComponent {
-  readonly titleText = signal('Document sans titre');
+  private readonly route = inject(ActivatedRoute);
+  readonly titleText = signal(this.getInitialTitle());
   readonly wordCount = signal(0);
   readonly isSaved = signal(true);
   readonly isEditorReady = signal(false);
@@ -136,6 +138,11 @@ export class EditorPageComponent {
   onTitleChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.titleText.set(input.value);
+  }
+
+  private getInitialTitle(): string {
+    const title = this.route.snapshot.queryParamMap.get('title')?.trim();
+    return title || 'Document sans titre';
   }
 
   toggleMarkdownPanel(): void {

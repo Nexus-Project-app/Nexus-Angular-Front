@@ -41,7 +41,7 @@ export interface FooterLink {
 export class FooterLinksComponent {
   protected readonly FOOTER_LINKS: ReadonlyArray<FooterLink> = [
     { text: 'Conditions d\'utilisation', href: '#' },
-    { text: 'Politique de Confidentialité', href: '#' },
+    { text: 'Politique de Confidentialité', href: '/policy' },
     { text: 'À propos', href: '#' },
     { text: 'Cookies', href: '#' }
   ];

@@ -1,7 +1,7 @@
 ---
-description: "Use when implementing features under src/app/modules to preserve modular architecture boundaries."
+description: "Use when implementing features under src/app/features to preserve modular architecture boundaries."
 applyTo:
-  - "src/app/modules/**"
+  - "src/app/features/**"
   - "src/app/shared/**"
   - "src/app/infrastructure/**"
 ---

@@ -1,7 +1,14 @@
-﻿import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
 import { NavbarComponent } from '../../../shared/components/navbar.component';
+
+export interface UserProfile {
+  readonly name: string;
+  readonly role: string;
+}
 
 export interface SidebarItem {
   readonly id: string;
@@ -73,7 +80,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
 @Component({
   selector: 'app-home-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DiscoveryItemComponent, FooterLinksComponent, NavbarComponent],
+  imports: [CreateDocumentationComponent, DiscoveryItemComponent, FooterLinksComponent, NavbarComponent],
   template: `
     <a class="skip-link" href="#main-content">Aller au contenu principal</a>
     <div class="home-page">
@@ -102,6 +109,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
           </div>
         </aside>
         <section class="feed-column" aria-label="Fil d actualites">
+          <app-create-documentation (created)="openEditor($event)" />
           @for (card of feedCards(); track card.id) {
             <article class="feed-card" aria-label="Publication de {{ card.author }}">
               <header class="card-head">
@@ -171,22 +179,24 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   styles: `
     .home-page {
       background: #0a0a0f;
-      min-height: 100vh;
+      min-height: 100%;
     }
     .main-grid {
       display: grid;
       gap: 0.875rem;
       grid-template-columns: 360px minmax(0, 1fr) 360px;
       padding: 0.875rem;
-      min-height: calc(100vh - 5rem);
-      overflow: visible;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
       justify-content: center;
     }
     .left-sidebar,
     .right-sidebar {
       border-radius: 1rem;
       padding: 1rem;
-      overflow: visible;
+      height: 100%;
+      overflow: hidden;
     }
     .left-sidebar {
       background: #14141f;
@@ -194,7 +204,6 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       flex-direction: column;
       gap: 0.75rem;
       padding: 0.75rem;
-      margin-bottom: 1rem;
     }
     .sidebar-list {
       display: grid;
@@ -205,7 +214,6 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      overflow-y: auto;
     }
     .sidebar-item {
       align-items: center;
@@ -276,7 +284,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       display: grid;
       gap: 1rem;
       min-height: 0;
-      overflow-y: scroll;
+      overflow-y: auto;
       -ms-overflow-style: none;
       scrollbar-width: none;
       padding-right: 0.25rem;
@@ -415,7 +423,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     @media (max-width: 1200px) {
       .main-grid {
         grid-template-columns: 1fr;
-        overflow: visible;
+        overflow: auto;
       }
       .feed-column {
         overflow: visible;
@@ -431,13 +439,20 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   `,
 })
 export class HomePageComponent {
-  protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>([
-    ...createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
-  ]);
+  private readonly router = inject(Router);
 
-  protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([
-    ...createFeedCards(['card-1', 'card-2', 'card-3']),
-  ]);
+  protected readonly user = signal<UserProfile>({
+    name: 'Admin Superadmin',
+    role: 'Administrateur',
+  });
+
+  protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>(
+    createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6'])
+  );
+
+  protected readonly feedCards = signal<ReadonlyArray<FeedCard>>(
+    createFeedCards(['card-1', 'card-2', 'card-3'])
+  );
 
   protected readonly topicDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([
     { id: 't1', name: 'Kubernetes', metric: '8465 posts' },
@@ -452,6 +467,11 @@ export class HomePageComponent {
     { id: 'g4', name: 'Linux', metric: '200 utilisateurs' },
   ]);
 
+  protected openEditor(title: string): void {
+    void this.router.navigate(['/editor'], {
+      queryParams: { title },
+    });
+  }
 
   protected readonly totalInteractions = computed(() =>
     this.feedCards()
@@ -459,5 +479,4 @@ export class HomePageComponent {
       .reduce((accumulator, action) => accumulator + Number(action.count), 0),
   );
 }
-
 
