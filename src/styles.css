@@ -1,3 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
-
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 @import 'tailwindcss';
+
+/* ─── Design tokens ─────────────────────────────────────────────────── */
+
+:root {
+  --nexus-bg:      #F6F6F6;
+  --nexus-surface: #FFFFFF;
+  --nexus-text:    #0A0A0F;
+  --nexus-muted:   #9CA3AF;
+  --nexus-border:  #E5E7EB;
+  --nexus-input:   #F9FAFB;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nexus-bg:      #0A0A0F;
+    --nexus-surface: #14141F;
+    --nexus-text:    #FFFFFF;
+    --nexus-muted:   #9CA3AF;
+    --nexus-border:  #252540;
+    --nexus-input:   #0F0F1A;
+  }
+}
+
+/* ─── Tailwind v4 theme registration ────────────────────────────────── */
+
+@theme inline {
+  --color-nexus-bg:      var(--nexus-bg);
+  --color-nexus-surface: var(--nexus-surface);
+  --color-nexus-text:    var(--nexus-text);
+  --color-nexus-muted:   var(--nexus-muted);
+  --color-nexus-border:  var(--nexus-border);
+  --color-nexus-input:   var(--nexus-input);
+  --color-nexus-accent:  #5B7CFF;
+}
