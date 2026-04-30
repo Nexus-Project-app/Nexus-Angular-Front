@@ -16,6 +16,11 @@ export const authRoutes: Routes = [
         loadComponent: () =>
           import('./presentation/login/login.component').then((m) => m.LoginComponent),
       },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./presentation/home/home.component').then((m) => m.HomeComponent),
+      },
     ],
   },
 ];
