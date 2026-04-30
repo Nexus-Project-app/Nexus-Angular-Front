@@ -22,7 +22,19 @@ export class HomeComponent {
         this.notConnected.set(this.keycloak.authenticated);
     }
 
+    loginMicrosoft() {
+        this.keycloak.login({
+            idpHint: 'microsoft',
+            redirectUri: window.location.origin + '/home',
+        });
+    }
 
+    loginGithub() {
+        this.keycloak.login({
+            idpHint: 'github',
+            redirectUri: window.location.origin + '/home',
+        });
+    }
 
     isAdmin(): boolean {
         const roles = this.keycloak.tokenParsed?.realm_access?.roles || [];
@@ -59,4 +71,6 @@ export class HomeComponent {
     login() {
         this.keycloak.login();
     }
+
+
 }
