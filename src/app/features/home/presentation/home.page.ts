@@ -468,7 +468,7 @@ export class HomePageComponent {
   ]);
 
   protected openEditor(title: string): void {
-    void this.router.navigate(['/editor'], {
+    this.router.navigate(['/editor'], {
       queryParams: { title },
     });
   }
