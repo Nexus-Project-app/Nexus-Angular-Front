@@ -32,7 +32,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci 2>&1 | tee npm-install.log
+        run: npm install 2>&1 | tee npm-install.log
 
       - name: Build application
         run: npm run build 2>&1 | tee build.log
