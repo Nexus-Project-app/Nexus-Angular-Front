@@ -35,6 +35,8 @@ jobs:
 
       - name: Build application
         run: npm run build 2>&1 | tee build.log
+        depends-on: Install dependencies # en gros si l'install cass bah ça passe pas
+        if: success() != false
 
       - name: Upload build artifact and logs
         uses: actions/upload-artifact@v4
