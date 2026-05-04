@@ -4,6 +4,7 @@ import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
 import { NavbarComponent } from '../../../shared/components/navbar.component';
+import Keycloak from 'keycloak-js';
 
 export interface UserProfile {
   readonly name: string;
@@ -464,6 +465,10 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
 })
 export class HomePageComponent {
   private readonly router = inject(Router);
+  protected readonly keycloak = inject(Keycloak);
+
+  private isConnected = false;
+
 
   protected readonly user = signal<UserProfile>({
     name: 'Admin Superadmin',
@@ -497,10 +502,14 @@ export class HomePageComponent {
     });
   }
 
+
+
   protected readonly totalInteractions = computed(() =>
     this.feedCards()
       .flatMap((card) => card.actions)
       .reduce((accumulator, action) => accumulator + Number(action.count), 0),
   );
+
+  
 }
 

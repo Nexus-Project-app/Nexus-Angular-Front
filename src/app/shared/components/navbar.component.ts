@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { ThemeService } from '../services/theme.service';
+import Keycloak from 'keycloak-js';
 
 export interface UserProfile {
   readonly name: string;
+  readonly email: string;
   readonly role: string;
 }
 
@@ -28,13 +30,36 @@ export interface UserProfile {
         >
           <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
+        @if (isConnected) {
         <div class="user-meta">
           <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
           <div>
-            <p class="user-name">{{ user().name }}</p>
-            <p class="user-role">{{ user().role }}</p>
+            <p class="user-name">{{ user().name }} - {{ user().role }}</p>
+            <p class="user-role">{{ user().email }}</p>
           </div>
         </div>
+        <button
+              class="icon-button"
+              type="button"
+              aria-label="Se déconnecter"
+              (click)="logout()"
+                >
+              <i class="fas fa-sign-out-alt"></i>
+        </button>
+        } 
+        
+        @if (!isConnected) {
+          <button
+              class="icon-button"
+                type="button"
+                aria-label="Se connecter"
+                (click)="login()"
+                  >
+                <i class="fas fa-user"></i>
+          </button>
+        }        
+
+        
       </div>
     </header>
   `,
@@ -134,15 +159,45 @@ export interface UserProfile {
 })
 export class NavbarComponent {
   protected readonly themeService = inject(ThemeService);
+  protected readonly keycloak = inject(Keycloak);
+  protected isConnected = false;
 
   protected readonly user = signal<UserProfile>({
-    name: 'Admin Superadmin',
-    role: 'Administrateur',
+    name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
+    email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
+    role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Administrateur' : 'Utilisateur',
   });
 
   protected readonly userInitial = computed(() =>
     this.user().name.trim().charAt(0).toUpperCase()
   );
+
+  
+  logout(): void {
+    this.keycloak.logout({
+      redirectUri: window.location.origin,
+    });
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/auth/callBack',
+      prompt: 'login'
+    });
+  }
+
+
+  ngOnInit(): void {
+    this.isConnected = this.keycloak.authenticated;
+
+    this.user.set({
+      name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
+      email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
+      role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Administrateur' : 'Utilisateur',
+    });
+    console.log(JSON.stringify(this.user()));
+  }
+
 
   navigateHome(event: Event): void {
     event.preventDefault();
