@@ -46,5 +46,9 @@ jobs:
             build.log
 
   docker:
-    - name: Build and Push Docker Image
-      run: echo "Building and pushing Docker image..." 
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Placeholder
+        run: echo "Docker job disabled until self-hosted runner is available"
