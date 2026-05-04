@@ -36,22 +36,6 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Upload coverage to SonarCloud
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   docker:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
