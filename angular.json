@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "64973c67-ac76-41d9-a4ba-278a3bce0c4f"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -25,10 +26,22 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/@milkdown/crepe/lib/theme/common/style.css",
+              "node_modules/@milkdown/crepe/lib/theme/frame/style.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
+            "allowedCommonJsDependencies": [
+              "extend",
+              "@vue/compiler-dom",
+              "@vue/runtime-dom",
+              "@vue/shared",
+              "@sindresorhus/is",
+              "char-regex",
+              "skin-tone"
+            ],
             "security": {
               "allowedHosts": []
             },
@@ -46,8 +59,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"

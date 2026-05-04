@@ -1,59 +1,97 @@
-# Projet
+# Nexus - Frontend Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Nexus-Project-app_Nexus-Angular-Front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Nexus-Project-app_Nexus-Angular-Front)
 
-## Development server
+Nexus, c'est le frontend d'une plateforme sociale pensée pour connecter des gens autour de leurs centres d'intérêt. Ce dépôt contient uniquement la partie Angular.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## Stack technique
+
+| Quoi | Version |
+|---|---|
+| Angular | 21 |
+| TypeScript | ~5.9 |
+| SSR (Server-Side Rendering) | @angular/ssr + Express 5 |
+| CSS | Tailwind CSS 4 |
+
+---
+
+## Architecture
+
+On suit l'architecture **Clean-Archi** avec des couches bien séparées à l'intérieur de chaque feature :
+
+```
+src/app/features/<feature>/
+├── domain/          → entités, modèles métier purs (aucune dépendance Angular)
+├── application/     → cas d'usage, ports (interfaces), DTOs
+├── infrastructure/  → implémentations concrètes (services HTTP, mocks)
+└── presentation/    → composants, pages, templates
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La règle d'or : `domain` ne dépend de rien. `application` dépend de `domain`. `infrastructure` implémente les ports de `application`. `presentation` consomme `application`.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Lancer le projet en local
 
-```bash
-ng generate component component-name
-```
+### Prérequis
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js 20+
+- npm 11+
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Installation
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Démarrer le serveur de développement
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+L'application sera disponible sur [http://localhost:4200](http://localhost:4200). Le rechargement automatique est activé.
 
-For end-to-end (e2e) testing, run:
+### Lancer le build de production
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Les artefacts sont générés dans `dist/`. Pour démarrer le serveur SSR en mode production :
 
-## Additional Resources
+```bash
+npm run serve:ssr:projet
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## Tests
+
+```bash
+npm test
+```
+
+Les tests tournent avec Vitest. Ils couvrent la validation de formulaire, les cas d'erreur, la navigation post-connexion et les comportements d'état local.
+
+---
+
+## Qualité du code
+
+Ce projet est analysé en continu par SonarCloud et Snyk. L'objectif est de garder zéro nouveau problème bloquant ou critique sur le code modifié.
+
+Si tu touches un fichier, tu es responsable de sa qualité SonarLint avant de pousser.
+
+---
+
+## Conventions Git
+
+- Les branches suivent le format `Feature/<nom-explicite>`
+- On ne pousse jamais directement sur `main`
+- Les commits suivent [Conventional Commits](https://www.conventionalcommits.org/fr/) (`feat:`, `fix:`, `chore:`...)
+- Les PRs ciblent `main` et doivent passer en revue avant merge
+
+*Projet réalisé dans le cadre de la formation DIIAGE - Promotion D2.*
+

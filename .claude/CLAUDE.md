@@ -31,6 +31,7 @@ Always load and apply these files before coding:
 
 ## Available Skills
 
+- `.claude/skills/design/SKILL.md` — design system, tokens, component patterns
 - `.claude/skills/implement-feature/SKILL.md`
 - `.claude/skills/review-pr/SKILL.md`
 - `.claude/skills/angular-ssr/SKILL.md`

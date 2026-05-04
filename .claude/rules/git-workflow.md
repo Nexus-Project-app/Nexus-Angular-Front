@@ -78,3 +78,9 @@ For UI changes, include screenshots or short visual proof.
 - Prefer squash merge to keep history readable.
 - Delete feature branch after merge.
 - Direct commits on `main` are prohibited except explicit emergency approval.
+
+## obligatory
+- ne jamais faire de commit sur main
+- ne jamais faire de push sur main
+- ne jamais faire de force push sur main
+- ne jamais commit au nom de claude ou d'anthropic

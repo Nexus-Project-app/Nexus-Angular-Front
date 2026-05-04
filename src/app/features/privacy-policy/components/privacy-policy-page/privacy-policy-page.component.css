@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  color: var(--nexus-text-primary);
+}
+
+.pp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--nexus-border);
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.pp-back-btn:hover {
+  background: var(--nexus-border-subtle);
+  color: var(--nexus-text-primary);
+  border-color: var(--nexus-interaction);
+}
+
+.privacy-policy-shell {
+  scroll-behavior: smooth;
+}
+
+.privacy-policy-shell section,
+.privacy-policy-shell nav {
+  border-color: var(--nexus-border) !important;
+}
+
+.privacy-policy-shell header {
+  box-shadow: 0 1px 2px rgb(10 10 15 / 0.04), 0 8px 18px rgb(10 10 15 / 0.03) !important;
+}
+
+.privacy-policy-shell section {
+  box-shadow: 0 1px 2px rgb(10 10 15 / 0.03);
+}
+
+.privacy-policy-shell h1,
+.privacy-policy-shell h2,
+.privacy-policy-shell h3,
+.privacy-policy-shell h4,
+.privacy-policy-shell strong,
+.privacy-policy-shell dt {
+  color: var(--nexus-text-primary) !important;
+}
+
+.privacy-policy-shell p,
+.privacy-policy-shell li,
+.privacy-policy-shell dd,
+.privacy-policy-shell address,
+.privacy-policy-shell td,
+.privacy-policy-shell th {
+  color: var(--nexus-text-secondary) !important;
+}
+
+.privacy-policy-shell a {
+  color: var(--nexus-interaction) !important;
+  text-decoration: none;
+}
+
+.privacy-policy-shell a:hover {
+  color: var(--nexus-interaction-hover) !important;
+}
+
+.privacy-policy-shell section > div,
+.privacy-policy-shell .rounded-2xl,
+.privacy-policy-shell .rounded-xl,
+.privacy-policy-shell .rounded-lg {
+  border-color: var(--nexus-border) !important;
+}
+
+.privacy-policy-shell .rounded-3xl {
+  border-radius: 1.25rem !important;
+}
+
+.privacy-policy-shell nav,
+.privacy-policy-shell section > div,
+.privacy-policy-shell .rounded-2xl,
+.privacy-policy-shell .rounded-xl,
+.privacy-policy-shell .rounded-lg {
+  box-shadow: none !important;
+}
+
+.privacy-policy-shell .border-b {
+  border-color: color-mix(in srgb, var(--nexus-border) 80%, transparent) !important;
+}
+
+.privacy-policy-shell table {
+  background: var(--nexus-bg-component);
+}
+
+.privacy-policy-shell thead {
+  background: var(--nexus-bg) !important;
+}
+
+.privacy-policy-shell tbody tr {
+  border-color: var(--nexus-border-subtle) !important;
+}
+
+.privacy-policy-shell code {
+  background: var(--nexus-border-subtle) !important;
+  color: var(--nexus-text-primary) !important;
+}
+
+.privacy-policy-shell ::marker {
+  color: var(--nexus-interaction);
+}
+
+@media (max-width: 1023px) {
+  .privacy-policy-shell aside {
+    position: static;
+  }
+}
