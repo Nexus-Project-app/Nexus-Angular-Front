@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ['**']
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -10,46 +10,68 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: '24'
+
 jobs:
-  # ── Quality gate ────────────────────────────────────────────────────────────
   build-and-test:
     name: Build & Test
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for SonarCloud analysis
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache: npm
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build application
         run: npm run build
 
-      - name: Test
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+      - name: Run tests
+        run: npm test -- --run --coverage
+        env:
+          CI: 'true'
 
-  # ── Docker build & push ─────────────────────────────────────────────────────
+      - name: Upload coverage to SonarCloud
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   docker:
-    name: Docker
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
-    needs: build-and-test
-    # Push image only on commits that reach main
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
+    needs: build-and-test
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -58,20 +80,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker metadata
+      - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/nexus-project-app/nexus-angular-front
+          images: ghcr.io/${{ github.repository }}
           tags: |
-            type=sha,prefix=sha-,format=short
-            type=raw,value=latest
+            type=ref,event=branch,suffix=-latest
+            type=sha,prefix={{branch}}-,format=short
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
