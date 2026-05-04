@@ -94,3 +94,4 @@ Si tu touches un fichier, tu es responsable de sa qualité SonarLint avant de po
 - Les PRs ciblent `main` et doivent passer en revue avant merge
 
 *Projet réalisé dans le cadre de la formation DIIAGE - Promotion D2.*
+
