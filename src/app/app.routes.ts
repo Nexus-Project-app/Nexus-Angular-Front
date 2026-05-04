@@ -5,8 +5,13 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./features/home/presentation/home.page').then(
-        (module) => module.HomePageComponent
-      )
+        (m) => m.HomePageComponent
+      ),
+  },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./features/auth/auth.routes').then((m) => m.authRoutes),
   },
   {
     path: 'policy',
@@ -19,10 +24,5 @@ export const routes: Routes = [
     path: 'editor',
     loadChildren: () =>
       import('./features/editor/editor.routes').then((m) => m.EDITOR_ROUTES),
-  },
-  {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full',
   },
 ];
