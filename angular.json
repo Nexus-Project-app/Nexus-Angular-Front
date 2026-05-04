@@ -38,7 +38,6 @@
               "@vue/compiler-dom",
               "@vue/runtime-dom",
               "@vue/shared",
-              "emojilib",
               "@sindresorhus/is",
               "char-regex",
               "skin-tone"
