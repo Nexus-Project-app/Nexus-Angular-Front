@@ -34,7 +34,7 @@ export interface UserProfile {
         <div class="user-meta">
           <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
           <div>
-            <p class="user-name">{{ user().name }} - {{ user().role }}</p>
+            <p class="user-name" class="flex">{{ user().name }} - {{ user().role }}</p>
             <p class="user-role">{{ user().email }}</p>
           </div>
         </div>
@@ -165,7 +165,7 @@ export class NavbarComponent {
   protected readonly user = signal<UserProfile>({
     name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
     email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
-    role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Administrateur' : 'Utilisateur',
+    role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
   });
 
   protected readonly userInitial = computed(() =>
@@ -193,9 +193,9 @@ export class NavbarComponent {
     this.user.set({
       name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
       email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
-      role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Administrateur' : 'Utilisateur',
+      role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
     });
-    console.log(JSON.stringify(this.user()));
+    console.log(JSON.stringify(this.keycloak.tokenParsed));
   }
 
 
