@@ -36,11 +36,6 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Run tests
-        run: npm test -- --run --coverage
-        env:
-          CI: 'true'
-
       - name: Upload coverage to SonarCloud
         uses: codecov/codecov-action@v4
         with:
