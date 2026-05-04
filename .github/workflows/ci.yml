@@ -12,6 +12,9 @@ concurrency:
 
 env:
   NODE_VERSION: '24'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true' # en gros permet de focer node 24 pour les action car node 20 c'est déprécier
+
+# on ajoute pas sonar car il est en analyse automatique et en continue
 
 jobs:
   build-and-test:
