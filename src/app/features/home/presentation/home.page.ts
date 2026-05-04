@@ -467,8 +467,7 @@ export class HomePageComponent {
   private readonly router = inject(Router);
   protected readonly keycloak = inject(Keycloak);
 
-  private isConnected = false;
-
+  protected isConnected = signal(this.keycloak.authenticated);
 
   protected readonly user = signal<UserProfile>({
     name: 'Admin Superadmin',
