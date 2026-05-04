@@ -23,7 +23,7 @@ WORKDIR /app
 
 # Production deps only
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+RUN npm install --omit=dev --ignore-scripts && npm cache clean --force
 
 # Built artefacts from builder
 COPY --from=builder --chown=nexus:nexus /app/dist ./dist
