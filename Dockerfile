@@ -10,7 +10,7 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 
 # Install all dependencies (dev tools required for Angular build)
-RUN npm ci --no-audit --no-fund
+RUN npm install --no-audit --no-fund
 
 # Copy source after deps to avoid invalidating npm layer on code changes
 COPY . .
@@ -29,8 +29,8 @@ WORKDIR /prod
 COPY package.json package-lock.json ./
 
 # BuildKit secrets: if private npm registry needed, use:
-#   RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci ...
-RUN npm ci --omit=dev --omit=optional --no-audit --no-fund && \
+#   RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm install ...
+RUN npm install --omit=dev --omit=optional --no-audit --no-fund && \
     npm cache clean --force
 
 # ──────────────────────────────────────────────────────────────────────────────
