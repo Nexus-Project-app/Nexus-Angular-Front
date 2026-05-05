@@ -13,16 +13,16 @@ export const appConfig: ApplicationConfig = {
     provideKeycloak({
       config: {
         
-        // url : 'https://groupe5.diiage.org/auth',
-        // realm: 'nexus',
-        // clientId: 'nexus-client'
+        url : 'https://groupe5.diiage.org/auth',
+        realm: 'nexus',
+        clientId: 'nexus-client'
       
         // 
         //*
 
-        url: 'http://localhost:8080',
-        realm: 'mon-realm',
-        clientId: 'mon-client'
+        // url: 'http://localhost:8080',
+        // realm: 'mon-realm',
+        // clientId: 'mon-client'
       
       },
       initOptions: {
