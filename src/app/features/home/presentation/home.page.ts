@@ -4,7 +4,7 @@ import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
 import { NavbarComponent } from '../../../shared/components/navbar.component';
-import Keycloak from 'keycloak-js';
+import { AuthService } from '../../../shared/services/auth.service';
 
 export interface UserProfile {
   readonly name: string;
@@ -465,9 +465,9 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
 })
 export class HomePageComponent {
   private readonly router = inject(Router);
-  protected readonly keycloak = inject(Keycloak);
-
-  protected isConnected = signal(this.keycloak.authenticated);
+  protected readonly auth = inject(AuthService);
+  protected readonly keycloak = this.auth.instance
+  protected isConnected = signal(this.keycloak?.authenticated);
 
   protected readonly user = signal<UserProfile>({
     name: 'Admin Superadmin',
