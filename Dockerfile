@@ -1,23 +1,30 @@
 # ──────────────────────────────────────────────────────────────────────────────
+# SHA256 pinning (reproducibility + security):
+#   docker pull dhi.io/node:24-alpine3.23
+#   docker inspect --format='{{index .RepoDigests 0}}' dhi.io/node:24-alpine3.23
+# Then replace tag with: dhi.io/node:24-alpine3.23@sha256:<digest>
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Stage 1: Builder
 # ──────────────────────────────────────────────────────────────────────────────
 FROM dhi.io/node:24-alpine3.23 AS builder
 
 WORKDIR /build
 
-# Copy lock files first for cache efficiency
-COPY package.json package-lock.json /build/
+# Cache-friendly: lock files first so npm ci layer is reused when source changes
+COPY package.json package-lock.json ./
 
-# Install dependencies (including dev for build)
+# Install all dependencies (dev tools required for Angular build)
 RUN npm ci --no-audit --no-fund
 
-# Copy source code
+# Copy source after deps to avoid invalidating npm layer on code changes
 COPY . .
 
-# Ensure public/ exists even if empty
+# Ensure public/ exists so runtime COPY never fails on empty asset dir
 RUN mkdir -p public
 
-# Build Angular application
+# Build Angular SSR application
 RUN npm run build
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -25,45 +32,55 @@ RUN npm run build
 # ──────────────────────────────────────────────────────────────────────────────
 FROM dhi.io/node:24-alpine3.23
 
-# OCI Image Labels
-LABEL org.opencontainers.image.title="Nexus Angular Frontend"
-LABEL org.opencontainers.image.description="Angular 21+ SSR frontend for Nexus Project"
-LABEL org.opencontainers.image.source="https://github.com/Nexus-Project-app/Nexus-Angular-Front"
-LABEL org.opencontainers.image.documentation="https://github.com/Nexus-Project-app/Nexus-Angular-Front"
-LABEL org.opencontainers.image.vendor="Nexus Project"
-LABEL org.opencontainers.image.licenses="MIT"
+# Build-time metadata — pass via: --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+ARG BUILD_DATE
+ARG GIT_REVISION
+ARG VERSION
 
-# Set working directory
+# OCI Image Labels (consolidated to single layer)
+LABEL org.opencontainers.image.title="Nexus Angular Frontend" \
+      org.opencontainers.image.description="Angular 21+ SSR frontend for Nexus Project" \
+      org.opencontainers.image.source="https://github.com/Nexus-Project-app/Nexus-Angular-Front" \
+      org.opencontainers.image.documentation="https://github.com/Nexus-Project-app/Nexus-Angular-Front" \
+      org.opencontainers.image.vendor="Nexus Project" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${GIT_REVISION}" \
+      org.opencontainers.image.version="${VERSION}"
+
+# Port control via env — override at runtime: docker run -e PORT=3000
+ENV PORT=4000
+
+# tini: proper PID 1 init, forwards SIGTERM to node process (graceful shutdown)
+# Non-root user: minimal attack surface
+RUN apk add --no-cache tini && \
+    addgroup -S nexus && adduser -S nexus -G nexus
+
 WORKDIR /app
 
-# Create non-root user (hardened)
-RUN addgroup -S nexus && adduser -S nexus -G nexus
+# Cache-friendly: prod deps layer before copying built artifacts (changes less often)
+COPY package.json package-lock.json ./
 
-# Copy package files
-COPY package.json package-lock.json /app/
-
-# Install production dependencies only
+# Production deps only — no dev tools in runtime image
+# BuildKit secrets: if private npm registry needed, use:
+#   RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci ...
 RUN npm ci --omit=dev --omit=optional --no-audit --no-fund && \
     npm cache clean --force
 
-# Copy built application from builder stage
+# Copy artifacts from builder (never from host — avoids stale local files)
 COPY --from=builder --chown=nexus:nexus /build/dist ./dist/
+COPY --from=builder --chown=nexus:nexus /build/public/ ./public/
 
-# Copy public assets
-COPY --chown=nexus:nexus public/ ./public/
-
-# Security: Verify build artifacts exist
+# Fail fast if build artifact missing
 RUN test -f dist/projet/server/server.mjs || (echo "ERROR: server.mjs not found" && exit 1)
 
-# Switch to non-root user
 USER nexus
 
-# Expose port
-EXPOSE 4000
+EXPOSE ${PORT}
 
-# Health check (graceful)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:4000/health', (res) => { if(res.statusCode !== 200) throw new Error(res.statusCode); })" || exit 1
+    CMD node -e "require('http').get('http://localhost:' + process.env.PORT + '/health', (res) => { if(res.statusCode !== 200) throw new Error(res.statusCode); })" || exit 1
 
-# Start application with graceful shutdown
+# tini as ENTRYPOINT ensures SIGTERM propagates correctly to node (PID 1 problem solved)
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "--enable-source-maps", "dist/projet/server/server.mjs"]
