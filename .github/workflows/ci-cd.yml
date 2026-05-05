@@ -48,7 +48,7 @@ jobs:
             dist/projet
             npm-install.log
             build.log
-
+  # délpoiement docker sur le servehr de production
   docker:
     name: Build & Push Docker Image
     runs-on: [self-hosted, nexus, front]
