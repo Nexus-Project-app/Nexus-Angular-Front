@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 1: Builder — Angular build + production deps
-# Has a working shell; all RUN commands live here.
+# Uses stock Node Alpine (has shell + npm). dhi.io/node is distroless — no /bin/sh.
 # ──────────────────────────────────────────────────────────────────────────────
-FROM dhi.io/node@sha256:fde8eaa98fe792804511c8729462a9825d6f66b620ad56b377e386c1a0fc2177 AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /build
 
@@ -10,7 +10,7 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 
 # Install all dependencies (dev tools required for Angular build)
-RUN npm install --no-audit --no-fund --verbose
+RUN npm install --no-audit --no-fund
 
 # Copy source after deps to avoid invalidating npm layer on code changes
 COPY . .
