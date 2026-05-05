@@ -35,7 +35,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci 2>&1 | tee npm-install.log
+        run: npm install 2>&1 | tee npm-install.log
 
       - name: Lint
         run: npm run lint 2>&1 | tee lint.log
