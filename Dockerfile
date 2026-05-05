@@ -10,7 +10,7 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 
 # Install all dependencies (dev tools required for Angular build)
-RUN npm install --no-audit --no-fund
+RUN npm install --no-audit --no-fund --verbose
 
 # Copy source after deps to avoid invalidating npm layer on code changes
 COPY . .
