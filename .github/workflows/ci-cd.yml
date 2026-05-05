@@ -13,52 +13,97 @@ concurrency:
 env:
   NODE_VERSION: '24'
 
-# on ajoute pas sonar car il est en analyse automatique et en continue
+# SonarQube runs in automatic continuous analysis mode — not invoked here
 
 jobs:
-  build-and-test:
-    name: Build
+  # ────────────────────────────────────────────────────────────────────────────
+  # Quality gates: lint, test, build validation, filesystem vulnerability scan
+  # Runs on GitHub-hosted runner for clean, reproducible environment
+  # ────────────────────────────────────────────────────────────────────────────
+  quality:
+    name: Quality Gates
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Listing files
-        run: ls -la
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install 2>&1 | tee npm-install.log
+        run: npm ci 2>&1 | tee npm-install.log
+
+      - name: Lint
+        run: npm run lint 2>&1 | tee lint.log
+
+      # - name: Run tests
+      #   # ChromeHeadless requires --no-sandbox on CI; configure in karma.config.js
+      #   # if ChromeHeadlessNoSandbox launcher is not defined, add:
+      #   #   browsers: ['ChromeHeadless']  with  flags: ['--no-sandbox']
+      #   run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadless 2>&1 | tee test.log
 
       - name: Build application
         run: npm run build 2>&1 | tee build.log
-        if: success()
 
-      - name: Upload build artifact and logs
-        uses: actions/upload-artifact@v4
+      - name: Scan filesystem for vulnerabilities (Trivy)
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          name: build-dist
+          scan-type: fs
+          scan-ref: .
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-fs-results.sarif
+
+      - name: Upload Trivy filesystem scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: trivy-fs-results.sarif
+
+      - name: Upload quality logs and scan results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: quality-logs-${{ github.sha }}
           path: |
-            dist/projet
             npm-install.log
+            lint.log
+            test.log
             build.log
-  # délpoiement docker sur le servehr de production
+            trivy-fs-results.sarif
+          retention-days: 30
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Docker: build production image, push to GHCR, scan image, attest provenance
+  # ────────────────────────────────────────────────────────────────────────────
   docker:
     name: Build & Push Docker Image
     runs-on: [self-hosted, nexus, front]
-    needs: build-and-test
+    needs: quality
+    permissions:
+      contents: read
+      packages: write
+      id-token: write         # required for provenance attestation
+      security-events: write  # required for SARIF upload
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - name: Set up Docker Build
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
+
+      - name: Log in to dhi.io registry
+        uses: docker/login-action@v4
+        with:
+          registry: dhi.io
+          username: ${{ secrets.DHI_USERNAME }}
+          password: ${{ secrets.DHI_PASSWORD }}
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
@@ -69,7 +114,7 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -79,13 +124,55 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        id: build
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            GIT_REVISION=${{ github.sha }}
+            VERSION=${{ github.ref_name }}
 
+      - name: Set lowercase image ref for Trivy
+        id: image-ref
+        run: |
+          echo "value=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')@${{ steps.build.outputs.digest }}" >> $GITHUB_OUTPUT
+
+      - name: Scan Docker image for vulnerabilities (Trivy)
+        id: trivy-image-scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ steps.image-ref.outputs.value }}
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-image-results.sarif
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
+        with:
+          sarif_file: trivy-image-results.sarif
+
+      - name: Upload Trivy SARIF artifact
+        if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
+        uses: actions/upload-artifact@v7
+        with:
+          name: trivy-image-results-${{ github.sha }}
+          path: trivy-image-results.sarif
+          retention-days: 30
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Deploy: pull latest image and redeploy via docker compose
+  # Runs only on push to main (not on PRs)
+  # ────────────────────────────────────────────────────────────────────────────
   deploy:
     name: Deploy Nexus Frontend
     runs-on: [self-hosted, nexus, front]
@@ -93,6 +180,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     env:
       COMPOSE_DIR: /opt/nexus
+
     steps:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4

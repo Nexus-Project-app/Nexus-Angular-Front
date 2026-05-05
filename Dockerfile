@@ -1,14 +1,8 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# SHA256 pinning (reproducibility + security):
-#   docker pull dhi.io/node:24-alpine3.23
-#   docker inspect --format='{{index .RepoDigests 0}}' dhi.io/node:24-alpine3.23
-# Then replace tag with: dhi.io/node:24-alpine3.23@sha256:<digest>
+# Stage 1: Builder — Angular build + production deps
+# Uses stock Node Alpine (has shell + npm). dhi.io/node is distroless — no /bin/sh.
 # ──────────────────────────────────────────────────────────────────────────────
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Stage 1: Builder
-# ──────────────────────────────────────────────────────────────────────────────
-FROM dhi.io/node:24-alpine3.23 AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /build
 
@@ -16,7 +10,7 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 
 # Install all dependencies (dev tools required for Angular build)
-RUN npm ci --no-audit --no-fund
+RUN npm install --no-audit --no-fund
 
 # Copy source after deps to avoid invalidating npm layer on code changes
 COPY . .
@@ -27,10 +21,33 @@ RUN mkdir -p public
 # Build Angular SSR application
 RUN npm run build
 
+# Verify build artifact before runtime stage consumes it
+RUN test -f dist/projet/server/server.mjs || (echo "ERROR: server.mjs not found" && exit 1)
+
+# Install production-only deps in a separate directory for clean COPY to runtime
+WORKDIR /prod
+COPY package.json package-lock.json ./
+
+# BuildKit secrets: if private npm registry needed, use:
+#   RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm install ...
+RUN npm install --omit=dev --omit=optional --no-audit --no-fund && \
+    npm cache clean --force
+
 # ──────────────────────────────────────────────────────────────────────────────
-# Stage 2: Runtime (Hardened)
+# Stage 2: Setup — Alpine provides tini + non-root user
+# dhi.io/node:24-alpine3.23 is a hardened image (no shell in runtime).
+# Use stock Alpine to prepare init binary and user entries, then copy them over.
 # ──────────────────────────────────────────────────────────────────────────────
-FROM dhi.io/node:24-alpine3.23
+FROM alpine:3.23 AS setup
+
+RUN apk add --no-cache tini && \
+    addgroup -S nexus && adduser -S nexus -G nexus
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage 3: Runtime — hardened, shell-less, COPY-only
+# No RUN commands: avoids /bin/sh dependency on the hardened node image.
+# ──────────────────────────────────────────────────────────────────────────────
+FROM dhi.io/node@sha256:fde8eaa98fe792804511c8729462a9825d6f66b620ad56b377e386c1a0fc2177
 
 # Build-time metadata — pass via: --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 ARG BUILD_DATE
@@ -50,29 +67,23 @@ LABEL org.opencontainers.image.title="Nexus Angular Frontend" \
 
 # Port control via env — override at runtime: docker run -e PORT=3000
 ENV PORT=4000
+ENV NODE_ENV=production
 
-# tini: proper PID 1 init, forwards SIGTERM to node process (graceful shutdown)
-# Non-root user: minimal attack surface
-RUN apk add --no-cache tini && \
-    addgroup -S nexus && adduser -S nexus -G nexus
+# Bring in non-root user entries from Alpine setup stage
+COPY --from=setup /etc/passwd /etc/passwd
+COPY --from=setup /etc/group /etc/group
+
+# tini static binary from Alpine setup stage (musl-compatible, no shell needed)
+COPY --from=setup /sbin/tini /sbin/tini
 
 WORKDIR /app
 
-# Cache-friendly: prod deps layer before copying built artifacts (changes less often)
-COPY package.json package-lock.json ./
+# Production node_modules from builder (no npm install needed at runtime)
+COPY --from=builder --chown=nexus:nexus /prod/node_modules ./node_modules/
 
-# Production deps only — no dev tools in runtime image
-# BuildKit secrets: if private npm registry needed, use:
-#   RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci ...
-RUN npm ci --omit=dev --omit=optional --no-audit --no-fund && \
-    npm cache clean --force
-
-# Copy artifacts from builder (never from host — avoids stale local files)
+# Built Angular SSR artifacts
 COPY --from=builder --chown=nexus:nexus /build/dist ./dist/
 COPY --from=builder --chown=nexus:nexus /build/public/ ./public/
-
-# Fail fast if build artifact missing
-RUN test -f dist/projet/server/server.mjs || (echo "ERROR: server.mjs not found" && exit 1)
 
 USER nexus
 
@@ -81,6 +92,6 @@ EXPOSE ${PORT}
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD node -e "require('http').get('http://localhost:' + process.env.PORT + '/health', (res) => { if(res.statusCode !== 200) throw new Error(res.statusCode); })" || exit 1
 
-# tini as ENTRYPOINT ensures SIGTERM propagates correctly to node (PID 1 problem solved)
+# tini as PID 1: forwards SIGTERM to node for graceful shutdown
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "--enable-source-maps", "dist/projet/server/server.mjs"]
