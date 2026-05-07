@@ -1,10 +1,19 @@
-﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+﻿import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
 import { NavbarComponent } from '../../../shared/components/navbar.component';
 import { AuthService } from '../../../shared/services/auth.service';
+import { PostsService } from '../../../infrastructure/services/posts.service';
+import { PostDto } from '../../posts/models/post.model';
 
 export interface UserProfile {
   readonly name: string;
@@ -42,36 +51,11 @@ const SIDEBAR_ITEM_TEMPLATE: Omit<SidebarItem, 'id'> = {
   subtitle: '',
 };
 
-const FEED_CARD_TEMPLATE: Omit<FeedCard, 'id'> = {
-  author: 'John doe',
-  title: 'Titre du post/ de la documentation',
-  description:
-    'Dans ce guide, nous allons explorer les concepts fondamentaux de Kubernetes et comment l utiliser pour orchestrer des containers Docker en production...',
-  tags: ['Docker', 'Kubernetes', 'DevOps'],
-  actions: [
-    { id: 'likes', icon: 'like', label: 'J aime', count: '42' },
-    { id: 'comments', icon: 'comment', label: 'Commentaires', count: '12' },
-    { id: 'shares', icon: 'share', label: 'Partages', count: '7' },
-  ],
-  savedCount: '42',
-};
-
 function createSidebarItem(id: string): SidebarItem {
   return {
     id,
     ...SIDEBAR_ITEM_TEMPLATE,
   };
-}
-
-function createFeedCard(id: string): FeedCard {
-  return {
-    id,
-    ...FEED_CARD_TEMPLATE,
-  };
-}
-
-function createFeedCards(ids: ReadonlyArray<string>): ReadonlyArray<FeedCard> {
-  return ids.map((id) => createFeedCard(id));
 }
 
 function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarItem> {
@@ -115,9 +99,16 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
           </div>
         </aside>
         <section class="feed-column" aria-label="Fil d actualites">
-          <app-create-documentation (created)="openEditor($event)" />
+          @if (isConnected()) {
+            <app-create-documentation (created)="openEditor($event)" />
+          }
           @for (card of feedCards(); track card.id) {
-            <article class="feed-card" aria-label="Publication de {{ card.author }}">
+            <article
+              class="feed-card"
+              aria-label="Publication de {{ card.author }}"
+              (click)="navigateToPost(card.id)"
+              style="cursor: pointer;"
+            >
               <header class="card-head">
                 <div class="card-author">
                   <div class="avatar" aria-hidden="true">
@@ -173,6 +164,30 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
           <p class="feed-summary" aria-live="polite">
             Total interactions sur le fil: {{ totalInteractions() }}
           </p>
+
+          @if (hasPreviousPage() || hasNextPage()) {
+            <nav class="feed-pagination" aria-label="Navigation des pages">
+              <button
+                class="pagination-btn"
+                type="button"
+                [disabled]="!hasPreviousPage()"
+                (click)="previousPage()"
+                aria-label="Page précédente"
+              >
+                ← Précédent
+              </button>
+              <span class="pagination-info">Page {{ currentPage() }}</span>
+              <button
+                class="pagination-btn"
+                type="button"
+                [disabled]="!hasNextPage()"
+                (click)="nextPage()"
+                aria-label="Page suivante"
+              >
+                Suivant →
+              </button>
+            </nav>
+          }
         </section>
         <aside class="right-sidebar" aria-label="Decouverte et informations">
           <app-discovery-item [title]="'Découverte de Sujets'" [items]="topicDiscoveries()" />
@@ -405,6 +420,34 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       font-size: 0.85rem;
       margin: 0;
     }
+    .feed-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+    }
+    .pagination-btn {
+      background: var(--nexus-surface-raised);
+      border: 1px solid var(--nexus-border);
+      border-radius: 0.5rem;
+      color: var(--nexus-text-primary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .pagination-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.35;
+    }
+    .pagination-btn:not(:disabled):hover {
+      background: var(--nexus-border);
+    }
+    .pagination-info {
+      color: var(--nexus-text-secondary);
+      font-size: 0.85rem;
+    }
     .right-sidebar {
       display: flex;
       flex-direction: column;
@@ -468,9 +511,10 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     }
   `,
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
+  private readonly postsService = inject(PostsService);
   protected readonly keycloak = this.auth.instance;
   protected isConnected = signal(this.keycloak?.authenticated);
 
@@ -483,9 +527,54 @@ export class HomePageComponent {
     createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   );
 
-  protected readonly feedCards = signal<ReadonlyArray<FeedCard>>(
-    createFeedCards(['card-1', 'card-2', 'card-3']),
-  );
+  protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([]);
+  protected readonly currentPage = signal(1);
+  protected readonly hasNextPage = signal(false);
+  protected readonly hasPreviousPage = signal(false);
+  protected readonly totalCount = signal(0);
+  private readonly PAGE_SIZE = 10;
+
+  ngOnInit(): void {
+    this.loadFeed(1);
+  }
+
+  protected loadFeed(page: number): void {
+    this.postsService.listPosts(page, this.PAGE_SIZE).subscribe({
+      next: (response) => {
+        const cards = response.items.map(
+          (post: PostDto): FeedCard => ({
+            id: post.id,
+            author: post.authorId,
+            title: post.title,
+            description: post.content,
+            tags: post.tags,
+            actions: [
+              { id: 'likes', icon: 'like', label: "J'aime", count: '0' },
+              { id: 'comments', icon: 'comment', label: 'Commentaires', count: '0' },
+              { id: 'shares', icon: 'share', label: 'Partages', count: '0' },
+            ],
+            savedCount: '0',
+          }),
+        );
+        this.feedCards.set(cards);
+        this.currentPage.set(response.page);
+        this.hasNextPage.set(response.hasNextPage);
+        this.hasPreviousPage.set(response.hasPreviousPage);
+        this.totalCount.set(response.totalCount);
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des posts :', err);
+      },
+    });
+  }
+
+  protected nextPage(): void {
+    this.loadFeed(this.currentPage() + 1);
+  }
+
+  protected previousPage(): void {
+    this.loadFeed(this.currentPage() - 1);
+  }
 
   protected readonly topicDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([
     { id: 't1', name: 'Kubernetes', metric: '8465 posts' },
@@ -504,6 +593,10 @@ export class HomePageComponent {
     await this.router.navigate(['/editor'], {
       queryParams: { title },
     });
+  }
+
+  protected async navigateToPost(id: string) {
+    await this.router.navigate(['/posts', id]);
   }
 
   protected readonly totalInteractions = computed(() =>

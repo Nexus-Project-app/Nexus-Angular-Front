@@ -56,7 +56,7 @@ jobs:
           scan-ref: .
           exit-code: '1'
           severity: CRITICAL,HIGH
-          format: table
+          format: sarif
           output: trivy-fs-results.sarif
 
       - name: Upload Trivy filesystem scan results to GitHub Security tab

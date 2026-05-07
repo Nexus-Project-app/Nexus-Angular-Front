@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { ThemeService } from '../services/theme.service';
 import { environment } from '../../../environment/environment';
@@ -37,7 +44,7 @@ export interface UserProfile {
           <div class="user-meta">
             <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
             <div>
-              <p class="user-name" class="flex">{{ user().name }} - {{ user().role }}</p>
+              <p class="flex">{{ user().name }} - {{ user().role }}</p>
               <p class="user-role">{{ user().email }}</p>
             </div>
           </div>
@@ -132,14 +139,6 @@ export interface UserProfile {
       width: 2rem;
     }
 
-    .user-name {
-      color: var(--nexus-text-primary);
-      font-size: 0.95rem;
-      font-weight: 600;
-      line-height: 1.2;
-      margin: 0;
-    }
-
     .user-role {
       color: color-mix(in srgb, var(--nexus-text-secondary) 70%, transparent);
       font-size: 0.8rem;
@@ -148,7 +147,7 @@ export interface UserProfile {
     }
   `,
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   protected readonly themeService = inject(ThemeService);
   protected readonly auth = inject(AuthService);
 

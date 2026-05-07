@@ -70,18 +70,19 @@
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
 
         @if (!notConnected()) {
-          Vous êtes connecté
+          Vous êtes bien connecté
+        } @else {
+          Vous n'êtes pas connecté
           <span class="text-sm text-gray-500 dark:text-gray-400"> - (En tant qu'invité)</span>
-        }
-        @else {
-          Vous êtes bien connecté - {{ getUserRole() }}
         }
 
       </h2>
 
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-        Votre authentification a réussi. Vous pouvez maintenant accéder à la plateforme.
-      </p>
+      @if (!notConnected()) {
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          Votre authentification a réussi. Vous pouvez maintenant accéder à la plateforme.
+        </p>
+      }
 
       <!-- Actions -->
       <div class="flex flex-col gap-3">
@@ -92,7 +93,7 @@
           Accéder au dashboard
         </button>
 
-        @if (notConnected()) {
+        @if (!notConnected()) {
           <button
             class="w-full py-2.5 px-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium text-sm rounded-lg transition"
             (click)="logout()">
@@ -100,23 +101,19 @@
           </button>
         }
 
-        @if (!notConnected()) {
+        @if (notConnected()) {
           <button
             class="w-full py-2.5 px-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium text-sm rounded-lg transition"
             (click)="login()">
             Se connecter
           </button>
-        }
 
-        @if(!notConnected()){
           <div class="flex flex-col gap-3">
-
             <button
               class="w-full py-2.5 px-4 bg-gray-900 hover:bg-gray-800 text-white font-medium text-sm rounded-lg flex items-center justify-center gap-2"
               (click)="loginGithub()">
               🐙 Continuer avec GitHub
             </button>
-
           </div>
         }
 
