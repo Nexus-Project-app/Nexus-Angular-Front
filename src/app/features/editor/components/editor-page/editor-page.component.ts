@@ -123,6 +123,7 @@ export class EditorPageComponent {
   }
 
   onSave(): void {
+    console.log(this.crepe?.getMarkdown());
     if (this.isSaving()) {
       return;
     }
@@ -143,7 +144,7 @@ export class EditorPageComponent {
         next: () => {
           this.isSaved.set(true);
           this.isSaving.set(false);
-          void this.router.navigate(['/posts', postId]);
+          this.router.navigate(['/posts', postId]);
         },
         error: (error: Error) => {
           console.error('Failed to update post', error);
@@ -158,7 +159,7 @@ export class EditorPageComponent {
       next: (newPostId) => {
         this.isSaved.set(true);
         this.isSaving.set(false);
-        void this.router.navigate(['/posts', newPostId]);
+        this.router.navigate(['/posts', newPostId]);
       },
       error: (error: Error) => {
         console.error('Failed to create post', error);

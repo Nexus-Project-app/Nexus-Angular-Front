@@ -113,7 +113,7 @@ export class PostViewComponent {
     if (!currentPost) {
       return;
     }
-    void this.router.navigate(['/editor'], {
+    this.router.navigate(['/editor'], {
       queryParams: { id: currentPost.id, title: currentPost.title },
     });
   }
@@ -129,7 +129,7 @@ export class PostViewComponent {
     }
 
     this.postsService.deletePost(currentPost.id).subscribe({
-      next: () => void this.router.navigate(['/']),
+      next: () => this.router.navigate(['/']),
       error: (error: Error) => console.error('Failed to delete post', error),
     });
   }
