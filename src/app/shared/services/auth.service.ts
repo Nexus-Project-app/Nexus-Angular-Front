@@ -8,6 +8,11 @@ export class AuthService {
   private isAuthenticated = false;
 
   async init(): Promise<void> {
+    // SSR-safe: only init Keycloak in browser environment
+    if (globalThis.window === undefined) {
+      return;
+    }
+
     if (this.initialized) {
       return;
     }
@@ -20,24 +25,26 @@ export class AuthService {
       clientId: 'mon-client',
     });
 
-    const authenticated = await this.keycloak.init({
+    this.isAuthenticated = await this.keycloak.init({
       onLoad: 'check-sso',
       checkLoginIframe: false,
     });
-
-    this.isAuthenticated = authenticated;
   }
 
   async login() {
-    await this.keycloak.login({
-      redirectUri: globalThis.window.location.origin + '/auth/callBack',
-    });
+    if (globalThis.window !== undefined) {
+      await this.keycloak.login({
+        redirectUri: globalThis.window.location.origin + '/auth/callBack',
+      });
+    }
   }
 
   async logout() {
-    await this.keycloak.logout({
-      redirectUri: globalThis.window.location.origin,
-    });
+    if (globalThis.window !== undefined) {
+      await this.keycloak.logout({
+        redirectUri: globalThis.window.location.origin,
+      });
+    }
   }
 
   get instance() {
