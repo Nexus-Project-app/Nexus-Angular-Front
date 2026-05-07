@@ -1,35 +1,28 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+
+
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { AuthService } from './shared/services/auth.service';
 import { provideRouter } from '@angular/router';
-
-import { provideKeycloak } from 'keycloak-angular';
-
+import { provideClientHydration } from '@angular/platform-browser';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { USER_REPOSITORY } from './features/auth/application/ports/user.repository';
+import { UserApi } from './features/auth/infrastructure/user.api';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+       provide: USER_REPOSITORY,
+       useClass: UserApi
+    },
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideKeycloak({
-      config: {
-        
-        url : 'https://groupe5.diiage.org/auth',
-        realm: 'nexus',
-        clientId: 'nexus-client'
-      
-        // 
-        //*
-
-        // url: 'http://localhost:8080',
-        // realm: 'mon-realm',
-        // clientId: 'mon-client'
-      
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        checkLoginIframe: false,
-        silentCheckSsoRedirectUri: undefined  
-      }
-    })
-  ]
+    provideRouter(routes),
+    provideClientHydration(),
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      return authService.init();
+    }),
+  ],
 };
+
+
