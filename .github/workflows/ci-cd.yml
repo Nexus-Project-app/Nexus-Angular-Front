@@ -57,13 +57,13 @@ jobs:
           exit-code: '1'
           severity: CRITICAL,HIGH
           format: table
-          output: trivy-fs-results.sarif.log
+          output: trivy-fs-results.sarif
 
       - name: Upload Trivy filesystem scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: trivy-fs-results.sarif.log
+          sarif_file: trivy-fs-results.sarif
 
       - name: Upload quality logs and scan results
         if: always()
@@ -75,7 +75,7 @@ jobs:
             lint.log
             test.log
             build.log
-            trivy-fs-results.sarif.log
+            trivy-fs-results.sarif
           retention-days: 30
 
   # ────────────────────────────────────────────────────────────────────────────
