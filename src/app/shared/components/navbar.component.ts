@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { NgOptimizedImage } from '@angular/common';
 import { ThemeService } from '../services/theme.service';
 import Keycloak from 'keycloak-js';
+import { Router } from '@angular/router';
+import { environment } from '../../../environment/environment';
+import { AuthService } from '../services/auth.service';
 
 export interface UserProfile {
   readonly name: string;
@@ -159,13 +162,16 @@ export interface UserProfile {
 })
 export class NavbarComponent {
   protected readonly themeService = inject(ThemeService);
-  protected readonly keycloak = inject(Keycloak);
+  protected readonly auth = inject(AuthService);
+
+  protected readonly keycloak = this.auth.instance;
+
   protected isConnected = false;
 
   protected readonly user = signal<UserProfile>({
-    name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
-    email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
-    role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
+    name: this.keycloak?.idTokenParsed?.['preferred_username'] || 'Utilisateur',
+    email: this.keycloak?.idTokenParsed?.['email'] || 'Invité',
+    role: this.keycloak?.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
   });
 
   protected readonly userInitial = computed(() =>
@@ -175,25 +181,26 @@ export class NavbarComponent {
   
   logout(): void {
     this.keycloak.logout({
-      redirectUri: window.location.origin,
+      redirectUri: `${environment.url}/auth/callBack`,
     });
   }
 
   login(): void {
     this.keycloak.login({
-      redirectUri: window.location.origin + '/auth/callBack',
+      redirectUri: `${environment.url}/auth/callBack`,
       prompt: 'login'
     });
   }
 
 
   ngOnInit(): void {
-    this.isConnected = this.keycloak.authenticated;
+
+    this.isConnected = this.keycloak?.authenticated;
 
     this.user.set({
-      name: this.keycloak.idTokenParsed?.['preferred_username'] || 'Utilisateur',
-      email: this.keycloak.idTokenParsed?.['email'] || 'Invité',
-      role: this.keycloak.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
+      name: this.keycloak?.idTokenParsed?.['preferred_username'] || 'Utilisateur',
+      email: this.keycloak?.idTokenParsed?.['email'] || 'Invité',
+      role: this.keycloak?.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
     });
     console.log(JSON.stringify(this.keycloak.tokenParsed));
   }

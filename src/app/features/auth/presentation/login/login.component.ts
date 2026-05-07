@@ -3,8 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import Keycloak from 'keycloak-js';
-import { KeycloakEventType } from 'keycloak-angular';
-
+import { environment } from '../../../../../environment/environment';
 
 @Component({
   selector: 'app-login',
@@ -24,21 +23,19 @@ export class LoginComponent {
   protected readonly serverError = signal<string | null>(null);
   protected readonly showPassword = signal(false);
 
-  protected readonly keycloak = inject(Keycloak);
-
+  protected readonly auth = inject(Keycloak);
 
   ngOnInit(): void {
-    console.log('Login loaded : ' + JSON.stringify(this.keycloak.tokenParsed
-    ));
-    console.log('Authenticated:' + this.keycloak.authenticated);
+    console.log('Login loaded : ' + JSON.stringify(this.auth.tokenParsed));
+    console.log('Authenticated:' + this.auth.authenticated);
 
-    if(this.keycloak.authenticated)
+    if(this.auth.authenticated)
     {
       this.router.navigate(['/']);
     }
 
     // Écoute les événements de Keycloak
-    this.keycloak.onAuthSuccess = () => {
+    this.auth.onAuthSuccess = () => {
       console.log('Authentication successful');
       this.router.navigate(['/']);
     };
@@ -52,10 +49,9 @@ export class LoginComponent {
     this.loading.set(true);
     this.serverError.set(null);
 
-    this.keycloak.login({
-          redirectUri: window.location.origin + '/auth/callBack',
+    this.auth.login({
+          redirectUri: environment.url + '/auth/callBack',
           prompt: 'login'
         });
-
   }
 }
