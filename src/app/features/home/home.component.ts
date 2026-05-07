@@ -101,7 +101,7 @@ export class HomeComponent {
   }
 
   protected openPost(id: string): void {
-    void this.router.navigate(['/posts', id]);
+    this.router.navigate(['/posts', id]);
   }
 
   protected getExcerpt(content: string): string {
