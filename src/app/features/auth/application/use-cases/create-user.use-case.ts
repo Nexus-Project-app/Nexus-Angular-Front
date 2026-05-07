@@ -6,8 +6,15 @@ import { CreateUserDTO } from '../../domain/user.model';
 export class CreateUserUseCase {
   private readonly repo = inject(USER_REPOSITORY);
 
-  
   execute(user: CreateUserDTO) {
     return this.repo.create(user);
   }
+}
+
+@Injectable({ providedIn: 'root' })
+export class me {
+    private readonly repo = inject(USER_REPOSITORY);
+    execute(){
+        return this.repo.me()
+    }
 }

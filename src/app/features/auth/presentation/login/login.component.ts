@@ -26,8 +26,7 @@ export class LoginComponent {
   protected readonly auth = inject(Keycloak);
 
   ngOnInit(): void {
-    console.log('Login loaded : ' + JSON.stringify(this.auth.tokenParsed
-    ));
+    console.log('Login loaded : ' + JSON.stringify(this.auth.tokenParsed));
     console.log('Authenticated:' + this.auth.authenticated);
 
     if(this.auth.authenticated)
@@ -54,6 +53,5 @@ export class LoginComponent {
           redirectUri: environment.url + '/auth/callBack',
           prompt: 'login'
         });
-
   }
 }

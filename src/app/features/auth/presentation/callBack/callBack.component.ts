@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
-import { CreateUserDTO, User } from '../../domain/user.model';
+import { CreateUserUseCase, me } from '../../application/use-cases/create-user.use-case';
+import { CreateUserDTO } from '../../domain/user.model';
 import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class CallBackComponent {
 
     private readonly authService = inject(AuthService);
     private readonly createUser = inject(CreateUserUseCase);
+    private readonly me = inject(me)
     private readonly router = inject(Router);
 
     private readonly keycloak = this.authService.instance;
@@ -30,11 +31,11 @@ export class CallBackComponent {
         lastName: ''
     });
 
-    protected readonly notConnected = signal<Boolean>(false);
+    protected readonly notConnected = signal<Boolean>(true);
 
     ngOnInit() {
 
-        this.notConnected.set(!this.keycloak.authenticated) 
+        this.notConnected.set(this.keycloak.authenticated) 
 
         this.createUserDto.set({
             email:  this.keycloak?.idTokenParsed?.['email'] || '',
@@ -45,11 +46,17 @@ export class CallBackComponent {
 
 
         if (this.keycloak.authenticated) {
-            this.notConnected.set(true);
+            this.notConnected.set(this.keycloak.authenticated);
             this.createUser.execute(this.createUserDto()).subscribe(() => {
-                this.router.navigate(['/']);
+                //this.router.navigate(['/']);
             });
+            console.log(this.keycloak.token)
         }        
+
+          this.me.execute().subscribe()
+
+          console.log(this.keycloak.tokenParsed)
+          console.log(this.keycloak.token)
 
         setTimeout(() => {
             this.loading.set(false);

@@ -11,3 +11,10 @@ export interface CreateUserDTO {
   firstName: string,
   lastName: string
 }
+
+export interface UserMe {
+    id : string,
+    email : string,
+    username: string,
+    roles : string 
+}
