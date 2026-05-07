@@ -74,7 +74,9 @@ export class EditorPageComponent {
     });
 
     this.destroyRef.onDestroy(() => {
-      if (this._applySourceTimer) clearTimeout(this._applySourceTimer);
+      if (this._applySourceTimer) {
+        clearTimeout(this._applySourceTimer);
+      }
       const destroyPromise = this.crepe?.destroy();
       if (destroyPromise) {
         destroyPromise.catch((error: Error) => {
@@ -134,7 +136,7 @@ export class EditorPageComponent {
 
   private getInitialTitle(): string {
     const title = this.route.snapshot.queryParamMap.get('title')?.trim();
-    return title || 'Document sans titre';
+    return title ?? 'Document sans titre';
   }
 
   toggleMarkdownPanel(): void {
@@ -161,7 +163,9 @@ export class EditorPageComponent {
     const markdown = textarea.value;
     this.markdownSource.set(markdown);
 
-    if (this._applySourceTimer) clearTimeout(this._applySourceTimer);
+    if (this._applySourceTimer) {
+      clearTimeout(this._applySourceTimer);
+    }
     this._applySourceTimer = setTimeout(() => {
       if (this.crepe) {
         this.crepe.editor.action(replaceAll(markdown, true));
@@ -170,7 +174,9 @@ export class EditorPageComponent {
   }
 
   focusEditor(): void {
-    if (!this.crepe) return;
+    if (!this.crepe) {
+      return;
+    }
     const pm = this.editorRoot().nativeElement.querySelector<HTMLElement>('.ProseMirror');
     pm?.focus();
   }

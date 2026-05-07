@@ -81,7 +81,12 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
 @Component({
   selector: 'app-home-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CreateDocumentationComponent, DiscoveryItemComponent, FooterLinksComponent, NavbarComponent],
+  imports: [
+    CreateDocumentationComponent,
+    DiscoveryItemComponent,
+    FooterLinksComponent,
+    NavbarComponent,
+  ],
   template: `
     <a class="skip-link" href="#main-content">Aller au contenu principal</a>
     <div class="home-page">
@@ -466,7 +471,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
 export class HomePageComponent {
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
-  protected readonly keycloak = this.auth.instance
+  protected readonly keycloak = this.auth.instance;
   protected isConnected = signal(this.keycloak?.authenticated);
 
   protected readonly user = signal<UserProfile>({
@@ -475,11 +480,11 @@ export class HomePageComponent {
   });
 
   protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>(
-    createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6'])
+    createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   );
 
   protected readonly feedCards = signal<ReadonlyArray<FeedCard>>(
-    createFeedCards(['card-1', 'card-2', 'card-3'])
+    createFeedCards(['card-1', 'card-2', 'card-3']),
   );
 
   protected readonly topicDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([
@@ -495,20 +500,15 @@ export class HomePageComponent {
     { id: 'g4', name: 'Linux', metric: '200 utilisateurs' },
   ]);
 
-  protected openEditor(title: string): void {
-    this.router.navigate(['/editor'], {
+  protected async openEditor(title: string) {
+    await this.router.navigate(['/editor'], {
       queryParams: { title },
     });
   }
-
-
 
   protected readonly totalInteractions = computed(() =>
     this.feedCards()
       .flatMap((card) => card.actions)
       .reduce((accumulator, action) => accumulator + Number(action.count), 0),
   );
-
-  
 }
-

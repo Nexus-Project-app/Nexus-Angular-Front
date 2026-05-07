@@ -13,8 +13,8 @@ export class CreateUserUseCase {
 
 @Injectable({ providedIn: 'root' })
 export class me {
-    private readonly repo = inject(USER_REPOSITORY);
-    execute(){
-        return this.repo.me()
-    }
+  private readonly repo = inject(USER_REPOSITORY);
+  execute() {
+    return this.repo.me();
+  }
 }

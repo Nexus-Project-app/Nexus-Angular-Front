@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { ThemeService } from '../services/theme.service';
-import Keycloak from 'keycloak-js';
-import { Router } from '@angular/router';
 import { environment } from '../../../environment/environment';
 import { AuthService } from '../services/auth.service';
 
@@ -28,41 +26,31 @@ export interface UserProfile {
         <button
           class="icon-button"
           type="button"
-          [attr.aria-label]="themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+          [attr.aria-label]="
+            themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'
+          "
           (click)="themeService.toggle()"
         >
           <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
         @if (isConnected) {
-        <div class="user-meta">
-          <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
-          <div>
-            <p class="user-name" class="flex">{{ user().name }} - {{ user().role }}</p>
-            <p class="user-role">{{ user().email }}</p>
+          <div class="user-meta">
+            <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
+            <div>
+              <p class="user-name" class="flex">{{ user().name }} - {{ user().role }}</p>
+              <p class="user-role">{{ user().email }}</p>
+            </div>
           </div>
-        </div>
-        <button
-              class="icon-button"
-              type="button"
-              aria-label="Se déconnecter"
-              (click)="logout()"
-                >
-              <i class="fas fa-sign-out-alt"></i>
-        </button>
-        } 
-        
-        @if (!isConnected) {
-          <button
-              class="icon-button"
-                type="button"
-                aria-label="Se connecter"
-                (click)="login()"
-                  >
-                <i class="fas fa-user"></i>
+          <button class="icon-button" type="button" aria-label="Se déconnecter" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
           </button>
-        }        
+        }
 
-        
+        @if (!isConnected) {
+          <button class="icon-button" type="button" aria-label="Se connecter" (click)="login()">
+            <i class="fas fa-user"></i>
+          </button>
+        }
       </div>
     </header>
   `,
@@ -158,7 +146,7 @@ export interface UserProfile {
       line-height: 1.2;
       margin: 0;
     }
-  `
+  `,
 })
 export class NavbarComponent {
   protected readonly themeService = inject(ThemeService);
@@ -169,42 +157,35 @@ export class NavbarComponent {
   protected isConnected = false;
 
   protected readonly user = signal<UserProfile>({
-    name: this.keycloak?.idTokenParsed?.['preferred_username'] || 'Utilisateur',
-    email: this.keycloak?.idTokenParsed?.['email'] || 'Invité',
+    name: this.keycloak?.idTokenParsed?.['preferred_username'] ?? 'Utilisateur',
+    email: this.keycloak?.idTokenParsed?.['email'] ?? 'Invité',
     role: this.keycloak?.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
   });
 
-  protected readonly userInitial = computed(() =>
-    this.user().name.trim().charAt(0).toUpperCase()
-  );
+  protected readonly userInitial = computed(() => this.user().name.trim().charAt(0).toUpperCase());
 
-  
-  logout(): void {
-    this.keycloak.logout({
+  async logout() {
+    await this.keycloak.logout({
       redirectUri: `${environment.url}/auth/callBack`,
     });
   }
 
-  login(): void {
-    this.keycloak.login({
+  async login() {
+    await this.keycloak.login({
       redirectUri: `${environment.url}/auth/callBack`,
-      prompt: 'login'
+      prompt: 'login',
     });
   }
-
 
   ngOnInit(): void {
-
     this.isConnected = this.keycloak?.authenticated;
 
     this.user.set({
-      name: this.keycloak?.idTokenParsed?.['preferred_username'] || 'Utilisateur',
-      email: this.keycloak?.idTokenParsed?.['email'] || 'Invité',
+      name: this.keycloak?.idTokenParsed?.['preferred_username'] ?? 'Utilisateur',
+      email: this.keycloak?.idTokenParsed?.['email'] ?? 'Invité',
       role: this.keycloak?.realmAccess?.roles?.includes('admin') ? 'Admin' : 'Utilisateur',
     });
-    console.log(JSON.stringify(this.keycloak.tokenParsed));
   }
-
 
   navigateHome(event: Event): void {
     event.preventDefault();

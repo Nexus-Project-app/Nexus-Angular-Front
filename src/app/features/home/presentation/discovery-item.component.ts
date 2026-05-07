@@ -66,11 +66,13 @@ export interface DiscoveryItem {
       color: var(--nexus-text-secondary);
       font-size: 0.85rem;
     }
-  `
+  `,
 })
 export class DiscoveryItemComponent {
   readonly title = input.required<string>();
   readonly items = input.required<ReadonlyArray<DiscoveryItem>>();
 
-  protected readonly headingId = computed(() => `panel-${this.title().toLowerCase().replaceAll(/\s+/g, '-')}`);
+  protected readonly headingId = computed(
+    () => `panel-${this.title().toLowerCase().replaceAll(/\s+/g, '-')}`,
+  );
 }

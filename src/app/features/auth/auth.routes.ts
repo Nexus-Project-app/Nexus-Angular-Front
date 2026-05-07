@@ -7,8 +7,9 @@ export const authRoutes: Routes = [
   {
     path: '',
     providers: [
-      { 
-        provide: AUTH_PORT, useClass: MockAuthService
+      {
+        provide: AUTH_PORT,
+        useClass: MockAuthService,
       },
       LoginUseCase,
     ],
@@ -16,14 +17,12 @@ export const authRoutes: Routes = [
       {
         path: 'login',
         loadComponent: () =>
-          import('./presentation/login/login.component')
-        .then((m) => m.LoginComponent),
+          import('./presentation/login/login.component').then((m) => m.LoginComponent),
       },
       {
         path: 'callBack',
         loadComponent: () =>
-          import('./presentation/callBack/callBack.component')
-        .then((m) => m.CallBackComponent),
+          import('./presentation/callBack/callBack.component').then((m) => m.CallBackComponent),
       },
     ],
   },

@@ -4,9 +4,7 @@ export const EDITOR_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./components/editor-page/editor-page.component').then(
-        (m) => m.EditorPageComponent
-      ),
+      import('./components/editor-page/editor-page.component').then((m) => m.EditorPageComponent),
     title: 'Éditeur — Nexus',
   },
 ];

@@ -6,15 +6,15 @@ export interface User {
 }
 
 export interface CreateUserDTO {
-  email: string,
-  keycloakId: string,
-  firstName: string,
-  lastName: string
+  email: string;
+  keycloakId: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface UserMe {
-    id : string,
-    email : string,
-    username: string,
-    roles : string 
+  id: string;
+  email: string;
+  username: string;
+  roles: string;
 }

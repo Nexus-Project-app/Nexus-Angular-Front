@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import Keycloak from 'keycloak-js';
@@ -11,10 +11,7 @@ import { environment } from '../../../../../environment/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
 })
-
-
 export class LoginComponent {
-  
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly loginUseCase = inject(LoginUseCase);
@@ -25,33 +22,24 @@ export class LoginComponent {
 
   protected readonly auth = inject(Keycloak);
 
-  ngOnInit(): void {
-    console.log('Login loaded : ' + JSON.stringify(this.auth.tokenParsed));
-    console.log('Authenticated:' + this.auth.authenticated);
-
-    if(this.auth.authenticated)
-    {
-      this.router.navigate(['/']);
+  async ngOnInit() {
+    if (this.auth.authenticated) {
+      await this.router.navigate(['/']);
     }
 
     // Écoute les événements de Keycloak
     this.auth.onAuthSuccess = () => {
-      console.log('Authentication successful');
-      this.router.navigate(['/']);
+      await this.router.navigate(['/']);
     };
-
-
   }
 
-
-
-  protected login(): void {
+  protected async login() {
     this.loading.set(true);
     this.serverError.set(null);
 
-    this.auth.login({
-          redirectUri: environment.url + '/auth/callBack',
-          prompt: 'login'
-        });
+    await this.auth.login({
+      redirectUri: environment.url + '/auth/callBack',
+      prompt: 'login',
+    });
   }
 }

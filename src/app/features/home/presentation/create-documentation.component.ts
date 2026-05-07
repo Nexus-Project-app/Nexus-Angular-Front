@@ -91,7 +91,10 @@ import { ChangeDetectionStrategy, Component, computed, output, signal } from '@a
       font-weight: 700;
       min-height: 2.75rem;
       padding: 0 1rem;
-      transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        opacity 0.2s ease;
       white-space: nowrap;
     }
 

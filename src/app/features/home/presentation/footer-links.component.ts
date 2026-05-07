@@ -36,14 +36,14 @@ export interface FooterLink {
     .right-footer a:hover {
       color: var(--nexus-text-primary);
     }
-  `
+  `,
 })
 export class FooterLinksComponent {
   protected readonly FOOTER_LINKS: ReadonlyArray<FooterLink> = [
-    { text: 'Conditions d\'utilisation', href: '#' },
+    { text: "Conditions d'utilisation", href: '#' },
     { text: 'Politique de Confidentialité', href: '/policy' },
     { text: 'À propos', href: '#' },
-    { text: 'Cookies', href: '#' }
+    { text: 'Cookies', href: '#' },
   ];
 
   protected readonly COPYRIGHT = 'Nexus © 2026';
