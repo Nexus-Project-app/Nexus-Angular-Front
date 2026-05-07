@@ -66,11 +66,18 @@
       <button
         type="button"
         class="nexus-editor-save-btn"
-        [class.saved]="isSaved()"
+        [class.saved]="isSaved() && !isSaving()"
+        [class.saving]="isSaving()"
+        [disabled]="isSaving()"
         (click)="onSave()"
-        [attr.aria-label]="isSaved() ? 'Document sauvegardé' : 'Sauvegarder le document'"
+        [attr.aria-label]="isSaving() ? 'Sauvegarde en cours…' : isSaved() ? 'Document sauvegardé' : 'Sauvegarder le document'"
       >
-        @if (isSaved()) {
+        @if (isSaving()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nexus-spin" aria-hidden="true">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          <span>Sauvegarde…</span>
+        } @else if (isSaved()) {
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
@@ -86,6 +93,15 @@
       </button>
     </div>
   </header>
+
+  @if (saveError()) {
+    <div class="nexus-editor-error" role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ saveError() }}
+    </div>
+  }
 
   <!-- Zone principale : éditeur + panneau markdown -->
   <div class="nexus-editor-workspace" [class.panel-open]="isMarkdownPanelOpen()">
