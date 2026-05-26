@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000',
-  url: 'http://localhost:4200',
+  apiUrl: 'https://groupe5.diiage.org/api',
+  url: 'https://groupe5.diiage.org',
 };
