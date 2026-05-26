@@ -13,6 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../../../shared/components/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
+import { PostsService } from '../../../../infrastructure/services/posts.service';
+import { PostDto } from '../../../posts/models/post.model';
 
 const INITIAL_CONTENT = `# Titre du document
 
@@ -52,9 +54,13 @@ console.log(salutation);
 export class EditorPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly postsService = inject(PostsService);
   readonly titleText = signal(this.getInitialTitle());
   readonly wordCount = signal(0);
-  readonly isSaved = signal(true);
+  // Nouveau post = false (pas encore sauvegardé), édition = true (déjà en base)
+  readonly isSaved = signal(Boolean(this.route.snapshot.queryParamMap.get('id')));
+  readonly isSaving = signal(false);
+  readonly saveError = signal<string | null>(null);
   readonly isEditorReady = signal(false);
   readonly markdownSource = signal(INITIAL_CONTENT);
   readonly isMarkdownPanelOpen = signal(false);
@@ -87,11 +93,18 @@ export class EditorPageComponent {
   }
 
   private async initEditor(): Promise<void> {
+    const existingPost = await this.loadExistingPost();
     const root = this.editorRoot().nativeElement;
+    const initialValue = existingPost?.content ?? INITIAL_CONTENT;
+
+    if (existingPost) {
+      this.titleText.set(existingPost.title);
+      this.markdownSource.set(existingPost.content);
+    }
 
     this.crepe = new Crepe({
       root,
-      defaultValue: INITIAL_CONTENT,
+      defaultValue: initialValue,
     });
 
     this.crepe.on((listener) => {
@@ -110,7 +123,50 @@ export class EditorPageComponent {
   }
 
   onSave(): void {
-    this.isSaved.set(true);
+    console.log(this.crepe?.getMarkdown());
+    if (this.isSaving()) {
+      return;
+    }
+
+    this.isSaving.set(true);
+    this.saveError.set(null);
+
+    const payload = {
+      title: this.titleText().trim(),
+      content: this.markdownSource(),
+      tags: [] as ReadonlyArray<string>,
+    };
+
+    const postId = this.route.snapshot.queryParamMap.get('id');
+
+    if (postId) {
+      this.postsService.updatePost(postId, payload).subscribe({
+        next: () => {
+          this.isSaved.set(true);
+          this.isSaving.set(false);
+          this.router.navigate(['/posts', postId]);
+        },
+        error: (error: Error) => {
+          console.error('Failed to update post', error);
+          this.isSaving.set(false);
+          this.saveError.set('La mise à jour a échoué. Vérifie ta connexion et réessaie.');
+        },
+      });
+      return;
+    }
+
+    this.postsService.createPost(payload).subscribe({
+      next: (newPostId) => {
+        this.isSaved.set(true);
+        this.isSaving.set(false);
+        this.router.navigate(['/posts', newPostId]);
+      },
+      error: (error: Error) => {
+        console.error('Failed to create post', error);
+        this.isSaving.set(false);
+        this.saveError.set('La sauvegarde a échoué. Vérifie ta connexion et réessaie.');
+      },
+    });
   }
 
   async onBackClick(): Promise<void> {
@@ -137,6 +193,20 @@ export class EditorPageComponent {
   private getInitialTitle(): string {
     const title = this.route.snapshot.queryParamMap.get('title')?.trim();
     return title ?? 'Document sans titre';
+  }
+
+  private async loadExistingPost(): Promise<PostDto | null> {
+    const postId = this.route.snapshot.queryParamMap.get('id');
+    if (!postId) {
+      return null;
+    }
+
+    return await new Promise<PostDto | null>((resolve) => {
+      this.postsService.getPostById(postId).subscribe({
+        next: (post) => resolve(post),
+        error: () => resolve(null),
+      });
+    });
   }
 
   toggleMarkdownPanel(): void {

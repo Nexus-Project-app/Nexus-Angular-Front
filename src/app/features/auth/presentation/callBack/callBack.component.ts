@@ -31,20 +31,26 @@ export class CallBackComponent {
   protected readonly notConnected = signal<boolean>(true);
 
   ngOnInit() {
-    this.notConnected.set(this.keycloak.authenticated);
+    // Keycloak n'est pas disponible côté serveur (SSR) : on sort proprement
+    if (!this.keycloak) {
+      this.loading.set(false);
+      return;
+    }
+
+    this.notConnected.set(!this.keycloak.authenticated);
 
     this.createUserDto.set({
-      email: this.keycloak?.idTokenParsed?.['email'] ?? '',
-      keycloakId: this.keycloak?.idTokenParsed?.sub ?? '',
-      firstName: this.keycloak?.idTokenParsed?.['preferred_username'] ?? '',
-      lastName: this.keycloak?.idTokenParsed?.['family_name'] ?? '',
+      email: this.keycloak.idTokenParsed?.['email'] ?? '',
+      keycloakId: this.keycloak.idTokenParsed?.sub ?? '',
+      firstName: this.keycloak.idTokenParsed?.['preferred_username'] ?? '',
+      lastName: this.keycloak.idTokenParsed?.['family_name'] ?? '',
     });
 
     if (this.keycloak.authenticated) {
-      this.notConnected.set(this.keycloak.authenticated);
+      this.notConnected.set(false);
       this.createUser.execute(this.createUserDto()).subscribe(() => {});
+      this.me.execute().subscribe();
     }
-    this.me.execute().subscribe();
 
     setTimeout(() => {
       this.loading.set(false);
@@ -69,8 +75,8 @@ export class CallBackComponent {
   }
 
   getUserRole(): string {
-    const roles = this.keycloak?.realmAccess?.roles.includes('admin') ? 'Admin' : 'Utilisateur';
-    return roles;
+
+    return this.keycloak?.realmAccess?.roles.includes('admin') ? 'Admin' : 'Utilisateur';
   }
 
   async logout() {
