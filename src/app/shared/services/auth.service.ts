@@ -22,7 +22,7 @@ export class AuthService {
     this.keycloak = new Keycloak({
       url: 'https://groupe5.diiage.org/auth',
       realm: 'nexus',
-      clientId: 'mon-client',
+      clientId: 'nexus-client',
     });
 
     this.isAuthenticated = await this.keycloak.init({
