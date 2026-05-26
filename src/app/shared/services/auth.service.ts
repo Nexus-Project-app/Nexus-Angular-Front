@@ -20,8 +20,8 @@ export class AuthService {
     this.initialized = true;
 
     this.keycloak = new Keycloak({
-      url: 'http://localhost:8080',
-      realm: 'mon-realm',
+      url: 'https://groupe5.diiage.org/auth',
+      realm: 'nexus',
       clientId: 'mon-client',
     });
 
