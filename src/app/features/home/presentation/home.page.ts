@@ -528,9 +528,6 @@ export class HomePageComponent implements OnInit {
   protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>(
     createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   );
-
-    env = signal(environment.apiUrl);
-
     
   protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([]);
   protected readonly currentPage = signal(1);
