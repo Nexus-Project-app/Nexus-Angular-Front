@@ -414,3 +414,37 @@
 .nexus-editor-modal-confirm:hover {
   background: #991b1b;
 }
+
+/* ─── Save button states ───────────────────────────────────── */
+
+.nexus-editor-save-btn.saving {
+  color: var(--nexus-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.nexus-editor-save-btn:disabled {
+  pointer-events: none;
+}
+
+@keyframes nexus-spin {
+  to { transform: rotate(360deg); }
+}
+
+.nexus-spin {
+  animation: nexus-spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* ─── Save error banner ────────────────────────────────────── */
+
+.nexus-editor-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(185, 28, 28, 0.12);
+  border-bottom: 1px solid rgba(185, 28, 28, 0.4);
+  color: #f87171;
+  font-size: 0.8125rem;
+}

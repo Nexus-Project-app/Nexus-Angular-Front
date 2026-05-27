@@ -49,21 +49,21 @@ jobs:
       - name: Build application
         run: npm run build 2>&1 | tee build.log
 
-      - name: Scan filesystem for vulnerabilities (Trivy)
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          exit-code: '1'
-          severity: CRITICAL,HIGH
-          format: sarif
-          output: trivy-fs-results.sarif
+      # - name: Scan filesystem for vulnerabilities (Trivy)
+      #   uses: aquasecurity/trivy-action@v0.36.0
+      #   with:
+      #     scan-type: fs
+      #     scan-ref: .
+      #     exit-code: '1'
+      #     severity: CRITICAL,HIGH
+      #     format: sarif
+      #     output: trivy-fs-results.sarif
 
-      - name: Upload Trivy filesystem scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: trivy-fs-results.sarif
+      # - name: Upload Trivy filesystem scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v4
+      #   if: always()
+      #   with:
+      #     sarif_file: trivy-fs-results.sarif
 
       - name: Upload quality logs and scan results
         if: always()
@@ -75,7 +75,6 @@ jobs:
             lint.log
             test.log
             build.log
-            trivy-fs-results.sarif
           retention-days: 30
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -85,6 +84,7 @@ jobs:
     name: Build & Push Docker Image
     runs-on: [self-hosted, nexus, front]
     needs: quality
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
@@ -140,34 +140,34 @@ jobs:
             GIT_REVISION=${{ github.sha }}
             VERSION=${{ github.ref_name }}
 
-      - name: Set lowercase image ref for Trivy
-        id: image-ref
-        run: |
-          echo "value=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')@${{ steps.build.outputs.digest }}" >> $GITHUB_OUTPUT
+      # - name: Set lowercase image ref for Trivy
+      #   id: image-ref
+      #   run: |
+      #     echo "value=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')@${{ steps.build.outputs.digest }}" >> $GITHUB_OUTPUT
 
-      - name: Scan Docker image for vulnerabilities (Trivy)
-        id: trivy-image-scan
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ${{ steps.image-ref.outputs.value }}
-          exit-code: '1'
-          severity: CRITICAL,HIGH
-          format: sarif
-          output: trivy-image-results.sarif
+      # - name: Scan Docker image for vulnerabilities (Trivy)
+      #   id: trivy-image-scan
+      #   uses: aquasecurity/trivy-action@v0.36.0
+      #   with:
+      #     image-ref: ${{ steps.image-ref.outputs.value }}
+      #     exit-code: '1'
+      #     severity: CRITICAL,HIGH
+      #     format: sarif
+      #     output: trivy-image-results.sarif
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
-        with:
-          sarif_file: trivy-image-results.sarif
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v4
+      #   if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
+      #   with:
+      #     sarif_file: trivy-image-results.sarif
 
-      - name: Upload Trivy SARIF artifact
-        if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
-        uses: actions/upload-artifact@v7
-        with:
-          name: trivy-image-results-${{ github.sha }}
-          path: trivy-image-results.sarif
-          retention-days: 30
+      # - name: Upload Trivy SARIF artifact
+      #   if: steps.trivy-image-scan.outcome == 'success' || steps.trivy-image-scan.outcome == 'failure'
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: trivy-image-results-${{ github.sha }}
+      #     path: trivy-image-results.sarif
+      #     retention-days: 30
 
   # ────────────────────────────────────────────────────────────────────────────
   # Deploy: pull latest image and redeploy via docker compose

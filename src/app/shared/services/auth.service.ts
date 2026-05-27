@@ -18,30 +18,32 @@ export class AuthService {
     this.initialized = true;
 
     this.keycloak = new Keycloak({
-      url: 'http://localhost:8080',
-      realm: 'mon-realm',
-      clientId: 'mon-client',
+      url: 'https://groupe5.diiage.org/auth',
+      realm: 'nexus',
+      clientId: 'nexus-client',
     });
 
 
-    const authenticated = await this.keycloak.init({
+    this.isAuthenticated = await this.keycloak.init({
       onLoad: 'check-sso',
       checkLoginIframe: false,
     });
-
-    this.isAuthenticated = authenticated;
   }
 
   async login() {
-    await this.keycloak.login({
-      redirectUri: globalThis.window.location.origin + '/auth/callBack',
-    });
+    if (globalThis.window !== undefined) {
+      await this.keycloak.login({
+        redirectUri: globalThis.window.location.origin + '/auth/callBack',
+      });
+    }
   }
 
   async logout() {
-    await this.keycloak.logout({
-      redirectUri: globalThis.window.location.origin,
-    });
+    if (globalThis.window !== undefined) {
+      await this.keycloak.logout({
+        redirectUri: globalThis.window.location.origin,
+      });
+    }
   }
 
   get instance() {
