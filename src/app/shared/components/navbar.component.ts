@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { Router } from '@angular/router';
 import { ThemeService } from '../services/theme.service';
 import { environment } from '../../../environment/environment';
 import { AuthService } from '../services/auth.service';
@@ -150,6 +151,7 @@ export interface UserProfile {
 export class NavbarComponent implements OnInit {
   protected readonly themeService = inject(ThemeService);
   protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   protected readonly keycloak = this.auth.instance;
 
@@ -188,11 +190,11 @@ export class NavbarComponent implements OnInit {
 
   navigateHome(event: Event): void {
     event.preventDefault();
-    globalThis.location.href = '/';
+    void this.router.navigate(['/']);
   }
 
   navigateProfile(event: Event): void {
     event.preventDefault();
-    globalThis.location.href = '/profile/me';
+    void this.router.navigate(['/profile/me']);
   }
 }
