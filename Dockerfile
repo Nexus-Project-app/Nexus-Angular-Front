@@ -18,8 +18,8 @@ COPY . .
 # Ensure public/ exists so runtime COPY never fails on empty asset dir
 RUN mkdir -p public
 
-# Build Angular SSR application
-RUN npm run build
+# Build Angular SSR application (explicit production configuration)
+RUN npm run build -- --configuration production
 
 # Verify build artifact before runtime stage consumes it
 RUN test -f dist/projet/server/server.mjs || (echo "ERROR: server.mjs not found" && exit 1)
