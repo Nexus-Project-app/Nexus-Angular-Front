@@ -8,11 +8,9 @@ export class AuthService {
   private isAuthenticated = false;
 
   async init(): Promise<void> {
-    // SSR-safe: only init Keycloak in browser environment
     if (globalThis.window === undefined) {
       return;
     }
-
     if (this.initialized) {
       return;
     }
