@@ -25,10 +25,17 @@ export class AuthService {
       clientId: 'nexus-client',
     });
 
-    this.isAuthenticated = await this.keycloak.init({
-      onLoad: 'check-sso',
-      checkLoginIframe: false,
-    });
+    try {
+      this.isAuthenticated = await this.keycloak.init({
+        onLoad: 'check-sso',
+        checkLoginIframe: false,
+      });
+    } catch (error) {
+      // If code exchange fails (e.g. unauthorized_client), keep the app usable.
+      this.isAuthenticated = false;
+      this.clearOidcParamsFromUrl();
+      console.error('Keycloak init failed:', error);
+    }
   }
 
   async login() {
@@ -49,5 +56,26 @@ export class AuthService {
 
   get instance() {
     return this.keycloak;
+  }
+
+  private clearOidcParamsFromUrl(): void {
+    if (globalThis.window === undefined) {
+      return;
+    }
+
+    const url = new URL(globalThis.window.location.href);
+    const oidcParams = ['code', 'state', 'session_state', 'iss', 'error', 'error_description'];
+    let changed = false;
+
+    for (const param of oidcParams) {
+      if (url.searchParams.has(param)) {
+        url.searchParams.delete(param);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      globalThis.window.history.replaceState({}, '', url.toString());
+    }
   }
 }
