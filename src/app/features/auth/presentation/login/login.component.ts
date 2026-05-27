@@ -38,7 +38,7 @@ export class LoginComponent {
     this.serverError.set(null);
 
     await this.keycloak.login({
-      redirectUri: environment.url + '/callBack',
+      redirectUri: environment.url + '/o2/callBack',
       prompt: 'login',
     });
   }
