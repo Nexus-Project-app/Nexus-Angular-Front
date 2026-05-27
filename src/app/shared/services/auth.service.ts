@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { environment } from '../utils/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,9 +19,9 @@ export class AuthService {
     this.initialized = true;
 
     this.keycloak = new Keycloak({
-      url: 'https://groupe5.diiage.org/auth',
-      realm: 'nexus',
-      clientId: 'nexus-client',
+      url: `${environment.keycloakUrl}`,
+      realm: `${environment.keycloakRealm}`,
+      clientId: `${environment.keycloakClientId}`,
     });
 
 
@@ -33,7 +34,7 @@ export class AuthService {
   async login() {
     if (globalThis.window !== undefined) {
       await this.keycloak.login({
-        redirectUri: globalThis.window.location.origin + '/auth/callBack',
+        redirectUri: globalThis.window.location.origin + '/o2/callBack',
       });
     }
   }
@@ -44,6 +45,10 @@ export class AuthService {
         redirectUri: globalThis.window.location.origin,
       });
     }
+  }
+
+  get authenticated(): boolean {
+    return this.isAuthenticated;
   }
 
   get instance() {

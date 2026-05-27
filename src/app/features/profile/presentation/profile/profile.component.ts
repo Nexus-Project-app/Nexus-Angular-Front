@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserProfile } from '../../domain/user.model';
 import { NavbarComponent } from '../../../../shared/components/navbar.component';
+import { environment } from '../../../../shared/utils/environment';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +21,8 @@ export class ProfileComponent implements OnInit {
   private readonly keycloak = this.authService.instance;
 
   loading = signal(true);
+
+  env = signal(environment.apiUrl);
 
   protected readonly notConnected = signal<boolean>(true);
 

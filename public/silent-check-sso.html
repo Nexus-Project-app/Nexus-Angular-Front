@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Silent SSO</title>
+  </head>
+  <body>
+    <script>
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(document.location.href, window.location.origin);
+      }
+    </script>
+  </body>
+</html>

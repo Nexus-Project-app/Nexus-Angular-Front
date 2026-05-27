@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PostsService } from '../../infrastructure/services/posts.service';
 import { PostDto } from '../posts/models/post.model';
 import { NavbarComponent } from '../../shared/components/navbar.component';
+import { environment } from '../../shared/utils/environment';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <section class="max-w-4xl mx-auto px-4 py-8">
         <div class="space-y-6">
           <div *ngIf="feedPosts().length === 0" class="text-center py-12">
-            <p class="text-nexus-muted text-sm">Aucun post disponible pour le moment</p>
+            <p class="text-nexus-muted text-sm">Aucun post disponible pour le moment </p>
           </div>
 
           <article
@@ -36,7 +37,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
           </article>
         </div>
-
+      
         <!-- Pagination -->
         <div class="flex items-center justify-center gap-4 mt-8">
           <button
@@ -54,13 +55,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             (click)="nextPage()"
             class="px-4 py-2 border border-nexus-border rounded-lg text-sm text-nexus-text hover:bg-nexus-card transition-colors"
           >
-            Suivant →
+            Suivant → 
           </button>
         </div>
       </section>
     </main>
   `,
 })
+
 export class HomeComponent {
   private readonly router = inject(Router);
   private readonly postsService = inject(PostsService);
@@ -72,6 +74,8 @@ export class HomeComponent {
 
   protected readonly hasNextPage = signal(false);
   protected readonly totalPages = signal(1);
+
+  
 
   constructor() {
     this.loadFeed();

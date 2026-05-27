@@ -14,6 +14,7 @@ import { NavbarComponent } from '../../../shared/components/navbar.component';
 import { AuthService } from '../../../shared/services/auth.service';
 import { PostsService } from '../../../infrastructure/services/posts.service';
 import { PostDto } from '../../posts/models/post.model';
+import { environment } from '../../../shared/utils/environment';
 
 export interface UserProfile {
   readonly name: string;
@@ -74,6 +75,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   template: `
     <a class="skip-link" href="#main-content">Aller au contenu principal</a>
     <div class="home-page">
+      
       <app-navbar />
       <main id="main-content" class="main-grid" aria-label="Contenu principal">
         <h1 class="visually-hidden">Fil principal Nexus</h1>
@@ -527,6 +529,9 @@ export class HomePageComponent implements OnInit {
     createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   );
 
+    env = signal(environment.apiUrl);
+
+    
   protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([]);
   protected readonly currentPage = signal(1);
   protected readonly hasNextPage = signal(false);

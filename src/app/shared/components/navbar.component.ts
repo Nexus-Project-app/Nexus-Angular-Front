@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { ThemeService } from '../services/theme.service';
-import { environment } from '../../../environment/environment';
+import { environment } from '../utils/environment';
 import { AuthService } from '../services/auth.service';
 
 export interface UserProfile {
@@ -165,15 +165,17 @@ export class NavbarComponent implements OnInit {
 
   async logout() {
     await this.keycloak.logout({
-      redirectUri: `${environment.url}/auth/callBack`,
+      redirectUri: `${globalThis.location.origin}/o2/callBack`,
     });
   }
 
   async login() {
-    await this.keycloak.login({
-      redirectUri: `${environment.url}/auth/callBack`,
-      prompt: 'login',
-    });
+    await this.keycloak.login(
+      {
+        redirectUri: `${globalThis.location.origin}/o2/callBack`,
+        prompt: 'login',
+      }
+    );
   }
 
   ngOnInit(): void {

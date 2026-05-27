@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { CreateUserDTO, UserMe } from '../domain/user.model';
-import { environment } from '../../../../environment/environment';
+import { environment } from '../../../shared/utils/environment';
 import { IUserRepository } from '../application/ports/user.repository';
 import { AuthService } from '../../../shared/services/auth.service';
 
