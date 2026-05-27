@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import Keycloak from 'keycloak-js';
 import { environment } from '../../../../../environment/environment';
+import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,18 +12,24 @@ import { environment } from '../../../../../environment/environment';
 })
 export class LoginComponent {
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly keycloak = this.authService.instance;
   protected readonly loading = signal(false);
   protected readonly serverError = signal<string | null>(null);
-  protected readonly auth = inject(Keycloak);
 
   async ngOnInit() {
-    if (this.auth.authenticated) {
+    if (this.keycloak?.authenticated) {
       await this.router.navigate(['/']);
     }
 
     // Écoute les événements de Keycloak
-    this.auth.onAuthSuccess = async () => {
+    this.keycloak.onAuthSuccess = async () => {
       await this.router.navigate(['/']);
+    };
+
+    this.keycloak.onAuthError = () => {
+      this.loading.set(false);
+      this.serverError.set('La connexion a échoué. Vérifiez la configuration Keycloak du client.');
     };
   }
 
@@ -31,7 +37,7 @@ export class LoginComponent {
     this.loading.set(true);
     this.serverError.set(null);
 
-    await this.auth.login({
+    await this.keycloak.login({
       redirectUri: environment.url + '/auth/callBack',
       prompt: 'login',
     });
