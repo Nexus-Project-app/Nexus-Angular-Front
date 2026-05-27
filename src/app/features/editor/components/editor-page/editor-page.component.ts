@@ -71,6 +71,7 @@ export class EditorPageComponent {
   private crepe: Crepe | null = null;
   private _sourceTextareaFocused = false;
   private _applySourceTimer: ReturnType<typeof setTimeout> | null = null;
+  private _leaveResolver: ((value: boolean) => void) | null = null;
 
   constructor() {
     afterNextRender(() => {
@@ -169,19 +170,29 @@ export class EditorPageComponent {
     });
   }
 
-  async onBackClick(): Promise<void> {
+  canDeactivate(): boolean | Promise<boolean> {
     if (this.isSaved()) {
-      await this.router.navigate(['/']);
-    } else {
-      this.isLeaveModalOpen.set(true);
+      return true;
     }
+    return new Promise<boolean>((resolve) => {
+      this._leaveResolver = resolve;
+      this.isLeaveModalOpen.set(true);
+    });
   }
 
-  async confirmLeave(): Promise<void> {
-    await this.router.navigate(['/']);
+  onBackClick(): void {
+    void this.router.navigate(['/']);
+  }
+
+  confirmLeave(): void {
+    this._leaveResolver?.(true);
+    this._leaveResolver = null;
+    this.isLeaveModalOpen.set(false);
   }
 
   cancelLeave(): void {
+    this._leaveResolver?.(false);
+    this._leaveResolver = null;
     this.isLeaveModalOpen.set(false);
   }
 
