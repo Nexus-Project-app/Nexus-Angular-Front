@@ -12,20 +12,35 @@ import { AuthService } from '../../../../shared/services/auth.service';
 })
 export class LoginComponent {
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly keycloak = this.authService.instance;
   protected readonly loading = signal(false);
   protected readonly serverError = signal<string | null>(null);
   protected readonly auth = inject(AuthService);
 
   async ngOnInit() {
-    if (this.auth.authenticated) {
+    if (this.keycloak?.authenticated) {
       await this.router.navigate(['/']);
     }
+
+    // Écoute les événements de Keycloak
+    this.keycloak.onAuthSuccess = async () => {
+      await this.router.navigate(['/']);
+    };
+
+    this.keycloak.onAuthError = () => {
+      this.loading.set(false);
+      this.serverError.set('La connexion a échoué. Vérifiez la configuration Keycloak du client.');
+    };
   }
 
   protected async login() {
     this.loading.set(true);
     this.serverError.set(null);
 
-    await this.auth.login();
+    await this.keycloak.login({
+      redirectUri: environment.url + '/o2/callBack',
+      prompt: 'login',
+    });
   }
 }
