@@ -8,6 +8,9 @@ export class AuthService {
   private isAuthenticated = false;
 
   async init(): Promise<void> {
+    if (globalThis.window === undefined) {
+      return;
+    }
     if (this.initialized) {
       return;
     }
@@ -19,6 +22,7 @@ export class AuthService {
       realm: 'mon-realm',
       clientId: 'mon-client',
     });
+
 
     const authenticated = await this.keycloak.init({
       onLoad: 'check-sso',

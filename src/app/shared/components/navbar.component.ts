@@ -34,7 +34,7 @@ export interface UserProfile {
           <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
         @if (isConnected) {
-          <div class="user-meta">
+          <div class="user-meta" (click)="navigateProfile($event)">
             <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
             <div>
               <p class="user-name" class="flex">{{ user().name }} - {{ user().role }}</p>
@@ -190,5 +190,10 @@ export class NavbarComponent {
   navigateHome(event: Event): void {
     event.preventDefault();
     globalThis.location.href = '/';
+  }
+
+  navigateProfile(event: Event): void {
+    event.preventDefault();
+    globalThis.location.href = '/profile/me';
   }
 }

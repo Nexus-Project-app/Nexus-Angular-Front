@@ -28,7 +28,7 @@ export class LoginComponent {
     }
 
     // Écoute les événements de Keycloak
-    this.auth.onAuthSuccess = () => {
+    this.auth.onAuthSuccess = async () => {
       await this.router.navigate(['/']);
     };
   }
