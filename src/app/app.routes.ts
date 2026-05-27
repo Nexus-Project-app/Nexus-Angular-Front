@@ -12,7 +12,7 @@ export const routes: Routes = [
       import('./features/posts/presentation/post-view.component').then((m) => m.PostViewComponent),
   },
   {
-    path: 'auth',
+    path: 'o2',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
   },
   {
