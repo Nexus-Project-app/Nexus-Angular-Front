@@ -167,13 +167,13 @@ export class NavbarComponent implements OnInit {
 
   async logout() {
     await this.keycloak.logout({
-      redirectUri: `${environment.url}/auth/callBack`,
+      redirectUri: `${environment.url}/callBack`,
     });
   }
 
   async login() {
     await this.keycloak.login({
-      redirectUri: `${environment.url}/auth/callBack`,
+      redirectUri: `${environment.url}/callBack`,
       prompt: 'login',
     });
   }

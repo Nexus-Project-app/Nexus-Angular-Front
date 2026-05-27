@@ -39,7 +39,7 @@ export class AuthService {
   async login() {
     if (globalThis.window !== undefined) {
       await this.keycloak.login({
-        redirectUri: globalThis.window.location.origin + '/auth/callBack',
+        redirectUri: globalThis.window.location.origin + '/callBack',
       });
     }
   }
