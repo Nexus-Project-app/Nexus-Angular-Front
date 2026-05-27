@@ -188,13 +188,13 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  navigateHome(event: Event): void {
+  navigateHome(event: Event): Promise<void> {
     event.preventDefault();
-    void this.router.navigate(['/']);
+    return this.router.navigate(['/']).then(() => undefined);
   }
 
-  navigateProfile(event: Event): void {
+  navigateProfile(event: Event): Promise<void> {
     event.preventDefault();
-    void this.router.navigate(['/profile/me']);
+    return this.router.navigate(['/profile/me']).then(() => undefined);
   }
 }

@@ -180,8 +180,8 @@ export class EditorPageComponent {
     });
   }
 
-  onBackClick(): void {
-    void this.router.navigate(['/']);
+  onBackClick(): Promise<void> {
+    return this.router.navigate(['/']).then(() => undefined);
   }
 
   confirmLeave(): void {
