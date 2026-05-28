@@ -1,0 +1,109 @@
+<section class="comments-section">
+  <h2 class="comments-title">
+    Commentaires
+    <span *ngIf="totalCount() > 0" class="comments-count">({{ totalCount() }})</span>
+  </h2>
+
+  <!-- Formulaire d'ajout — visible uniquement si connecté -->
+  <div *ngIf="isConnected()" class="comment-form">
+    <p class="comment-form__label">Laisser un commentaire</p>
+    <textarea
+      [(ngModel)]="newContentValue"
+      placeholder="Écrivez votre commentaire..."
+      rows="3"
+      class="comment-form__textarea"
+    ></textarea>
+    <div class="comment-form__actions">
+      <p *ngIf="submitError()" class="comment-form__error">{{ submitError() }}</p>
+      <button
+        type="button"
+        class="btn-primary"
+        [disabled]="!newContentValue.trim() || submitting()"
+        (click)="submitComment()"
+      >
+        {{ submitting() ? 'Envoi...' : 'Publier' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Message si non connecté -->
+  <div *ngIf="!isConnected()" class="comments-login-hint">
+    <p>Connectez-vous pour laisser un commentaire.</p>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="loading()" class="comments-empty">
+    <p>Chargement des commentaires...</p>
+  </div>
+
+  <!-- Aucun commentaire -->
+  <div *ngIf="!loading() && comments().length === 0" class="comments-empty">
+    <p>Aucun commentaire pour l'instant. Soyez le premier !</p>
+  </div>
+
+  <!-- Liste -->
+  <div *ngIf="!loading() && comments().length > 0" class="comments-list">
+    <div *ngFor="let comment of comments()" class="comment-card">
+      <ng-container *ngIf="editingId() !== comment.id">
+        <div class="comment-card__body">
+          <p class="comment-card__content">{{ comment.content }}</p>
+          <div *ngIf="isCommentOwner(comment)" class="comment-card__actions">
+            <button type="button" class="btn-ghost" (click)="startEdit(comment)">Modifier</button>
+            <button type="button" class="btn-ghost btn-ghost--danger" (click)="deleteComment(comment.id)">Supprimer</button>
+          </div>
+        </div>
+        <p class="comment-card__date">{{ formatDate(comment.created) }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="editingId() === comment.id">
+        <textarea
+          [(ngModel)]="editContentValue"
+          rows="3"
+          class="comment-form__textarea comment-form__textarea--editing"
+        ></textarea>
+        <div class="comment-card__edit-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Annuler</button>
+          <button
+            type="button"
+            class="btn-primary btn-primary--sm"
+            [disabled]="!editContentValue.trim() || updating()"
+            (click)="submitEdit(comment.id)"
+          >
+            {{ updating() ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="totalPages() > 1" class="comments-pagination">
+    <button
+      type="button"
+      class="pagination-btn"
+      [disabled]="currentPage() === 1"
+      (click)="goToPage(currentPage() - 1)"
+    >
+      ← Précédent
+    </button>
+
+    <button
+      *ngFor="let p of pageNumbers()"
+      type="button"
+      class="pagination-page"
+      [class.pagination-page--active]="p === currentPage()"
+      (click)="goToPage(p)"
+    >
+      {{ p }}
+    </button>
+
+    <button
+      type="button"
+      class="pagination-btn"
+      [disabled]="currentPage() === totalPages()"
+      (click)="goToPage(currentPage() + 1)"
+    >
+      Suivant →
+    </button>
+  </nav>
+</section>

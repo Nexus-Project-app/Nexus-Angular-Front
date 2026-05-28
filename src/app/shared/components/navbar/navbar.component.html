@@ -1,0 +1,42 @@
+<header class="top-header" aria-label="Barre supérieure">
+  <a class="brand" href="#" (click)="navigateHome($event)">
+    @if (themeService.isDark()) {
+      <img ngSrc="/nexus.svg" alt="Nexus" width="255" height="102" priority />
+    } @else {
+      <img ngSrc="/nexus_black.svg" alt="Nexus" width="255" height="102" priority />
+    }
+  </a>
+  <div class="header-actions" aria-label="Actions utilisateur">
+    <button class="icon-button" type="button" aria-label="Rechercher" title="Rechercher">
+      <i class="fas fa-search"></i>
+    </button>
+    <button
+      class="icon-button"
+      type="button"
+      [attr.aria-label]="themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+      (click)="themeService.toggle()"
+      title="Changer le thème"
+    >
+      <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
+    </button>
+
+    @if (isConnected) {
+      <button class="user-meta" type="button" (click)="navigateProfile($event)">
+        <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
+        <div>
+          <p class="flex">{{ user().name }} - {{ user().role }}</p>
+          <p class="user-role">{{ user().email }}</p>
+        </div>
+      </button>
+      <button class="icon-button" type="button" aria-label="Se déconnecter" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    }
+
+    @if (!isConnected) {
+      <button class="icon-button" type="button" aria-label="Se connecter" (click)="login()">
+        <i class="fas fa-user"></i>
+      </button>
+    }
+  </div>
+</header>

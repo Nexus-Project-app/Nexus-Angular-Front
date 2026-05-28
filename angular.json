@@ -40,7 +40,8 @@
               "@vue/shared",
               "@sindresorhus/is",
               "char-regex",
-              "skin-tone"
+              "skin-tone",
+              "dompurify"
             ],
             "security": {
               "allowedHosts": []

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../../../shared/utils/environment';
-import { AuthService } from '../../../../shared/services/auth.service';
+import { environment } from '@app/shared/utils/env/environment';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,14 +18,18 @@ export class LoginComponent {
   protected readonly serverError = signal<string | null>(null);
   protected readonly auth = inject(AuthService);
 
-  async ngOnInit() {
+  constructor() {
+    this.init();
+  }
+
+  private init(): void {
     if (this.keycloak?.authenticated) {
-      await this.router.navigate(['/']);
+      void this.router.navigate(['/']);
     }
 
     // Écoute les événements de Keycloak
-    this.keycloak.onAuthSuccess = async () => {
-      await this.router.navigate(['/']);
+    this.keycloak.onAuthSuccess = () => {
+      void this.router.navigate(['/']);
     };
 
     this.keycloak.onAuthError = () => {

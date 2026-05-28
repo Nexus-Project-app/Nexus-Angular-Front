@@ -4,11 +4,23 @@
 export interface PostDto {
   readonly id: string;
   readonly authorId: string;
+  readonly authorName: string;
   readonly title: string;
   readonly content: string;
   readonly tags: ReadonlyArray<string>;
   readonly created: string; // ISO 8601 datetime
   readonly updated: string; // ISO 8601 datetime
+  readonly likeCount: number;
+  readonly commentCount: number;
+  readonly isLikedByCurrentUser: boolean;
+}
+
+/**
+ * Réponse du toggle like
+ */
+export interface ToggleLikeResponse {
+  readonly isLiked: boolean;
+  readonly likeCount: number;
 }
 
 /**

@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'posts/:id',
     loadComponent: () =>
-      import('./features/posts/presentation/post-view.component').then((m) => m.PostViewComponent),
+      import('./features/posts/presentation/post/post-view.component').then((m) => m.PostViewComponent),
   },
   {
     path: 'o2',
