@@ -356,4 +356,8 @@ export class PostViewComponent {
   protected formatDate(value: string): string {
     return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
   }
+
+  protected goBack(): void {
+    this.router.navigate(['/']);
+  }
 }

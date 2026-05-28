@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { PostsService } from '../../infrastructure/services/posts.service';
-import { PostDto } from '../posts/models/post.model';
-import { NavbarComponent } from '../../shared/components/navbar.component';
-import { environment } from '../../shared/utils/environment';
+import { PostsService } from '@shared/services/posts.service';
+import { PostDto } from '@features/posts/models/post.model';
+import { NavbarComponent } from '@shared/components/navbar.component';
 
 @Component({
   selector: 'app-home',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavbarComponent } from '../../../../shared/components/navbar.component';
+import { NavbarComponent } from '@shared/components/navbar.component';
 
 @Component({
   selector: 'app-privacy-policy-page',

@@ -1,7 +1,7 @@
 ﻿import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { USER_REPOSITORY } from '../../features/auth/application/ports/user.repository';
-import { UserMe } from '../../features/auth/domain/user.model';
+import { USER_REPOSITORY } from '@features/auth/application/ports/user.repository';
+import { UserMe } from '@features/auth/domain/user.model';
 
 /**
  * Service pour accéder aux données utilisateur connecté

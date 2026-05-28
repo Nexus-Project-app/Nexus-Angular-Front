@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
-import { ThemeService } from '../services/theme.service';
-import { environment } from '../utils/environment';
-import { AuthService } from '../services/auth.service';
+import { ThemeService } from '@shared/services/theme.service';
+import { environment } from '@shared/utils/environment';
+import { AuthService } from '@shared/services/auth.service';
 
 export interface UserProfile {
   readonly name: string;
@@ -25,22 +25,26 @@ export interface UserProfile {
   template: `
     <header class="top-header" aria-label="Barre supérieure">
       <a class="brand" href="#" aria-label="Accueil Nexus" (click)="navigateHome($event)">
-        <img ngSrc="/nexus.svg" alt="Nexus" width="360" height="80" priority />
+        @if (themeService.isDark()) {
+          <img ngSrc="/nexus.svg" alt="Nexus" width="360" height="80" priority />
+        } @else {
+          <img ngSrc="/nexus_black.svg" alt="Nexus" width="360" height="80" priority />
+        }
       </a>
       <div class="header-actions" aria-label="Actions utilisateur">
-        <button class="icon-button" type="button" aria-label="Rechercher">
+        <button class="icon-button" type="button" aria-label="Rechercher" title="Rechercher">
           <i class="fas fa-search"></i>
         </button>
         <button
           class="icon-button"
           type="button"
-          [attr.aria-label]="
-            themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'
-          "
+          [attr.aria-label]="themeService.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
           (click)="themeService.toggle()"
+          title="Changer le thème"
         >
           <i [class]="themeService.isDark() ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
+
         @if (isConnected) {
           <div class="user-meta" (click)="navigateProfile($event)">
             <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
@@ -146,14 +150,18 @@ export interface UserProfile {
       line-height: 1.2;
       margin: 0;
     }
+
+    /* Accessibility menu removed */
   `,
 })
 export class NavbarComponent implements OnInit {
   protected readonly themeService = inject(ThemeService);
+  
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
   protected readonly keycloak = this.auth.instance;
+  
 
   protected isConnected = false;
 
