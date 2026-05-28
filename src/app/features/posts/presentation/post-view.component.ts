@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar.component';
-import { PostsService } from '../../../infrastructure/services/posts.service';
-import { LikesService } from '../../../infrastructure/services/likes.service';
-import { UserService } from '../../../shared/services/user.service';
-import { AuthService } from '../../../shared/services/auth.service';
+import { NavbarComponent } from '@shared/components/navbar.component';
+import { PostsService } from '@shared/services/posts.service';
+import { LikesService } from '@shared/services/likes.service';
+import { UserService } from '@shared/services/user.service';
+import { AuthService } from '@shared/services/auth.service';
 import { PostDto } from '../models/post.model';
 import { CommentsSectionComponent } from './comments-section.component';
 

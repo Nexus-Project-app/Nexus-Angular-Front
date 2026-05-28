@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from './auth.service';
 import { ToggleLikeResponse } from '../../features/posts/models/post.model';
-import { environment } from '../../shared/utils/environment';
+import { environment } from '../utils/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LikesService {
