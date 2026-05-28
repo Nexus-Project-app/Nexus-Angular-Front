@@ -1,19 +1,20 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   signal,
   OnInit,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
-import { NavbarComponent } from '@shared/components/navbar.component';
-import { AuthService } from '@shared/services/auth.service';
-import { PostsService } from '@shared/services/posts.service';
-import { PostDto } from '@features/posts/models/post.model';
+import { NavbarComponent } from '../../../shared/components/navbar.component';
+import { AuthService } from '../../../shared/services/auth.service';
+import { PostsService } from '../../../infrastructure/services/posts.service';
+import { LikesService } from '../../../infrastructure/services/likes.service';
+import { PostDto } from '../../posts/models/post.model';
 
 export interface UserProfile {
   readonly name: string;
@@ -26,21 +27,15 @@ export interface SidebarItem {
   readonly subtitle: string;
 }
 
-export interface FeedAction {
-  readonly id: string;
-  readonly icon: 'like' | 'comment' | 'share';
-  readonly label: string;
-  readonly count: string;
-}
-
 export interface FeedCard {
   readonly id: string;
   readonly author: string;
   readonly title: string;
   readonly description: string;
   readonly tags: ReadonlyArray<string>;
-  readonly actions: ReadonlyArray<FeedAction>;
-  readonly savedCount: string;
+  likeCount: number;
+  commentCount: number;
+  isLiked: boolean;
 }
 
 // Import DiscoveryItem from its module
@@ -52,10 +47,7 @@ const SIDEBAR_ITEM_TEMPLATE: Omit<SidebarItem, 'id'> = {
 };
 
 function createSidebarItem(id: string): SidebarItem {
-  return {
-    id,
-    ...SIDEBAR_ITEM_TEMPLATE,
-  };
+  return { id, ...SIDEBAR_ITEM_TEMPLATE };
 }
 
 function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarItem> {
@@ -66,6 +58,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   selector: 'app-home-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    CommonModule,
     CreateDocumentationComponent,
     DiscoveryItemComponent,
     FooterLinksComponent,
@@ -74,7 +67,6 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   template: `
     <a class="skip-link" href="#main-content">Aller au contenu principal</a>
     <div class="home-page">
-      
       <app-navbar />
       <main id="main-content" class="main-grid" aria-label="Contenu principal">
         <h1 class="visually-hidden">Fil principal Nexus</h1>
@@ -99,10 +91,12 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
             <button class="plus-button" type="button" aria-label="Creer un groupe">+</button>
           </div>
         </aside>
+
         <section class="feed-column" aria-label="Fil d actualites">
           @if (isConnected()) {
             <app-create-documentation (created)="openEditor($event)" />
           }
+
           @for (card of feedCards(); track card.id) {
             <article
               class="feed-card"
@@ -128,43 +122,47 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
                   <span class="tag">{{ tag }}</span>
                 }
               </div>
-              <div class="card-actions" aria-label="Actions de la publication">
+              <div class="card-actions">
                 <div class="card-actions-left">
-                  @for (action of card.actions; track action.id) {
-                    <button
-                      class="action-button"
-                      type="button"
-                      [attr.aria-label]="action.label + ' ' + action.count"
-                    >
-                      @switch (action.icon) {
-                        @case ('like') {
-                          <i class="fas fa-heart"></i>
-                        }
-                        @case ('comment') {
-                          <i class="fas fa-comment"></i>
-                        }
-                        @case ('share') {
-                          <i class="fas fa-share"></i>
-                        }
-                      }
-                      <span class="action-count">{{ action.count }}</span>
-                    </button>
-                  }
+                  <!-- Bouton like -->
+                  <button
+                    class="action-button"
+                    [class.action-button--liked]="card.isLiked"
+                    type="button"
+                    [attr.aria-label]="card.isLiked ? 'Ne plus aimer' : 'Aimer'"
+                    [disabled]="!isConnected()"
+                    (click)="toggleLike(card, $event)"
+                  >
+                    <svg class="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        *ngIf="!card.isLiked"
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                      />
+                      <path
+                        *ngIf="card.isLiked"
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <span class="action-count">{{ card.likeCount }}</span>
+                  </button>
+
+                  <!-- Compteur commentaires -->
+                  <span class="action-button action-button--static">
+                    <svg class="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span class="action-count">{{ card.commentCount }}</span>
+                  </span>
                 </div>
-                <button
-                  class="save-button"
-                  type="button"
-                  aria-label="Sauvegarder {{ card.savedCount }}"
-                >
-                  <i class="fas fa-bookmark"></i>
-                  <span class="action-count">{{ card.savedCount }}</span>
-                </button>
               </div>
             </article>
           }
-          <p class="feed-summary" aria-live="polite">
-            Total interactions sur le fil: {{ totalInteractions() }}
-          </p>
 
           @if (hasPreviousPage() || hasNextPage()) {
             <nav class="feed-pagination" aria-label="Navigation des pages">
@@ -190,6 +188,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
             </nav>
           }
         </section>
+
         <aside class="right-sidebar" aria-label="Decouverte et informations">
           <app-discovery-item [title]="'Découverte de Sujets'" [items]="topicDiscoveries()" />
           <app-discovery-item [title]="'Découverte de groupes'" [items]="groupDiscoveries()" />
@@ -388,7 +387,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
     .card-actions {
       align-items: center;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 0.75rem;
       margin-top: 1rem;
       padding-top: 1rem;
@@ -399,8 +398,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       display: flex;
       gap: 0.65rem;
     }
-    .action-button,
-    .save-button {
+    .action-button {
       align-items: center;
       background: transparent;
       border: 0;
@@ -408,18 +406,33 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       cursor: pointer;
       display: inline-flex;
       gap: 0.35rem;
-      padding: 0;
-      transition: color 0.2s ease;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      transition: color 0.2s ease, background 0.2s ease;
     }
-    .action-button i,
-    .save-button i {
-      font-size: 1rem;
-      color: inherit;
+    .action-button--static {
+      cursor: default;
     }
-    .feed-summary {
-      color: var(--nexus-text-secondary);
-      font-size: 0.85rem;
-      margin: 0;
+    .action-button:not(:disabled):not(.action-button--static):hover {
+      color: #f43f5e;
+      background: color-mix(in srgb, #f43f5e 10%, transparent);
+    }
+    .action-button--liked {
+      color: #f43f5e !important;
+    }
+    .action-button:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+    .action-icon {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+    .action-count {
+      font-size: 0.875rem;
+      font-weight: 500;
     }
     .feed-pagination {
       display: flex;
@@ -474,10 +487,6 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
-    .action-button:hover,
-    .save-button:hover {
-      color: var(--nexus-text-primary);
-    }
     a:focus-visible,
     button:focus-visible {
       border-color: #b374ff;
@@ -516,19 +525,15 @@ export class HomePageComponent implements OnInit {
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
   private readonly postsService = inject(PostsService);
+  private readonly likesService = inject(LikesService);
   protected readonly keycloak = this.auth.instance;
-  protected isConnected = signal(this.keycloak?.authenticated);
-
-  protected readonly user = signal<UserProfile>({
-    name: 'Admin Superadmin',
-    role: 'Administrateur',
-  });
+  protected isConnected = signal(this.keycloak?.authenticated ?? false);
 
   protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>(
     createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
   );
-    
-  protected readonly feedCards = signal<ReadonlyArray<FeedCard>>([]);
+
+  protected readonly feedCards = signal<FeedCard[]>([]);
   protected readonly currentPage = signal(1);
   protected readonly hasNextPage = signal(false);
   protected readonly hasPreviousPage = signal(false);
@@ -542,21 +547,16 @@ export class HomePageComponent implements OnInit {
   protected loadFeed(page: number): void {
     this.postsService.listPosts(page, this.PAGE_SIZE).subscribe({
       next: (response) => {
-        const cards = response.items.map(
-          (post: PostDto): FeedCard => ({
-            id: post.id,
-            author: post.authorId,
-            title: post.title,
-            description: post.content,
-            tags: post.tags,
-            actions: [
-              { id: 'likes', icon: 'like', label: "J'aime", count: '0' },
-              { id: 'comments', icon: 'comment', label: 'Commentaires', count: '0' },
-              { id: 'shares', icon: 'share', label: 'Partages', count: '0' },
-            ],
-            savedCount: '0',
-          }),
-        );
+        const cards: FeedCard[] = response.items.map((post: PostDto) => ({
+          id: post.id,
+          author: post.authorName,
+          title: post.title,
+          description: post.content,
+          tags: post.tags,
+          likeCount: post.likeCount,
+          commentCount: post.commentCount,
+          isLiked: post.isLikedByCurrentUser,
+        }));
         this.feedCards.set(cards);
         this.currentPage.set(response.page);
         this.hasNextPage.set(response.hasNextPage);
@@ -565,6 +565,30 @@ export class HomePageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors du chargement des posts :', err);
+      },
+    });
+  }
+
+  protected toggleLike(card: FeedCard, event: Event): void {
+    event.stopPropagation();
+    if (!this.isConnected()) return;
+
+    const wasLiked = card.isLiked;
+    card.isLiked = !wasLiked;
+    card.likeCount += wasLiked ? -1 : 1;
+    this.feedCards.update(cards => [...cards]);
+
+    this.likesService.toggleLike(card.id).subscribe({
+      next: (res) => {
+        card.isLiked = res.isLiked;
+        card.likeCount = res.likeCount;
+        this.feedCards.update(cards => [...cards]);
+      },
+      error: (err) => {
+        card.isLiked = wasLiked;
+        card.likeCount += wasLiked ? 1 : -1;
+        this.feedCards.update(cards => [...cards]);
+        console.error('[Home] Failed to toggle like:', err);
       },
     });
   }
@@ -591,18 +615,10 @@ export class HomePageComponent implements OnInit {
   ]);
 
   protected async openEditor(title: string) {
-    await this.router.navigate(['/editor'], {
-      queryParams: { title },
-    });
+    await this.router.navigate(['/editor'], { queryParams: { title } });
   }
 
   protected async navigateToPost(id: string) {
     await this.router.navigate(['/posts', id]);
   }
-
-  protected readonly totalInteractions = computed(() =>
-    this.feedCards()
-      .flatMap((card) => card.actions)
-      .reduce((accumulator, action) => accumulator + Number(action.count), 0),
-  );
 }
