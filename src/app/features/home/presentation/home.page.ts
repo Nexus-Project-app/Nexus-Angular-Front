@@ -10,11 +10,10 @@ import { Router } from '@angular/router';
 import { CreateDocumentationComponent } from './create-documentation.component';
 import { DiscoveryItemComponent } from './discovery-item.component';
 import { FooterLinksComponent } from './footer-links.component';
-import { NavbarComponent } from '../../../shared/components/navbar.component';
-import { AuthService } from '../../../shared/services/auth.service';
-import { PostsService } from '../../../infrastructure/services/posts.service';
-import { PostDto } from '../../posts/models/post.model';
-import { environment } from '../../../shared/utils/environment';
+import { NavbarComponent } from '@shared/components/navbar.component';
+import { AuthService } from '@shared/services/auth.service';
+import { PostsService } from '@shared/services/posts.service';
+import { PostDto } from '@features/posts/models/post.model';
 
 export interface UserProfile {
   readonly name: string;

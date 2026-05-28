@@ -10,38 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from '../../../../shared/components/navbar.component';
+import { NavbarComponent } from '@shared/components/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
-import { PostsService } from '../../../../infrastructure/services/posts.service';
-import { PostDto } from '../../../posts/models/post.model';
-
-const INITIAL_CONTENT = `# Titre du document
-
-Rédigez votre contenu ici. L'éditeur supporte la syntaxe **Markdown** complète.
-
-## Formatage de base
-
-- **Gras** avec \`**texte**\`
-- *Italique* avec \`*texte*\`
-- \`Code inline\` avec \` \`code\` \`
-- ~~Barré~~ avec \`~~texte~~\`
-
-## Tableau
-
-| Colonne 1 | Colonne 2 | Colonne 3 |
-| --------- | --------- | --------- |
-| Valeur    | Valeur    | Valeur    |
-
-## Bloc de code
-
-\`\`\`typescript
-const salutation = 'Bienvenue sur Nexus';
-console.log(salutation);
-\`\`\`
-
-> Utilisez \`Ctrl+Z\` pour annuler et \`Ctrl+Y\` pour rétablir.
-`;
+import { PostsService } from '@shared/services/posts.service';
+import { PostDto } from '@features/posts/models/post.model';
+import { INITIAL_CONTENT } from './editor-initial-content';
 
 @Component({
   selector: 'app-editor-page',
@@ -124,7 +98,6 @@ export class EditorPageComponent {
   }
 
   onSave(): void {
-    console.log(this.crepe?.getMarkdown());
     if (this.isSaving()) {
       return;
     }

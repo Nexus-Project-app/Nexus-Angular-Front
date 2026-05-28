@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../shared/services/auth.service';
-import { UserProfile } from '../../domain/user.model';
-import { NavbarComponent } from '../../../../shared/components/navbar.component';
-import { environment } from '../../../../shared/utils/environment';
+import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from '@shared/services/auth.service';
+import { UserProfile } from '@features/profile/domain/user.model';
+import { NavbarComponent } from '@shared/components/navbar.component';
+import { environment } from '@shared/utils/environment';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +18,7 @@ export class ProfileComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly platformId = inject(PLATFORM_ID);
 
   private readonly keycloak = this.authService.instance;
 
@@ -57,6 +59,11 @@ export class ProfileComponent implements OnInit {
   });
 
   ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) {
+      this.loading.set(false);
+      return;
+    }
+
     if (!this.keycloak.authenticated) {
       this.notConnected.set(true);
       this.loading.set(false);
@@ -106,7 +113,6 @@ export class ProfileComponent implements OnInit {
   }
 
   onAvatarSelected(event: Event): void {
-
     const input = event.target as HTMLInputElement;
 
     if (!input.files?.length) {
@@ -157,12 +163,6 @@ export class ProfileComponent implements OnInit {
     };
 
     this.userProfile.set(updatedProfile);
-
-    console.log('Profil sauvegardé', updatedProfile);
-
-    if (this.selectedAvatar()) {
-      console.log('Avatar à upload :', this.selectedAvatar());
-    }
   }
 
   async logout() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
-import { environment } from '../utils/environment';
+import { environment } from '@shared/utils/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,10 +25,17 @@ export class AuthService {
     });
 
     try {
-      this.isAuthenticated = await this.keycloak.init({
+      const initPromise = this.keycloak.init({
         onLoad: 'check-sso',
         checkLoginIframe: false,
       });
+
+      // Timeout after 5 seconds to prevent hanging bootstrap
+      const timeoutPromise = new Promise<boolean>(resolve => {
+        setTimeout(() => resolve(false), 5000);
+      });
+
+      this.isAuthenticated = await Promise.race([initPromise, timeoutPromise]);
     } catch (error) {
       // If code exchange fails (e.g. unauthorized_client), keep the app usable.
       this.isAuthenticated = false;

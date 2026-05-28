@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreateUserUseCase, me } from '../../application/use-cases/create-user.use-case';
 import { CreateUserDTO } from '../../domain/user.model';
-import { AuthService } from '../../../../shared/services/auth.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-callBack',
@@ -30,7 +30,11 @@ export class CallBackComponent {
 
   protected readonly notConnected = signal<boolean>(true);
 
-  ngOnInit() {
+  constructor() {
+    this.init();
+  }
+
+  private init(): void {
     // Keycloak n'est pas disponible côté serveur (SSR) : on sort proprement
     if (!this.keycloak) {
       this.loading.set(false);

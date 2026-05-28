@@ -22,15 +22,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch()),
-    // Initialize AuthService but do not block application bootstrap.
-    // Keycloak init may perform network calls (silent SSO) which can hang
-    // the bootstrap if returned promise is awaited. Start init asynchronously
-    // and let the app render immediately.
+    // Initialize AuthService before app bootstrap
     provideAppInitializer(() => {
       const authService = inject(AuthService);
-      // fire-and-forget initialization
-      void authService.init().catch(() => {});
-      return Promise.resolve();
+      return authService.init().catch(() => {});
     }),
   ],
 };

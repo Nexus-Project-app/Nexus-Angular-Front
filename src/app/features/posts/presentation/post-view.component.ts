@@ -1,10 +1,10 @@
 ﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar.component';
-import { PostsService } from '../../../infrastructure/services/posts.service';
-import { UserService } from '../../../shared/services/user.service';
-import { PostDto } from '../models/post.model';
+import { NavbarComponent } from '@shared/components/navbar.component';
+import { PostsService } from '@shared/services/posts.service';
+import { UserService } from '@shared/services/user.service';
+import { PostDto } from '@features/posts/models/post.model';
 
 @Component({
   selector: 'app-post-view',
@@ -21,7 +21,18 @@ import { PostDto } from '../models/post.model';
         <div class="bg-nexus-card border border-nexus-border rounded-lg p-8 space-y-6">
           <!-- Header with title and actions -->
           <div class="space-y-4">
-            <h1 class="text-3xl font-bold text-nexus-text">{{ post()!.title }}</h1>
+            <div class="flex items-center gap-3">
+              <button
+                (click)="goBack()"
+                class="p-2 rounded-lg border border-nexus-border hover:bg-nexus-bg transition"
+                aria-label="Retour"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-nexus-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 class="text-3xl font-bold text-nexus-text">{{ post()!.title }}</h1>
+            </div>
             <div class="flex items-center justify-between">
               <div class="text-sm text-nexus-muted">
                 {{ formatDate(post()!.created) }}
@@ -30,7 +41,7 @@ import { PostDto } from '../models/post.model';
                 <button
                   *ngIf="isOwner()"
                   (click)="editPost()"
-                  class="px-4 py-2 border border-nexus-accent text-nexus-accent rounded-lg text-sm hover:bg-nexus-accent hover:text-nexus-bg transition-colors"
+                  class="px-4 py-2 border border-nexus-accent text-white bg-nexus-accent rounded-lg text-sm hover:bg-blue-700 hover:border-blue-700 transition-colors"
                 >
                   Modifier
                 </button>
@@ -139,5 +150,9 @@ export class PostViewComponent {
       dateStyle: 'medium',
       timeStyle: 'short',
     }).format(new Date(value));
+  }
+
+  protected goBack(): void {
+    this.router.navigate(['/']);
   }
 }
