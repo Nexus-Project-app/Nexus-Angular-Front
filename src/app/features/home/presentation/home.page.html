@@ -1,0 +1,129 @@
+<a class="skip-link" href="#main-content">Aller au contenu principal</a>
+<div class="home-page">
+  <app-navbar />
+  <main id="main-content" class="main-grid" aria-label="Contenu principal">
+    <h1 class="visually-hidden">Fil principal Nexus</h1>
+    <aside class="left-sidebar" aria-label="Navigation groupes">
+      <nav class="sidebar-list" aria-label="Groupes">
+        @for (item of sidebarItems(); track item.id) {
+          <a
+            class="sidebar-item"
+            href="#"
+            [attr.aria-label]="item.title + ' - ' + item.subtitle"
+          >
+            <span class="item-visual" aria-hidden="true"></span>
+            <span class="sidebar-copy">
+              <span class="item-title">{{ item.title }}</span>
+              <span class="item-subtitle">{{ item.subtitle }}</span>
+            </span>
+          </a>
+        }
+      </nav>
+      <div class="sidebar-footer">
+        <button class="join-button" type="button">Rejoindre un groupe</button>
+        <button class="plus-button" type="button" aria-label="Creer un groupe">+</button>
+      </div>
+    </aside>
+
+    <section class="feed-column" aria-label="Fil d actualites">
+      @if (isConnected()) {
+        <app-create-documentation (created)="openEditor($event)" />
+      }
+
+      @for (card of feedCards(); track card.id) {
+        <article
+          class="feed-card"
+          aria-label="Publication de {{ card.author }}"
+          (click)="navigateToPost(card.id)"
+          (keydown.enter)="navigateToPost(card.id)"
+          (keydown.space)="$event.preventDefault(); navigateToPost(card.id)"
+          style="cursor: pointer;"
+        >
+          <header class="card-head">
+            <div class="card-author">
+              <div class="avatar" aria-hidden="true">
+                {{ card.author.charAt(0).toUpperCase() }}
+              </div>
+              <div class="card-author-info">
+                <p class="user-name">{{ card.author }}</p>
+                <p class="card-meta">{{ card.updated }}</p>
+              </div>
+            </div>
+          </header>
+          <h2 class="card-title">{{ card.title }}</h2>
+          <p class="card-description">{{ card.truncatedDescription }}</p>
+          <div class="tag-list" aria-label="Tags de la publication">
+            @for (tag of card.tags; track tag) {
+              <span class="tag">{{ tag }}</span>
+            }
+          </div>
+          <div class="card-actions">
+            <div class="card-actions-left">
+              <button
+                class="action-button"
+                [class.action-button--liked]="card.isLiked"
+                type="button"
+                [attr.aria-label]="card.isLiked ? 'Ne plus aimer' : 'Aimer'"
+                [disabled]="!isConnected()"
+                (click)="toggleLike(card, $event)"
+              >
+                <svg class="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    *ngIf="!card.isLiked"
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                  />
+                  <path
+                    *ngIf="card.isLiked"
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span class="action-count">{{ card.likeCount }}</span>
+              </button>
+
+              <span class="action-button action-button--static">
+                <svg class="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"
+                  />
+                </svg>
+                <span class="action-count">{{ card.commentCount }}</span>
+              </span>
+            </div>
+          </div>
+        </article>
+      }
+
+      @if (hasPreviousPage() || hasNextPage()) {
+        <nav class="feed-pagination" aria-label="Navigation des pages">
+          <button
+            class="pagination-btn"
+            type="button"
+            [disabled]="!hasPreviousPage()"
+            (click)="previousPage()"
+          >
+            ← Précédent
+          </button>
+          <span class="pagination-info">Page {{ currentPage() }}</span>
+          <button
+            class="pagination-btn"
+            type="button"
+            [disabled]="!hasNextPage()"
+            (click)="nextPage()"
+          >
+            Suivant →
+          </button>
+        </nav>
+      }
+    </section>
+
+    <aside class="right-sidebar" aria-label="Decouverte et informations">
+      <app-discovery-item [title]="'Découverte de Sujets'" [items]="topicDiscoveries()" />
+      <app-discovery-item [title]="'Découverte de groupes'" [items]="groupDiscoveries()" />
+      <app-footer-links />
+    </aside>
+  </main>
+</div>

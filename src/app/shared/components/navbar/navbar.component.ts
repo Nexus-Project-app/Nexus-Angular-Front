@@ -9,7 +9,7 @@ import {
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { ThemeService } from '@shared/services/theme.service';
-import { environment } from '@shared/utils/environment';
+import { environment } from '@app/shared/utils/env/environment';
 import { AuthService } from '@shared/services/auth.service';
 
 export interface UserProfile {

@@ -1,0 +1,81 @@
+<app-navbar></app-navbar>
+<main class="post-view-main">
+  <div class="post-view-header">
+    <button class="btn-back" (click)="goBack()">
+      ← Retour
+    </button>
+  </div>
+
+  <div *ngIf="!post()" class="post-loading">
+    <p>Chargement du post...</p>
+  </div>
+
+  <article *ngIf="post()" class="post-article">
+    <div class="post-card">
+      <!-- Header : titre + actions owner -->
+      <div class="post-header">
+        <h1 class="post-title">{{ post()!.title }}</h1>
+        <div class="post-meta-row">
+          <span class="post-date">crée le : {{ formatDateFn(post()!.created) }}</span>
+          <span class="post-date">mis à jour le : {{ formatDateFn(post()!.updated) }}</span>
+          <div class="post-owner-actions">
+            <button *ngIf="isOwner()" (click)="editPost()" class="btn-outline">Modifier</button>
+            <button *ngIf="isOwner()" (click)="deletePost()" class="btn-danger">Supprimer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div *ngIf="post()!.tags.length > 0" class="post-tags">
+        <span *ngFor="let tag of post()!.tags" class="post-tag">{{ tag }}</span>
+      </div>
+
+      <!-- Contenu -->
+      <app-markdown-renderer [content]="post()?.content ?? ''"></app-markdown-renderer>
+
+      <!-- Like bar -->
+      <div class="post-like-bar">
+        <button
+          class="like-btn"
+          [class.like-btn--active]="likedState()"
+          [disabled]="!isConnected() || likeLoading()"
+          (click)="toggleLike()"
+          [title]="isConnected() ? (likedState() ? 'Ne plus aimer' : 'Aimer') : 'Connectez-vous pour liker'"
+        >
+          <svg class="like-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              *ngIf="!likedState()"
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              fill="none" stroke="currentColor" stroke-width="2"
+            />
+            <path
+              *ngIf="likedState()"
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              fill="currentColor"
+            />
+          </svg>
+          <span class="like-count">{{ likeCount() }}</span>
+        </button>
+
+        <span class="comment-count-display">
+          <svg viewBox="0 0 24 24" class="comment-icon" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            />
+          </svg>
+          <span>{{ post()!.commentCount }}</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Séparateur -->
+    <hr class="post-divider" />
+
+    <!-- Commentaires -->
+    <app-comments-section
+      [postId]="post()!.id"
+      [currentUserId]="currentUserId()"
+    />
+  </article>
+</main>

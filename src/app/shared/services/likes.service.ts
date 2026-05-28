@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { ToggleLikeResponse } from '../../features/posts/models/post.model';
-import { environment } from '../utils/environment';
+import { environment } from '../utils/env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LikesService {

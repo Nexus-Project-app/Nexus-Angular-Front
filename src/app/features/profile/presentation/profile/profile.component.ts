@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '@shared/services/auth.service';
 import { UserProfile } from '@features/profile/domain/user.model';
-import { NavbarComponent } from '@shared/components/navbar.component';
-import { environment } from '@shared/utils/environment';
+import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
+import { environment } from '@app/shared/utils/env/environment';
 
 @Component({
   selector: 'app-profile',

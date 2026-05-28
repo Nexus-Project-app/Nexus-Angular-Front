@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '@shared/utils/environment';
+import { environment } from '@app/shared/utils/env/environment';
 import { AuthService } from '@shared/services/auth.service';
 
 @Component({
