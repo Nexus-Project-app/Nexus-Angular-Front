@@ -10,7 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from '@shared/components/navbar.component';
+import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
 import { PostsService } from '@shared/services/posts.service';

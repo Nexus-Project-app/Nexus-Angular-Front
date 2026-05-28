@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { CommentPagedResponse } from '../../features/posts/models/comment.model';
-import { environment } from '../utils/environment';
+import { environment } from '../utils/env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CommentsService {

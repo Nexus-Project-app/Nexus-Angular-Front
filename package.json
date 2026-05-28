@@ -12,7 +12,6 @@
     "serve:ssr:projet": "node dist/projet/server/server.mjs",
     "lint": "eslint src --ext .ts,.tsx,.js,.mjs",
     "lint:fix": "eslint src --ext .ts,.tsx,.js,.mjs --fix"
-
   },
   "private": true,
   "packageManager": "npm@11.6.2",
@@ -28,11 +27,16 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@milkdown/crepe": "^7.20.0",
     "@milkdown/kit": "^7.20.0",
+    "@types/dompurify": "^3.0.5",
+    "dompurify": "^3.4.7",
     "eslint": "^10.3.0",
     "express": "^5.1.0",
     "font-awesome": "^4.7.0",
+    "highlight.js": "^11.11.1",
     "keycloak-angular": "^21.0.0",
     "keycloak-js": "^26.2.4",
+    "marked": "^18.0.4",
+    "marked-highlight": "^2.2.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

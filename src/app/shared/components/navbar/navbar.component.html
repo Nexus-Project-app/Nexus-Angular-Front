@@ -1,9 +1,9 @@
 <header class="top-header" aria-label="Barre supérieure">
-  <a class="brand" href="#" aria-label="Accueil Nexus" (click)="navigateHome($event)">
+  <a class="brand" href="#" (click)="navigateHome($event)">
     @if (themeService.isDark()) {
-      <img ngSrc="/nexus.svg" alt="Nexus" width="360" height="80" priority />
+      <img ngSrc="/nexus.svg" alt="Nexus" width="255" height="102" priority />
     } @else {
-      <img ngSrc="/nexus_black.svg" alt="Nexus" width="360" height="80" priority />
+      <img ngSrc="/nexus_black.svg" alt="Nexus" width="255" height="102" priority />
     }
   </a>
   <div class="header-actions" aria-label="Actions utilisateur">
@@ -21,13 +21,13 @@
     </button>
 
     @if (isConnected) {
-      <div class="user-meta" (click)="navigateProfile($event)">
+      <button class="user-meta" type="button" (click)="navigateProfile($event)">
         <div class="avatar" aria-hidden="true">{{ userInitial() }}</div>
         <div>
           <p class="flex">{{ user().name }} - {{ user().role }}</p>
           <p class="user-role">{{ user().email }}</p>
         </div>
-      </div>
+      </button>
       <button class="icon-button" type="button" aria-label="Se déconnecter" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i>
       </button>

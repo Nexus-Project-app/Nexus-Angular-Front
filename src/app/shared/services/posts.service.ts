@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { PostDto, PostPayload, PostsListResponse } from '@features/posts/models/post.model';
-import { environment } from '@shared/utils/environment';
+import { environment } from '@app/shared/utils/env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {

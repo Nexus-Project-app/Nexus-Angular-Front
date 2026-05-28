@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostsService } from '@shared/services/posts.service';
 import { PostDto } from '@features/posts/models/post.model';
-import { NavbarComponent } from '@shared/components/navbar.component';
+import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',

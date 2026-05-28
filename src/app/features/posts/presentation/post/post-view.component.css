@@ -1,0 +1,309 @@
+@import 'highlight.js/styles/atom-one-dark.css';
+
+.post-view-main {
+  background: var(--nexus-bg);
+  min-height: 100dvh;
+  padding: 2rem 1rem 3rem;
+}
+
+.post-view-header {
+  max-width: 56rem;
+  margin: 0 auto 1.5rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--nexus-border);
+  border-radius: 0.5rem;
+  background: var(--nexus-bg-component);
+  color: var(--nexus-text-primary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  border-color: var(--nexus-interaction);
+  background: color-mix(in srgb, var(--nexus-interaction) 8%, var(--nexus-bg-component));
+  color: var(--nexus-interaction);
+}
+
+.btn-back:focus-visible {
+  outline: 2px solid var(--nexus-interaction);
+  outline-offset: 2px;
+}
+
+.btn-back:active {
+  transform: scale(0.98);
+}
+
+.post-loading {
+  max-width: 56rem;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--nexus-text-secondary);
+}
+
+.post-article {
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.post-card {
+  background: var(--nexus-bg-component);
+  border: 1px solid var(--nexus-border);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.post-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.post-title {
+  color: var(--nexus-text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.post-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.post-date {
+  color: var(--nexus-text-secondary);
+  font-size: 0.875rem;
+}
+
+.post-owner-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--nexus-interaction);
+  border-radius: 0.5rem;
+  color: var(--nexus-interaction);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.4rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid #ef4444;
+  border-radius: 0.5rem;
+  color: #ef4444;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.4rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.post-tag {
+  background: color-mix(in srgb, var(--nexus-interaction) 12%, transparent);
+  border-radius: 999px;
+  color: var(--nexus-interaction);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+}
+
+
+.post-content {
+  color: var(--nexus-text-primary);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.post-content h1 {
+  font-size: 1.875rem;
+}
+
+.post-content h2 {
+  font-size: 1.5rem;
+}
+
+.post-content h3 {
+  font-size: 1.25rem;
+}
+
+.post-content p {
+  margin-bottom: 1rem;
+}
+
+.post-content ul,
+.post-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.post-content code {
+  background: var(--nexus-surface-raised);
+  border-radius: 0.35rem;
+  padding: 0.125rem 0.25rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.post-content pre {
+  background: var(--nexus-bg-component);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.post-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--nexus-text-primary);
+}
+
+.post-content blockquote {
+  border-left: 4px solid var(--nexus-border);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  color: var(--nexus-text-secondary);
+}
+
+.post-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.post-content table th,
+.post-content table td {
+  border: 1px solid var(--nexus-border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.post-content table th {
+  background: var(--nexus-surface-raised);
+  font-weight: 600;
+}
+
+.post-content a {
+  color: var(--nexus-interaction);
+  text-decoration: none;
+}
+
+.post-content a:hover {
+  text-decoration: underline;
+}
+
+.post-like-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--nexus-border);
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 0;
+  color: var(--nexus-text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.like-btn:hover:not(:disabled) {
+  color: #f43f5e;
+}
+
+.like-btn--active {
+  color: #f43f5e !important;
+}
+
+.like-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.like-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.like-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.comment-count-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--nexus-text-secondary);
+  font-size: 0.875rem;
+}
+
+.comment-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.post-divider {
+  border: none;
+  border-top: 1px solid var(--nexus-border);
+  margin: 2rem 0;
+}
