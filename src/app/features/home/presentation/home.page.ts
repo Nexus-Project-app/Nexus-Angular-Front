@@ -9,6 +9,7 @@ import { AuthService } from '@shared/services/auth.service';
 import { PostsService } from '@shared/services/posts.service';
 import { LikesService } from '@shared/services/likes.service';
 import { truncateMarkdown } from '@shared/utils/markdown/truncate-markdown';
+import { extractFirstImage } from '@shared/utils/markdown/extract-first-image';
 import { formatDate } from '@shared/utils/format-date';
 import { PostDto } from '../../posts/models/post.model';
 
@@ -29,6 +30,7 @@ export interface FeedCard {
   readonly title: string;
   readonly description: string;
   readonly truncatedDescription?: string;
+  readonly coverImage: string | null;
   readonly tags: ReadonlyArray<string>;
   updated: string;
   likeCount: number;
@@ -99,6 +101,7 @@ export class HomePageComponent implements OnInit {
           title: post.title,
           description: post.content,
           truncatedDescription: truncateMarkdown(post.content, 50),
+          coverImage: extractFirstImage(post.content),
           tags: post.tags,
           likeCount: post.likeCount,
           commentCount: post.commentCount,

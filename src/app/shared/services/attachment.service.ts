@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../shared/services/auth.service';
-import { environment } from '../../shared/utils/environment';
+import { AuthService } from './auth.service';
+import { environment } from '../utils/env/environment';
 
 export interface AttachmentResponse {
   readonly key: string;

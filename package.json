@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration production",
+    "start": "ng serve --configuration development",
     "start:dev": "ng serve --configuration development",
+    "start:prod": "ng serve --configuration production",
     "build": "ng build --configuration production",
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
@@ -36,7 +37,7 @@
     "highlight.js": "^11.11.1",
     "keycloak-angular": "^21.0.0",
     "keycloak-js": "^26.2.4",
-    "marked": "^18.0.4",
+    "marked": "^18.0.5",
     "marked-highlight": "^2.2.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

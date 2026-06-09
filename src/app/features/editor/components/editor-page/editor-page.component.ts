@@ -80,22 +80,16 @@ export class EditorPageComponent {
       this.markdownSource.set(existingPost.content);
     }
 
-    const postId = this.route.snapshot.queryParamMap.get('id');
+    const postId = this.route.snapshot.queryParamMap.get('id') ?? crypto.randomUUID();
 
     this.crepe = new Crepe({
       root,
       defaultValue: initialValue,
-      // Upload only enabled on existing posts (postId known).
-      // TODO: support upload on new posts via temporary UUID.
-      ...(postId
-        ? {
-            featureConfigs: {
-              [CrepeFeature.ImageBlock]: {
-                onUpload: createImageUploader(postId, this.attachmentService),
-              },
-            },
-          }
-        : {}),
+      featureConfigs: {
+        [CrepeFeature.ImageBlock]: {
+          onUpload: createImageUploader(postId, this.attachmentService),
+        },
+      },
     });
 
     this.crepe.on((listener) => {

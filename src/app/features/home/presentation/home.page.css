@@ -191,6 +191,15 @@
   margin: 1rem 0 0.6rem;
 }
 
+.card-cover {
+  max-width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
 .card-description {
   color: var(--nexus-text-secondary);
   margin: 0;

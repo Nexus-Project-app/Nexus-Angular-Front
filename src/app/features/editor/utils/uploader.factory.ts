@@ -1,5 +1,5 @@
 import { firstValueFrom } from 'rxjs';
-import type { AttachmentService } from '../../../infrastructure/services/attachment.service';
+import type { AttachmentService } from '../../../shared/services/attachment.service';
 
 export function createImageUploader(
   postId: string,
