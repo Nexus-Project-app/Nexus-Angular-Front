@@ -1,28 +1,55 @@
 <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+@if (showCreateGroupModal()) {
+  <app-create-group (closed)="showCreateGroupModal.set(false)" />
+}
 <div class="home-page">
   <app-navbar />
   <main id="main-content" class="main-grid" aria-label="Contenu principal">
     <h1 class="visually-hidden">Fil principal Nexus</h1>
     <aside class="left-sidebar" aria-label="Navigation groupes">
-      <nav class="sidebar-list" aria-label="Groupes">
-        @for (item of sidebarItems(); track item.id) {
-          <a
-            class="sidebar-item"
-            href="#"
-            [attr.aria-label]="item.title + ' - ' + item.subtitle"
-          >
-            <span class="item-visual" aria-hidden="true"></span>
-            <span class="sidebar-copy">
-              <span class="item-title">{{ item.title }}</span>
-              <span class="item-subtitle">{{ item.subtitle }}</span>
-            </span>
-          </a>
-        }
-      </nav>
-      <div class="sidebar-footer">
-        <button class="join-button" type="button">Rejoindre un groupe</button>
-        <button class="plus-button" type="button" aria-label="Creer un groupe">+</button>
-      </div>
+      @if (isConnected()) {
+        <nav class="sidebar-list" aria-label="Mes groupes">
+          @if (myGroups().length === 0) {
+            <p class="sidebar-empty">Aucun groupe rejoint</p>
+          }
+          @for (group of myGroups(); track group.id) {
+            <button
+              class="sidebar-item"
+              type="button"
+              [attr.aria-label]="group.name"
+              (click)="navigateToGroup(group.id)"
+            >
+              <span class="item-visual item-visual--letter" aria-hidden="true">
+                {{ group.name.charAt(0).toUpperCase() }}
+              </span>
+              <span class="sidebar-copy">
+                <span class="item-title">{{ group.name }}</span>
+                <span class="item-subtitle">{{ group.memberCount }} membre{{ group.memberCount > 1 ? 's' : '' }}</span>
+              </span>
+              @if (group.visibility === 1) {
+                <span class="item-private-badge" aria-label="Groupe privé">🔒</span>
+              }
+            </button>
+          }
+        </nav>
+        <div class="sidebar-footer">
+          <button class="join-button" type="button" (click)="openGroupBrowser()">Rejoindre un groupe</button>
+          <button class="plus-button" type="button" aria-label="Créer un groupe" (click)="createGroup()">+</button>
+        </div>
+      } @else {
+        <div class="sidebar-guest">
+          <div class="sidebar-guest-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="sidebar-guest-title">Vos groupes</p>
+          <p class="sidebar-guest-text">Connectez-vous pour rejoindre des communautés et retrouver vos groupes ici.</p>
+          <button class="sidebar-guest-btn" type="button" (click)="login()">Se connecter</button>
+        </div>
+      }
     </aside>
 
     <section class="feed-column" aria-label="Fil d actualites">
@@ -122,7 +149,7 @@
 
     <aside class="right-sidebar" aria-label="Decouverte et informations">
       <app-discovery-item [title]="'Découverte de Sujets'" [items]="topicDiscoveries()" />
-      <app-discovery-item [title]="'Découverte de groupes'" [items]="groupDiscoveries()" />
+      <app-discovery-item [title]="'Découverte de groupes'" [items]="groupDiscoveries()" (itemClicked)="onGroupDiscoveryClick($event)" />
       <app-footer-links />
     </aside>
   </main>

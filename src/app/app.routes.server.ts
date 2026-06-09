@@ -18,6 +18,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client,
   },
   {
+    path: 'groups',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'groups/**',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: '**',
     renderMode: RenderMode.Server,
   },

@@ -14,6 +14,7 @@
   justify-content: center;
 }
 
+
 .left-sidebar,
 .right-sidebar {
   border-radius: 1rem;
@@ -60,6 +61,99 @@
   border-radius: 0.5rem;
   flex: 0 0 2rem;
   height: 2rem;
+}
+
+.item-visual--letter {
+  align-items: center;
+  background: var(--nexus-surface-raised);
+  color: var(--nexus-text-primary);
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.item-private-badge {
+  font-size: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.sidebar-empty {
+  color: var(--nexus-text-secondary);
+  font-size: 0.85rem;
+  padding: 0.5rem 0.25rem;
+  margin: 0;
+}
+
+/* ── Guest state ─────────────────────────────────────── */
+.sidebar-guest {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.625rem;
+  justify-content: center;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+}
+
+.sidebar-guest-icon {
+  align-items: center;
+  background: var(--nexus-surface-raised);
+  border: 1px solid var(--nexus-border);
+  border-radius: 0.875rem;
+  color: var(--nexus-text-secondary);
+  display: inline-flex;
+  height: 3rem;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  width: 3rem;
+}
+
+.sidebar-guest-icon svg {
+  height: 1.4rem;
+  width: 1.4rem;
+}
+
+.sidebar-guest-title {
+  color: var(--nexus-text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sidebar-guest-text {
+  color: var(--nexus-text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sidebar-guest-btn {
+  background: var(--nexus-interaction);
+  border: none;
+  border-radius: 0.6rem;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  padding: 0.5rem 1.1rem;
+  transition: all 0.15s ease;
+}
+
+.sidebar-guest-btn:hover {
+  background: var(--nexus-interaction-hover);
+}
+
+.sidebar-item {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .sidebar-copy {
