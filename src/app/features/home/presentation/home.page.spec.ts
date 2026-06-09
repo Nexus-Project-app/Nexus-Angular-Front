@@ -29,10 +29,13 @@ describe('HomePageComponent', () => {
           items: [
             {
               id: 'post-1',
+              authorId: 'author-1',
               authorName: 'Alice',
               title: 'Hello Nexus',
               content: 'Contenu du post',
               tags: ['tag1'],
+              created: '2026-06-09T07:00:00Z',
+              updated: '2026-06-09T07:00:00Z',
               likeCount: 2,
               commentCount: 1,
               isLikedByCurrentUser: false,

@@ -95,7 +95,7 @@ export class HomePageComponent implements OnInit {
       next: (response) => {
         const cards: FeedCard[] = response.items.map((post: PostDto) => ({
           id: post.id,
-          author: post.authorName,
+          author: post.authorName || 'Auteur inconnu',
           title: post.title,
           description: post.content,
           truncatedDescription: truncateMarkdown(post.content, 50),
