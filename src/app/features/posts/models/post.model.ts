@@ -13,6 +13,8 @@ export interface PostDto {
   readonly likeCount: number;
   readonly commentCount: number;
   readonly isLikedByCurrentUser: boolean;
+  readonly groupId: string | null;
+  readonly groupName: string | null;
 }
 
 /**
@@ -30,6 +32,7 @@ export interface PostPayload {
   readonly title: string;
   readonly content: string;
   readonly tags: ReadonlyArray<string>;
+  readonly groupId?: string | null;
 }
 
 /**

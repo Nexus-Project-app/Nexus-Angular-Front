@@ -1,0 +1,116 @@
+<div class="modal-overlay" (click)="cancel()" (keydown.escape)="cancel()" tabindex="-1" role="presentation">
+  <div class="modal-card" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <div class="modal-header">
+      <div class="modal-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h2 id="modal-title" class="modal-title">Créer une communauté</h2>
+        <p class="modal-subtitle">Rassemblez vos collègues autour d'un sujet</p>
+      </div>
+      <button class="modal-close" type="button" aria-label="Fermer" (click)="cancel()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="modal-form">
+
+      <div class="field">
+        <label class="field-label" for="group-name">
+          Nom de la communauté
+          <span class="field-required" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="group-name"
+          class="field-input"
+          [class.field-input--error]="form.controls.name.invalid && form.controls.name.touched"
+          type="text"
+          formControlName="name"
+          placeholder="ex: DevOps France, Cybersécurité…"
+          maxlength="100"
+          autocomplete="off"
+        />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <span class="field-error-msg" role="alert">Requis — 100 caractères max</span>
+        }
+        <span class="field-counter">{{ form.controls.name.value.length }}/100</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="group-description">Description</label>
+        <textarea
+          id="group-description"
+          class="field-input field-textarea"
+          formControlName="description"
+          placeholder="Quel est le sujet de cette communauté ?"
+          maxlength="500"
+          rows="3"
+        ></textarea>
+        <span class="field-counter">{{ form.controls.description.value.length }}/500</span>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Visibilité</span>
+        <div class="visibility-options" role="radiogroup" aria-label="Visibilité du groupe">
+          <label class="visibility-option" [class.visibility-option--selected]="form.controls.visibility.value === 0">
+            <input type="radio" formControlName="visibility" [value]="0" class="sr-only" />
+            <div class="visibility-icon visibility-icon--public" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div>
+              <p class="visibility-name">Public</p>
+              <p class="visibility-desc">Tout le monde peut rejoindre</p>
+            </div>
+          </label>
+          <label class="visibility-option" [class.visibility-option--selected]="form.controls.visibility.value === 1">
+            <input type="radio" formControlName="visibility" [value]="1" class="sr-only" />
+            <div class="visibility-icon visibility-icon--private" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <p class="visibility-name">Privé</p>
+              <p class="visibility-desc">Sur demande acceptée</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      @if (error()) {
+        <div class="form-error" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">Annuler</button>
+        <button type="submit" class="btn-submit" [disabled]="form.invalid || submitting()">
+          @if (submitting()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Création…
+          } @else {
+            Créer la communauté
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

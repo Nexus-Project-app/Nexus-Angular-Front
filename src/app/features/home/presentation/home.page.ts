@@ -8,19 +8,16 @@ import { NavbarComponent } from '@app/shared/components/navbar/navbar.component'
 import { AuthService } from '@shared/services/auth.service';
 import { PostsService } from '@shared/services/posts.service';
 import { LikesService } from '@shared/services/likes.service';
+import { GroupsService } from '@shared/services/groups.service';
+import { CreateGroupComponent } from '../../groups/presentation/create-group/create-group.component';
 import { truncateMarkdown } from '@shared/utils/markdown/truncate-markdown';
 import { formatDate } from '@shared/utils/format-date';
 import { PostDto } from '../../posts/models/post.model';
+import { GroupSummaryDto } from '../../groups/models/group.model';
 
 export interface UserProfile {
   readonly name: string;
   readonly role: string;
-}
-
-export interface SidebarItem {
-  readonly id: string;
-  readonly title: string;
-  readonly subtitle: string;
 }
 
 export interface FeedCard {
@@ -39,19 +36,6 @@ export interface FeedCard {
 // Import DiscoveryItem from its module
 type DiscoveryItem = import('./discovery-item.component').DiscoveryItem;
 
-const SIDEBAR_ITEM_TEMPLATE: Omit<SidebarItem, 'id'> = {
-  title: 'Lorum ispeum',
-  subtitle: '',
-};
-
-function createSidebarItem(id: string): SidebarItem {
-  return { id, ...SIDEBAR_ITEM_TEMPLATE };
-}
-
-function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarItem> {
-  return ids.map((id) => createSidebarItem(id));
-}
-
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -59,6 +43,7 @@ function createSidebarItems(ids: ReadonlyArray<string>): ReadonlyArray<SidebarIt
   imports: [
     CommonModule,
     CreateDocumentationComponent,
+    CreateGroupComponent,
     DiscoveryItemComponent,
     FooterLinksComponent,
     NavbarComponent,
@@ -71,13 +56,13 @@ export class HomePageComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   private readonly postsService = inject(PostsService);
   private readonly likesService = inject(LikesService);
+  private readonly groupsService = inject(GroupsService);
   protected readonly keycloak = this.auth.instance;
   protected isConnected = signal(this.keycloak?.authenticated ?? false);
   protected readonly formatDateFn = formatDate;
 
-  protected readonly sidebarItems = signal<ReadonlyArray<SidebarItem>>(
-    createSidebarItems(['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6']),
-  );
+  protected readonly myGroups = signal<GroupSummaryDto[]>([]);
+  protected readonly showCreateGroupModal = signal(false);
 
   protected readonly feedCards = signal<FeedCard[]>([]);
   protected readonly currentPage = signal(1);
@@ -88,6 +73,35 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFeed(1);
+    this.loadGroupDiscoveries();
+    if (this.isConnected()) {
+      this.loadMyGroups();
+    }
+  }
+
+  private loadMyGroups(): void {
+    this.groupsService.listGroups(1, 100).subscribe({
+      next: (res) => {
+        this.myGroups.set(res.items.filter((g) => g.isMember));
+      },
+      error: (err: Error) => console.error('[Home] Failed to load groups:', err),
+    });
+  }
+
+  protected navigateToGroup(id: string): void {
+    void this.router.navigate(['/groups', id]);
+  }
+
+  protected openGroupBrowser(): void {
+    void this.router.navigate(['/groups']);
+  }
+
+  protected createGroup(): void {
+    this.showCreateGroupModal.set(true);
+  }
+
+  protected login(): void {
+    void this.auth.login();
   }
 
   protected loadFeed(page: number): void {
@@ -157,12 +171,28 @@ export class HomePageComponent implements OnInit {
     { id: 't3', name: 'PostgreSQL', metric: '875 posts' },
   ]);
 
-  protected readonly groupDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([
-    { id: 'g1', name: 'Diiage', metric: '8465 utilisateurs' },
-    { id: 'g2', name: 'Microsoft', metric: '526 utilisateurs' },
-    { id: 'g3', name: 'Windows', metric: '352 utilisateurs' },
-    { id: 'g4', name: 'Linux', metric: '200 utilisateurs' },
-  ]);
+  protected readonly groupDiscoveries = signal<ReadonlyArray<DiscoveryItem>>([]);
+
+  private loadGroupDiscoveries(): void {
+    this.groupsService.listGroups(1, 100).subscribe({
+      next: (res) => {
+        const top4: DiscoveryItem[] = [...res.items]
+          .sort((a, b) => b.memberCount - a.memberCount)
+          .slice(0, 4)
+          .map((g) => ({
+            id: g.id,
+            name: g.name,
+            metric: `${g.memberCount} membre${g.memberCount > 1 ? 's' : ''}`,
+          }));
+        this.groupDiscoveries.set(top4);
+      },
+      error: (err: Error) => console.error('[Home] Failed to load group discoveries:', err),
+    });
+  }
+
+  protected onGroupDiscoveryClick(id: string): void {
+    void this.router.navigate(['/groups', id]);
+  }
 
   protected async openEditor(title: string) {
     await this.router.navigate(['/editor'], { queryParams: { title } });
