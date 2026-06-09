@@ -1,0 +1,360 @@
+/* ── Overlay ────────────────────────────────────────── */
+.modal-overlay {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  animation: overlay-in 0.18s ease;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Card ───────────────────────────────────────────── */
+.modal-card {
+  background: var(--nexus-bg-component);
+  border: 1px solid var(--nexus-border);
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 480px;
+  animation: card-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: scale(0.93) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.modal-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-icon {
+  align-items: center;
+  background: linear-gradient(135deg, #3b5bdb22, #7c3aed22);
+  border: 1px solid var(--nexus-border);
+  border-radius: 0.75rem;
+  color: var(--nexus-interaction);
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 2.75rem;
+  justify-content: center;
+  width: 2.75rem;
+}
+
+.modal-icon svg {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.modal-title {
+  color: var(--nexus-text-primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 0.2rem;
+}
+
+.modal-subtitle {
+  color: var(--nexus-text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.modal-close {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  color: var(--nexus-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  height: 2rem;
+  justify-content: center;
+  margin-left: auto;
+  width: 2rem;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.modal-close svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.modal-close:hover {
+  background: var(--nexus-surface-raised);
+  color: var(--nexus-text-primary);
+}
+
+.modal-close:focus-visible {
+  border-color: var(--nexus-interaction);
+  outline: 2px solid var(--nexus-interaction);
+  outline-offset: 2px;
+}
+
+/* ── Form fields ─────────────────────────────────────── */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+}
+
+.field-label {
+  color: var(--nexus-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.field-required {
+  color: #f43f5e;
+  margin-left: 0.2rem;
+}
+
+.field-input {
+  background: var(--nexus-bg);
+  border: 1.5px solid var(--nexus-border);
+  border-radius: 0.65rem;
+  color: var(--nexus-text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.65rem 0.875rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field-input::placeholder {
+  color: var(--nexus-text-secondary);
+}
+
+.field-input:focus {
+  border-color: var(--nexus-interaction);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nexus-interaction) 18%, transparent);
+  outline: none;
+}
+
+.field-input--error {
+  border-color: #f43f5e;
+}
+
+.field-input--error:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #f43f5e 18%, transparent);
+}
+
+.field-textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.field-counter {
+  color: var(--nexus-text-secondary);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.field-error-msg {
+  color: #f43f5e;
+  font-size: 0.8rem;
+}
+
+/* ── Visibility options ──────────────────────────────── */
+.visibility-options {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.visibility-option {
+  align-items: center;
+  background: var(--nexus-bg);
+  border: 1.5px solid var(--nexus-border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  transition: all 0.15s ease;
+}
+
+.visibility-option:hover {
+  border-color: var(--nexus-interaction);
+  background: color-mix(in srgb, var(--nexus-interaction) 6%, var(--nexus-bg));
+}
+
+.visibility-option--selected {
+  border-color: var(--nexus-interaction);
+  background: color-mix(in srgb, var(--nexus-interaction) 10%, var(--nexus-bg));
+  box-shadow: 0 0 0 1px var(--nexus-interaction);
+}
+
+.visibility-icon {
+  align-items: center;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.visibility-icon svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.visibility-icon--public {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.dark .visibility-icon--public {
+  background: #14532d33;
+  color: #4ade80;
+}
+
+.visibility-icon--private {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.dark .visibility-icon--private {
+  background: #78350f33;
+  color: #fbbf24;
+}
+
+.visibility-name {
+  color: var(--nexus-text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.visibility-desc {
+  color: var(--nexus-text-secondary);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* ── Error banner ────────────────────────────────────── */
+.form-error {
+  align-items: center;
+  background: color-mix(in srgb, #f43f5e 12%, var(--nexus-bg));
+  border: 1px solid color-mix(in srgb, #f43f5e 30%, transparent);
+  border-radius: 0.65rem;
+  color: #f43f5e;
+  display: flex;
+  font-size: 0.875rem;
+  gap: 0.5rem;
+  padding: 0.65rem 0.875rem;
+}
+
+.form-error svg {
+  flex-shrink: 0;
+  height: 1rem;
+  width: 1rem;
+}
+
+/* ── Actions ─────────────────────────────────────────── */
+.modal-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1.5px solid var(--nexus-border);
+  border-radius: 0.65rem;
+  color: var(--nexus-text-primary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.15s ease;
+}
+
+.btn-cancel:hover {
+  background: var(--nexus-surface-raised);
+}
+
+.btn-submit {
+  align-items: center;
+  background: var(--nexus-interaction);
+  border: none;
+  border-radius: 0.65rem;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  transition: all 0.15s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--nexus-interaction-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--nexus-interaction) 40%, transparent);
+}
+
+.btn-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+.btn-spinner {
+  animation: spin 0.7s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  display: inline-block;
+  height: 0.875rem;
+  width: 0.875rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
