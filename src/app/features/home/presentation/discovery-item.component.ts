@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 export interface DiscoveryItem {
   readonly id: string;
@@ -14,10 +14,15 @@ export interface DiscoveryItem {
       <h2 [id]="headingId()">{{ title() }}</h2>
       <div class="panel-list">
         @for (item of items(); track item.id) {
-          <a class="panel-item" href="#" [attr.aria-label]="item.name + ' - ' + item.metric">
+          <button
+            class="panel-item"
+            type="button"
+            [attr.aria-label]="item.name + ' - ' + item.metric"
+            (click)="itemClicked.emit(item.id)"
+          >
             <span class="panel-title">{{ item.name }}</span>
             <span class="panel-metric">{{ item.metric }}</span>
-          </a>
+          </button>
         }
       </div>
     </section>
@@ -43,14 +48,18 @@ export interface DiscoveryItem {
     }
 
     .panel-item {
+      background: transparent;
+      border: none;
       border-radius: 0.65rem;
       color: inherit;
+      cursor: pointer;
+      font-family: inherit;
       padding: 0.5rem 0.4rem;
-      text-decoration: none;
       transition: background-color 0.2s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
     }
 
     .panel-item:hover {
@@ -71,6 +80,7 @@ export interface DiscoveryItem {
 export class DiscoveryItemComponent {
   readonly title = input.required<string>();
   readonly items = input.required<ReadonlyArray<DiscoveryItem>>();
+  readonly itemClicked = output<string>();
 
   protected readonly headingId = computed(
     () => `panel-${this.title().toLowerCase().replaceAll(/\s+/g, '-')}`,

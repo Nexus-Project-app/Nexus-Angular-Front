@@ -105,10 +105,12 @@ export class EditorPageComponent {
     this.isSaving.set(true);
     this.saveError.set(null);
 
+    const groupId = this.route.snapshot.queryParamMap.get('groupId');
     const payload = {
       title: this.titleText().trim(),
       content: this.markdownSource(),
       tags: [] as ReadonlyArray<string>,
+      groupId: groupId ?? null,
     };
 
     const postId = this.route.snapshot.queryParamMap.get('id');

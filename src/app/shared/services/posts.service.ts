@@ -29,6 +29,7 @@ export class PostsService {
       title: payload.title,
       content: payload.content,
       tags: payload.tags ?? [],
+      groupId: payload.groupId ?? null,
     };
     return this.http.post<string>(this.baseUrl, body, {
       headers: this.buildHeaders(),

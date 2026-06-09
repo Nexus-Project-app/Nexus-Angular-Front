@@ -75,4 +75,5 @@ export class NavbarComponent implements OnInit {
     event.preventDefault();
     void this.router.navigate(['/profile/me']);
   }
+
 }
