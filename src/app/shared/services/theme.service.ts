@@ -18,11 +18,14 @@ export class ThemeService {
   }
 
   toggle(): void {
+    this.setDark(!this._isDark());
+  }
+
+  setDark(dark: boolean): void {
     if (isPlatformBrowser(this.platformId)) {
-      const next = !this._isDark();
-      this._isDark.set(next);
-      this.applyClass(next);
-      localStorage.setItem('nexus-theme', next ? 'dark' : 'light');
+      this._isDark.set(dark);
+      this.applyClass(dark);
+      localStorage.setItem('nexus-theme', dark ? 'dark' : 'light');
     }
   }
 

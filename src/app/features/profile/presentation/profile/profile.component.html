@@ -1,7 +1,7 @@
 <div class="h-screen flex flex-col overflow-hidden">
   <app-navbar />
   <div class="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0b0f19] px-4 py-10">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
       <!-- Header with Back Button -->
       <div class="mb-8 flex items-center gap-4">
         <button
@@ -32,213 +32,532 @@
           </p>
         </div>
       </div>
-      <!-- Main card -->
-      <div
-        class="bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden"
-      >
-        <div class="grid grid-cols-1 lg:grid-cols-3">
-          <!-- LEFT -->
-          <div class="border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800 p-8">
-            <!-- Avatar -->
-            <div class="flex flex-col items-center text-center">
-              <div class="relative">
-                <img
-                  [src]="
-                    userProfile().avatarUrl ||
-                    'https://ui-avatars.com/api/?name=' +
-                      userProfile().firstName +
-                      '+' +
-                      userProfile().lastName
-                  "
-                  alt="Photo de profil"
-                  class="h-32 w-32 rounded-full object-cover border-4 border-white dark:border-gray-900 shadow"
-                />
-                <label
-                  class="absolute bottom-0 right-0 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-700 transition flex items-center justify-center cursor-pointer shadow-lg"
-                >
-                  <input
-                    type="file"
-                    class="hidden"
-                    accept="image/*"
-                    (change)="onAvatarSelected($event)"
-                  />
 
+      <!-- Two-column layout -->
+      <div class="flex flex-col xl:flex-row gap-6">
+        <!-- Profile card (left) -->
+        <div class="flex-1 min-w-0">
+          <div
+            class="bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden"
+          >
+            <div class="grid grid-cols-1 lg:grid-cols-3">
+              <!-- LEFT -->
+              <div class="border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800 p-8">
+                <!-- Avatar -->
+                <div class="flex flex-col items-center text-center">
+                  <div class="relative">
+                    <img
+                      [src]="
+                        userProfile().avatarUrl ||
+                        'https://ui-avatars.com/api/?name=' +
+                          userProfile().firstName +
+                          '+' +
+                          userProfile().lastName
+                      "
+                      alt="Photo de profil"
+                      class="h-32 w-32 rounded-full object-cover border-4 border-white dark:border-gray-900 shadow"
+                    />
+                    <label
+                      class="absolute bottom-0 right-0 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-700 transition flex items-center justify-center cursor-pointer shadow-lg"
+                    >
+                      <input
+                        type="file"
+                        class="hidden"
+                        accept="image/*"
+                        (change)="onAvatarSelected($event)"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15.232 5.232l3.536 3.536M9 13l6.768-6.768a2.5 2.5 0 113.536 3.536L12.536 16.536a4 4 0 01-1.768 1.036L7 19l1.428-3.768A4 4 0 019 13z"
+                        />
+                      </svg>
+                    </label>
+                  </div>
+
+                  <h2 class="mt-5 text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ userProfile().firstName }} {{ userProfile().lastName }}
+                  </h2>
+
+                  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {{ userProfile().email }}
+                  </p>
+
+                  <!-- Role -->
+                  <div
+                    class="mt-4 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium"
+                  >
+                    {{ userProfile().role }}
+                  </div>
+                </div>
+
+                <!-- Meta -->
+                <div class="mt-10 space-y-5">
+                  <div>
+                    <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+                      Date de création
+                    </p>
+                    <p class="text-sm text-gray-700 dark:text-gray-200">
+                      {{ userProfile().DateDeCreation }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+                      Dernière modification
+                    </p>
+                    <p class="text-sm text-gray-700 dark:text-gray-200">
+                      {{ userProfile().DateDeModification }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="lg:col-span-2 p-8">
+                <form class="space-y-8">
+                  <!-- Personal infos -->
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+                      Informations personnelles
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <!-- Firstname -->
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Prénom
+                        </label>
+                        <input
+                          type="text"
+                          [value]="userProfile().firstName"
+                          class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <!-- Lastname -->
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Nom
+                        </label>
+                        <input
+                          type="text"
+                          [value]="userProfile().lastName"
+                          class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mt-5">
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Adresse email
+                      </label>
+                      <input
+                        type="email"
+                        [value]="userProfile().email"
+                        disabled
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-[#1e293b] px-4 py-3 text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      />
+                      <p class="mt-2 text-xs text-gray-400">
+                        L'adresse email est gérée par votre fournisseur d'authentification.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Password -->
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Sécurité</h3>
+
+                    <div class="space-y-5">
+                      <!-- Current password -->
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Mot de passe actuel
+                        </label>
+                        <input
+                          type="password"
+                          placeholder="••••••••"
+                          class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <!-- New password -->
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Nouveau mot de passe
+                        </label>
+                        <input
+                          type="password"
+                          placeholder="••••••••"
+                          class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <!-- Confirm -->
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Confirmation du mot de passe
+                        </label>
+                        <input
+                          type="password"
+                          placeholder="••••••••"
+                          class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                    <button
+                      type="submit"
+                      class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition"
+                    >
+                      Sauvegarder les modifications
+                    </button>
+
+                    <button
+                      type="button"
+                      class="px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-xl transition"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accessibility card (right) -->
+        <div class="xl:w-80 shrink-0">
+          <div
+            class="xl:sticky xl:top-6 bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm p-5 xl:max-h-[calc(100vh-5rem)] xl:overflow-y-auto"
+          >
+            <!-- Header -->
+            <div class="flex items-center gap-2 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3a9 9 0 100 18A9 9 0 0012 3zm0 0v1m0 16v1M3 12H2m20 0h-1M5.636 5.636l-.707-.707m14.142 14.142-.707-.707M5.636 18.364l-.707.707M18.364 5.636l.707-.707M12 7a5 5 0 100 10A5 5 0 0012 7z"
+                />
+              </svg>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Accessibilité</h2>
+            </div>
+
+            <!-- Theme section -->
+            <div class="mb-4">
+              <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                Thème
+              </p>
+              <div class="grid grid-cols-2 gap-2" role="group" aria-label="Choix du thème">
+                <button
+                  type="button"
+                  (click)="setTheme(false)"
+                  [class]="
+                    !themeService.isDark()
+                      ? 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 px-3 py-3 text-blue-600 dark:text-blue-400 text-xs font-medium transition cursor-pointer'
+                      : 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-3 py-3 text-gray-600 dark:text-gray-400 text-xs font-medium hover:border-gray-300 dark:hover:border-gray-600 transition cursor-pointer'
+                  "
+                  [attr.aria-pressed]="!themeService.isDark()"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-white"
+                    class="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    aria-hidden="true"
                   >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M15.232 5.232l3.536 3.536M9 13l6.768-6.768a2.5 2.5 0 113.536 3.536L12.536 16.536a4 4 0 01-1.768 1.036L7 19l1.428-3.768A4 4 0 019 13z"
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l.707.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
                     />
                   </svg>
-                </label>
-              </div>
-
-              <h2 class="mt-5 text-xl font-semibold text-gray-900 dark:text-white">
-                {{ userProfile().firstName }} {{ userProfile().lastName }}
-              </h2>
-
-              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {{ userProfile().email }}
-              </p>
-
-              <!-- Role -->
-              <div
-                class="mt-4 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium"
-              >
-                {{ userProfile().role }}
-              </div>
-            </div>
-
-            <!-- Meta -->
-            <div class="mt-10 space-y-5">
-              <div>
-                <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
-                  Date de création
-                </p>
-
-                <p class="text-sm text-gray-700 dark:text-gray-200">
-                  {{ userProfile().DateDeCreation }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
-                  Dernière modification
-                </p>
-
-                <p class="text-sm text-gray-700 dark:text-gray-200">
-                  {{ userProfile().DateDeModification }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT -->
-          <div class="lg:col-span-2 p-8">
-            <form class="space-y-8">
-              <!-- Personal infos -->
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                  Informations personnelles
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <!-- Firstname -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Prénom
-                    </label>
-
-                    <input
-                      type="text"
-                      [value]="userProfile().firstName"
-                      class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <!-- Lastname -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Nom
-                    </label>
-
-                    <input
-                      type="text"
-                      [value]="userProfile().lastName"
-                      class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-
-                <!-- Email -->
-                <div class="mt-5">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Adresse email
-                  </label>
-
-                  <input
-                    type="email"
-                    [value]="userProfile().email"
-                    disabled
-                    class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-[#1e293b] px-4 py-3 text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                  />
-
-                  <p class="mt-2 text-xs text-gray-400">
-                    L'adresse email est gérée par votre fournisseur d'authentification.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Password -->
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Sécurité</h3>
-
-                <div class="space-y-5">
-                  <!-- Current password -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Mot de passe actuel
-                    </label>
-
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <!-- New password -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Nouveau mot de passe
-                    </label>
-
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <!-- Confirm -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Confirmation du mot de passe
-                    </label>
-
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Actions -->
-              <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button
-                  type="submit"
-                  class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition"
-                >
-                  Sauvegarder les modifications
+                  Clair
                 </button>
 
                 <button
                   type="button"
-                  class="px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-xl transition"
+                  (click)="setTheme(true)"
+                  [class]="
+                    themeService.isDark()
+                      ? 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 px-3 py-3 text-blue-600 dark:text-blue-400 text-xs font-medium transition cursor-pointer'
+                      : 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-3 py-3 text-gray-600 dark:text-gray-400 text-xs font-medium hover:border-gray-300 dark:hover:border-gray-600 transition cursor-pointer'
+                  "
+                  [attr.aria-pressed]="themeService.isDark()"
                 >
-                  Annuler
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                    />
+                  </svg>
+                  Sombre
                 </button>
               </div>
-            </form>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-100 dark:border-gray-800 mb-4"></div>
+
+            <!-- Font section -->
+            <div>
+              <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                Police d'écriture
+              </p>
+              <div class="space-y-2" role="group" aria-label="Choix de la police">
+                <button
+                  type="button"
+                  (click)="setFont('system')"
+                  [class]="
+                    a11yService.font() === 'system'
+                      ? 'w-full flex items-center gap-3 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 px-4 py-3 text-left transition cursor-pointer'
+                      : 'w-full flex items-center gap-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-left hover:border-gray-300 dark:hover:border-gray-600 transition cursor-pointer'
+                  "
+                  [attr.aria-pressed]="a11yService.font() === 'system'"
+                >
+                  <span
+                    class="text-xl font-semibold leading-none"
+                    [class]="
+                      a11yService.font() === 'system'
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                    "
+                    aria-hidden="true"
+                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
+                  >Aa</span>
+                  <div>
+                    <p
+                      class="text-sm font-medium"
+                      [class]="
+                        a11yService.font() === 'system'
+                          ? 'text-blue-700 dark:text-blue-300'
+                          : 'text-gray-700 dark:text-gray-200'
+                      "
+                    >Système</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500">Police par défaut</p>
+                  </div>
+                  @if (a11yService.font() === 'system') {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-auto text-blue-500 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                  }
+                </button>
+
+                <button
+                  type="button"
+                  (click)="setFont('opendyslexic')"
+                  [class]="
+                    a11yService.font() === 'opendyslexic'
+                      ? 'w-full flex items-center gap-3 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 px-4 py-3 text-left transition cursor-pointer'
+                      : 'w-full flex items-center gap-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] px-4 py-3 text-left hover:border-gray-300 dark:hover:border-gray-600 transition cursor-pointer'
+                  "
+                  [attr.aria-pressed]="a11yService.font() === 'opendyslexic'"
+                >
+                  <span
+                    class="text-xl font-semibold leading-none"
+                    [class]="
+                      a11yService.font() === 'opendyslexic'
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                    "
+                    aria-hidden="true"
+                    style="font-family: 'OpenDyslexic', sans-serif;"
+                  >Aa</span>
+                  <div>
+                    <p
+                      class="text-sm font-medium"
+                      [class]="
+                        a11yService.font() === 'opendyslexic'
+                          ? 'text-blue-700 dark:text-blue-300'
+                          : 'text-gray-700 dark:text-gray-200'
+                      "
+                    >OpenDyslexic</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500">Conçue pour la dyslexie</p>
+                  </div>
+                  @if (a11yService.font() === 'opendyslexic') {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-auto text-blue-500 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                  }
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-100 dark:border-gray-800 mb-4 mt-4"></div>
+
+            <!-- Font size section -->
+            <div class="mb-4">
+              <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                Taille du texte
+              </p>
+              <div class="grid grid-cols-4 gap-1.5" role="group" aria-label="Taille du texte">
+                @for (item of fontSizeOptions; track item.value) {
+                  <button
+                    type="button"
+                    (click)="setFontSize(item.value)"
+                    [attr.aria-pressed]="a11yService.fontSize() === item.value"
+                    [attr.aria-label]="item.label"
+                    [class]="
+                      a11yService.fontSize() === item.value
+                        ? 'flex flex-col items-center gap-1 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 py-3 px-1 cursor-pointer transition'
+                        : 'flex flex-col items-center gap-1 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] py-3 px-1 hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer transition'
+                    "
+                  >
+                    <span
+                      [style.font-size]="item.preview"
+                      [class]="
+                        a11yService.fontSize() === item.value
+                          ? 'font-bold leading-none text-blue-600 dark:text-blue-400'
+                          : 'font-bold leading-none text-gray-500 dark:text-gray-400'
+                      "
+                      aria-hidden="true"
+                    >A</span>
+                    <span
+                      class="text-[10px] leading-none"
+                      [class]="
+                        a11yService.fontSize() === item.value
+                          ? 'text-blue-600 dark:text-blue-400 font-medium'
+                          : 'text-gray-400 dark:text-gray-500'
+                      "
+                    >{{ item.label }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-100 dark:border-gray-800 mb-4"></div>
+
+            <!-- Line height section -->
+            <div class="mb-4">
+              <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                Interligne
+              </p>
+              <div class="grid grid-cols-3 gap-1.5" role="group" aria-label="Interligne">
+                @for (item of lineHeightOptions; track item.value) {
+                  <button
+                    type="button"
+                    (click)="setLineHeight(item.value)"
+                    [attr.aria-pressed]="a11yService.lineHeight() === item.value"
+                    [class]="
+                      a11yService.lineHeight() === item.value
+                        ? 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 py-3 px-2 cursor-pointer transition'
+                        : 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] py-3 px-2 hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer transition'
+                    "
+                  >
+                    <svg
+                      viewBox="0 0 20 20"
+                      class="h-5 w-5 shrink-0"
+                      fill="none"
+                      aria-hidden="true"
+                      [class]="
+                        a11yService.lineHeight() === item.value
+                          ? 'text-blue-500'
+                          : 'text-gray-400 dark:text-gray-500'
+                      "
+                    >
+                      <line x1="3" [attr.y1]="item.y1" x2="17" [attr.y2]="item.y1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <line x1="3" [attr.y1]="item.y2" x2="17" [attr.y2]="item.y2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <line x1="3" [attr.y1]="item.y3" x2="17" [attr.y2]="item.y3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span
+                      class="text-[10px] leading-none text-center"
+                      [class]="
+                        a11yService.lineHeight() === item.value
+                          ? 'text-blue-600 dark:text-blue-400 font-medium'
+                          : 'text-gray-400 dark:text-gray-500'
+                      "
+                    >{{ item.label }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Letter spacing section -->
+            <div>
+              <p class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                Espacement des lettres
+              </p>
+              <div class="grid grid-cols-3 gap-1.5" role="group" aria-label="Espacement des lettres">
+                @for (item of letterSpacingOptions; track item.value) {
+                  <button
+                    type="button"
+                    (click)="setLetterSpacing(item.value)"
+                    [attr.aria-pressed]="a11yService.letterSpacing() === item.value"
+                    [class]="
+                      a11yService.letterSpacing() === item.value
+                        ? 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 py-3 px-2 cursor-pointer transition'
+                        : 'flex flex-col items-center gap-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f172a] py-3 px-2 hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer transition'
+                    "
+                  >
+                    <span
+                      [style.letter-spacing]="item.preview"
+                      class="text-sm font-bold leading-none"
+                      [class]="
+                        a11yService.letterSpacing() === item.value
+                          ? 'text-blue-600 dark:text-blue-400'
+                          : 'text-gray-500 dark:text-gray-400'
+                      "
+                      aria-hidden="true"
+                    >Aa</span>
+                    <span
+                      class="text-[10px] leading-none text-center"
+                      [class]="
+                        a11yService.letterSpacing() === item.value
+                          ? 'text-blue-600 dark:text-blue-400 font-medium'
+                          : 'text-gray-400 dark:text-gray-500'
+                      "
+                    >{{ item.label }}</span>
+                  </button>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
