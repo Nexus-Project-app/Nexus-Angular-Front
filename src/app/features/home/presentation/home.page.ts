@@ -11,6 +11,7 @@ import { LikesService } from '@shared/services/likes.service';
 import { GroupsService } from '@shared/services/groups.service';
 import { CreateGroupComponent } from '../../groups/presentation/create-group/create-group.component';
 import { truncateMarkdown } from '@shared/utils/markdown/truncate-markdown';
+import { extractFirstImage } from '@shared/utils/markdown/extract-first-image';
 import { formatDate } from '@shared/utils/format-date';
 import { PostDto } from '../../posts/models/post.model';
 import { GroupSummaryDto } from '../../groups/models/group.model';
@@ -26,6 +27,7 @@ export interface FeedCard {
   readonly title: string;
   readonly description: string;
   readonly truncatedDescription?: string;
+  readonly coverImage: string | null;
   readonly tags: ReadonlyArray<string>;
   updated: string;
   likeCount: number;
@@ -113,6 +115,7 @@ export class HomePageComponent implements OnInit {
           title: post.title,
           description: post.content,
           truncatedDescription: truncateMarkdown(post.content, 50),
+          coverImage: extractFirstImage(post.content),
           tags: post.tags,
           likeCount: post.likeCount,
           commentCount: post.commentCount,

@@ -11,10 +11,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
-import { Crepe } from '@milkdown/crepe';
+import { Crepe, CrepeFeature } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/kit/utils';
 import { PostsService } from '@shared/services/posts.service';
 import { PostDto } from '@features/posts/models/post.model';
+import { AttachmentService } from '@shared/services/attachment.service';
+import { createImageUploader } from '../../utils/uploader.factory';
 import { INITIAL_CONTENT } from './editor-initial-content';
 
 @Component({
@@ -29,6 +31,7 @@ export class EditorPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly postsService = inject(PostsService);
+  private readonly attachmentService = inject(AttachmentService);
   readonly titleText = signal(this.getInitialTitle());
   readonly wordCount = signal(0);
   // Nouveau post = false (pas encore sauvegardé), édition = true (déjà en base)
@@ -77,9 +80,16 @@ export class EditorPageComponent {
       this.markdownSource.set(existingPost.content);
     }
 
+    const postId = this.route.snapshot.queryParamMap.get('id') ?? crypto.randomUUID();
+
     this.crepe = new Crepe({
       root,
       defaultValue: initialValue,
+      featureConfigs: {
+        [CrepeFeature.ImageBlock]: {
+          onUpload: createImageUploader(postId, this.attachmentService),
+        },
+      },
     });
 
     this.crepe.on((listener) => {
