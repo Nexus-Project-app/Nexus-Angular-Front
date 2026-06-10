@@ -78,6 +78,14 @@
             </div>
           </header>
           <h2 class="card-title">{{ card.title }}</h2>
+          @if (card.coverImage) {
+            <img
+              class="card-cover"
+              [src]="card.coverImage"
+              [alt]="card.title"
+              loading="lazy"
+            />
+          }
           <p class="card-description">{{ card.truncatedDescription }}</p>
           <div class="tag-list" aria-label="Tags de la publication">
             @for (tag of card.tags; track tag) {
