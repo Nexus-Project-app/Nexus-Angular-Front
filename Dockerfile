@@ -89,7 +89,7 @@ USER nexus
 
 EXPOSE ${PORT}
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=3600s --timeout=3s --start-period=10s --retries=3 \
     CMD node -e "require('http').get('http://localhost:' + process.env.PORT + '/health', (res) => { if(res.statusCode !== 200) throw new Error(res.statusCode); })" || exit 1
 
 # tini as PID 1: forwards SIGTERM to node for graceful shutdown
