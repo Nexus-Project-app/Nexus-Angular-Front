@@ -1,10 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+  PLATFORM_ID,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '@shared/services/auth.service';
 import { ThemeService } from '@shared/services/theme.service';
-import { AccessibilityService, AppFont, FontSize, LineHeight, LetterSpacing } from '@shared/services/accessibility.service';
+import {
+  AccessibilityService,
+  AppFont,
+  FontSize,
+  LineHeight,
+  LetterSpacing,
+} from '@shared/services/accessibility.service';
 import { UserProfile } from '@features/profile/domain/user.model';
 import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 import { environment } from '@app/shared/utils/env/environment';
@@ -25,22 +38,32 @@ export class ProfileComponent implements OnInit {
   protected readonly a11yService = inject(AccessibilityService);
 
   protected readonly fontSizeOptions: { value: FontSize; label: string; preview: string }[] = [
-    { value: 'sm',   label: 'Petit',      preview: '11px' },
-    { value: 'base', label: 'Normal',     preview: '14px' },
-    { value: 'lg',   label: 'Grand',      preview: '17px' },
-    { value: 'xl',   label: 'Très grand', preview: '20px' },
+    { value: 'sm', label: 'Petit', preview: '11px' },
+    { value: 'base', label: 'Normal', preview: '14px' },
+    { value: 'lg', label: 'Grand', preview: '17px' },
+    { value: 'xl', label: 'Très grand', preview: '20px' },
   ];
 
-  protected readonly lineHeightOptions: { value: LineHeight; label: string; y1: number; y2: number; y3: number }[] = [
-    { value: 'normal',   label: 'Normal',   y1: 5,  y2: 10, y3: 15 },
-    { value: 'relaxed',  label: 'Aéré',     y1: 4,  y2: 10, y3: 16 },
-    { value: 'spacious', label: 'Spacieux', y1: 3,  y2: 10, y3: 17 },
+  protected readonly lineHeightOptions: {
+    value: LineHeight;
+    label: string;
+    y1: number;
+    y2: number;
+    y3: number;
+  }[] = [
+    { value: 'normal', label: 'Normal', y1: 5, y2: 10, y3: 15 },
+    { value: 'relaxed', label: 'Aéré', y1: 4, y2: 10, y3: 16 },
+    { value: 'spacious', label: 'Spacieux', y1: 3, y2: 10, y3: 17 },
   ];
 
-  protected readonly letterSpacingOptions: { value: LetterSpacing; label: string; preview: string }[] = [
-    { value: 'normal', label: 'Normal',     preview: '0em'    },
-    { value: 'wide',   label: 'Large',      preview: '0.05em' },
-    { value: 'wider',  label: 'Très large', preview: '0.1em'  },
+  protected readonly letterSpacingOptions: {
+    value: LetterSpacing;
+    label: string;
+    preview: string;
+  }[] = [
+    { value: 'normal', label: 'Normal', preview: '0em' },
+    { value: 'wide', label: 'Large', preview: '0.05em' },
+    { value: 'wider', label: 'Très large', preview: '0.1em' },
   ];
 
   private readonly keycloak = this.authService.instance;
@@ -119,20 +142,21 @@ export class ProfileComponent implements OnInit {
     });
 
     this.loading.set(false);
+
+    console.warn(JSON.stringify(this.userProfile()));
   }
 
   private extractRole(): string {
-    const roles = this.keycloak.tokenParsed?.realm_access?.roles ?? [];
-
-    if (!roles.length) {
-      return 'Utilisateur';
-    }
+    const roles = this.keycloak.tokenParsed?.resource_access?.['nexus-client']?.roles ?? [];
+    let RealRoles: string;
 
     if (roles.includes('admin')) {
-      return 'Administrateur';
+      RealRoles = 'Administrateur';
+    } else {
+      RealRoles = 'Utilisateur';
     }
 
-    return roles[0];
+    return RealRoles;
   }
 
   onAvatarSelected(event: Event): void {
@@ -156,7 +180,7 @@ export class ProfileComponent implements OnInit {
     reader.onload = () => {
       this.avatarPreview.set(reader.result as string);
 
-      this.userProfile.update(profile => ({
+      this.userProfile.update((profile) => ({
         ...profile,
         avatarUrl: reader.result as string,
       }));
