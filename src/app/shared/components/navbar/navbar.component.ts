@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ThemeService } from '@shared/services/theme.service';
 import { environment } from '@app/shared/utils/env/environment';
 import { AuthService } from '@shared/services/auth.service';
+import { SearchModalComponent } from '@shared/components/search-modal/search-modal.component';
 
 export interface UserProfile {
   readonly name: string;
@@ -22,7 +23,7 @@ export interface UserProfile {
   selector: 'app-navbar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, SearchModalComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -42,6 +43,8 @@ export class NavbarComponent implements OnInit {
   });
 
   protected readonly userInitial = computed(() => this.user().name.trim().charAt(0).toUpperCase());
+
+  protected readonly searchOpen = signal(false);
 
   async logout() {
     await this.keycloak.logout({
@@ -76,4 +79,11 @@ export class NavbarComponent implements OnInit {
     void this.router.navigate(['/profile/me']);
   }
 
+  openSearch(): void {
+    this.searchOpen.set(true);
+  }
+
+  closeSearch(): void {
+    this.searchOpen.set(false);
+  }
 }

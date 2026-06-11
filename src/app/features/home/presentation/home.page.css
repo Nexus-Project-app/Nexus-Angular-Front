@@ -37,7 +37,7 @@
 }
 
 .right-sidebar {
-  background: transparent;
+  background: var(--nexus-bg-component);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -192,10 +192,10 @@
 }
 
 .plus-button {
-  background: linear-gradient(135deg, #dbeafe, #c4b5fd);
+  background: var(--nexus-interaction);
   border: none;
   border-radius: 999px;
-  color: #0f172a;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 2.5rem;
@@ -214,7 +214,7 @@
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  padding-right: 0.25rem;
+  padding-inline: 0.5rem;
   align-content: start;
 }
 
