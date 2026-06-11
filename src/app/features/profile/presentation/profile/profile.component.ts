@@ -212,6 +212,14 @@ export class ProfileComponent implements OnInit {
     this.userProfile.set(updatedProfile);
   }
 
+  async openKeycloakProfile(): Promise<void> {
+    if (!this.keycloak?.authenticated) {
+      return;
+    }
+
+    await this.authService.accountManagement();
+  }
+
   setTheme(dark: boolean): void {
     this.themeService.setDark(dark);
   }
