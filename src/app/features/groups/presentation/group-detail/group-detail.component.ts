@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 import { GroupsService } from '@shared/services/groups.service';
@@ -31,7 +30,6 @@ export class GroupDetailComponent {
   private readonly groupsService = inject(GroupsService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly location = inject(Location);
   protected readonly authService = inject(AuthService);
 
   protected readonly group = signal<GroupDetailDto | null>(null);
@@ -101,7 +99,7 @@ export class GroupDetailComponent {
   }
 
   protected goBack(): void {
-    this.location.back();
+    void this.router.navigate(['/']);
   }
 
   protected toggleSettings(): void {

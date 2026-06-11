@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '@shared/services/auth.service';
+import { ThemeService } from '@shared/services/theme.service';
+import { AccessibilityService, AppFont, FontSize, LineHeight, LetterSpacing } from '@shared/services/accessibility.service';
 import { UserProfile } from '@features/profile/domain/user.model';
 import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 import { environment } from '@app/shared/utils/env/environment';
@@ -19,6 +21,27 @@ export class ProfileComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly platformId = inject(PLATFORM_ID);
+  protected readonly themeService = inject(ThemeService);
+  protected readonly a11yService = inject(AccessibilityService);
+
+  protected readonly fontSizeOptions: { value: FontSize; label: string; preview: string }[] = [
+    { value: 'sm',   label: 'Petit',      preview: '11px' },
+    { value: 'base', label: 'Normal',     preview: '14px' },
+    { value: 'lg',   label: 'Grand',      preview: '17px' },
+    { value: 'xl',   label: 'Très grand', preview: '20px' },
+  ];
+
+  protected readonly lineHeightOptions: { value: LineHeight; label: string; y1: number; y2: number; y3: number }[] = [
+    { value: 'normal',   label: 'Normal',   y1: 5,  y2: 10, y3: 15 },
+    { value: 'relaxed',  label: 'Aéré',     y1: 4,  y2: 10, y3: 16 },
+    { value: 'spacious', label: 'Spacieux', y1: 3,  y2: 10, y3: 17 },
+  ];
+
+  protected readonly letterSpacingOptions: { value: LetterSpacing; label: string; preview: string }[] = [
+    { value: 'normal', label: 'Normal',     preview: '0em'    },
+    { value: 'wide',   label: 'Large',      preview: '0.05em' },
+    { value: 'wider',  label: 'Très large', preview: '0.1em'  },
+  ];
 
   private readonly keycloak = this.authService.instance;
 
@@ -163,6 +186,34 @@ export class ProfileComponent implements OnInit {
     };
 
     this.userProfile.set(updatedProfile);
+  }
+
+  async openKeycloakProfile(): Promise<void> {
+    if (!this.keycloak?.authenticated) {
+      return;
+    }
+
+    await this.authService.accountManagement();
+  }
+
+  setTheme(dark: boolean): void {
+    this.themeService.setDark(dark);
+  }
+
+  setFont(font: AppFont): void {
+    this.a11yService.setFont(font);
+  }
+
+  setFontSize(size: FontSize): void {
+    this.a11yService.setFontSize(size);
+  }
+
+  setLineHeight(lh: LineHeight): void {
+    this.a11yService.setLineHeight(lh);
+  }
+
+  setLetterSpacing(ls: LetterSpacing): void {
+    this.a11yService.setLetterSpacing(ls);
   }
 
   async logout() {

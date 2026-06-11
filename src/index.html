@@ -27,6 +27,38 @@
     })();
   </script>
 
+  <!-- ACCESSIBILITY INIT BEFORE RENDER -->
+  <script>
+    (function () {
+      try {
+        var cl = document.documentElement.classList;
+
+        if (localStorage.getItem('nexus-font') === 'opendyslexic') {
+          cl.add('font-opendyslexic');
+        }
+
+        var fontSize = localStorage.getItem('nexus-font-size');
+        if (fontSize && fontSize !== 'base') {
+          cl.add('font-size-' + fontSize);
+        }
+
+        var lineHeight = localStorage.getItem('nexus-line-height');
+        if (lineHeight && lineHeight !== 'normal') {
+          cl.add('line-height-' + lineHeight);
+        }
+
+        var letterSpacing = localStorage.getItem('nexus-letter-spacing');
+        if (letterSpacing && letterSpacing !== 'normal') {
+          cl.add('letter-spacing-' + letterSpacing);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- OpenDyslexic font -->
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/opendyslexic">
+
   
 
   <!-- PRELOADER STYLE (THEME AWARE) -->

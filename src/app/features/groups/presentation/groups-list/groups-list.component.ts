@@ -44,6 +44,10 @@ export class GroupsListComponent {
     });
   }
 
+  protected goBack(): void {
+    void this.router.navigate(['/']);
+  }
+
   protected navigateToGroup(id: string): void {
     void this.router.navigate(['/groups', id]);
   }

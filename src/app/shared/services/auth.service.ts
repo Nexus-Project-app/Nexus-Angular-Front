@@ -60,6 +60,12 @@ export class AuthService {
     }
   }
 
+  async accountManagement(): Promise<void> {
+    if (globalThis.window !== undefined) {
+      await this.keycloak.accountManagement();
+    }
+  }
+
   get authenticated(): boolean {
     return this.isAuthenticated;
   }
