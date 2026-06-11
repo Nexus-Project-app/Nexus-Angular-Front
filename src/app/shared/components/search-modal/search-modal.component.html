@@ -1,0 +1,102 @@
+@if (open()) {
+  <div
+    class="search-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Rechercher"
+    (click)="onBackdropClick($event)"
+  >
+    <div class="search-panel" (click)="$event.stopPropagation()">
+
+      <!-- Input -->
+      <div class="search-input-row">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.15z" />
+        </svg>
+
+        <input
+          #searchInput
+          class="search-input"
+          type="search"
+          [value]="query()"
+          (input)="onQueryChange($any($event.target).value)"
+          (keydown)="onKeydown($event)"
+          placeholder="Rechercher des posts et groupes..."
+          autocomplete="off"
+          aria-label="Rechercher"
+        />
+
+        @if (loading()) {
+          <svg class="search-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        }
+
+        <button class="search-close-btn" type="button" aria-label="Fermer (ESC)" (click)="close()">
+          <span class="search-esc">ESC</span>
+        </button>
+      </div>
+
+      <!-- Results -->
+      @if (query().trim().length >= 2) {
+        @if (!loading() && results().length === 0) {
+          <p class="search-empty">Aucun résultat pour « {{ query().trim() }} »</p>
+        }
+
+        @if (results().length > 0) {
+          <div class="search-results" role="listbox">
+            @for (item of results(); track item.data.id; let i = $index) {
+              @if (item.kind === 'post' && (i === 0 || results()[i - 1].kind !== 'post')) {
+                <p class="search-section">Publications</p>
+              }
+              @if (item.kind === 'group' && (i === 0 || results()[i - 1].kind !== 'group')) {
+                <p class="search-section">Groupes</p>
+              }
+
+              <button
+                class="search-item"
+                [class.is-active]="activeIndex() === i"
+                type="button"
+                role="option"
+                [attr.aria-selected]="activeIndex() === i"
+                (click)="navigate(item)"
+                (mouseenter)="activeIndex.set(i)"
+              >
+                @if (item.kind === 'post') {
+                  <span class="item-icon item-icon--post" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </span>
+                  <span class="item-body">
+                    <span class="item-title">{{ item.data.title }}</span>
+                    <span class="item-meta">par {{ item.data.authorName }}</span>
+                  </span>
+                } @else {
+                  <span class="item-icon item-icon--group" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="item-body">
+                    <span class="item-title">{{ item.data.name }}</span>
+                    <span class="item-meta">{{ item.data.memberCount }} membre{{ item.data.memberCount > 1 ? 's' : '' }}</span>
+                  </span>
+                }
+              </button>
+            }
+          </div>
+        }
+      }
+
+      <!-- Hint when empty -->
+      @if (query().trim().length < 2) {
+        <div class="search-hint">
+          Tapez au moins 2 caractères pour lancer la recherche
+        </div>
+      }
+
+    </div>
+  </div>
+}
