@@ -29,8 +29,8 @@ export interface DiscoveryItem {
   `,
   styles: `
     .discovery-panel {
-      background: var(--nexus-bg-component);
-      border: 1px solid var(--nexus-border);
+      background: var(--nexus-border);
+      border: none;
       border-radius: 1rem;
       padding: 1rem;
       height: fit-content;
